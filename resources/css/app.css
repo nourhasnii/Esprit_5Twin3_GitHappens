@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+[x-cloak] {
+	display: none !important;
+}
+
+.sidebar-scrollbar-hidden {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+
+.sidebar-scrollbar-hidden::-webkit-scrollbar {
+	display: none;
+}
+
+.dark input:not([type='checkbox']):not([type='radio']):not([type='file']),
+.dark textarea,
+.dark select {
+	border-color: rgba(255, 255, 255, 0.1);
+	background-color: #1e3527;
+	color: #ffffff;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+	color: rgba(255, 255, 255, 0.4);
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+	-webkit-box-shadow: 0 0 0 1000px white inset;
+	box-shadow: 0 0 0 1000px white inset;
+	-webkit-text-fill-color: #24352d;
+	transition: background-color 5000s ease-in-out 0s;
+}

@@ -1,0 +1,5 @@
+@component('emails.layout', ['title' => 'New verification request'])
+<p>A new producer or distributor account requires verification.</p>
+<p><strong>User:</strong> {{ $user->name }}<br><strong>Email:</strong> {{ $user->email }}<br><strong>Role:</strong> {{ ucfirst($user->getRoleNames()->first() ?: '—') }}<br><strong>Organization:</strong> {{ $user->organization_name ?: '—' }}<br><strong>Phone:</strong> {{ $user->phone ?: '—' }}<br><strong>Registration date:</strong> {{ $user->created_at?->format('d M Y, H:i') }}<br><strong>Status:</strong> Pending verification</p>
+<p><a href="{{ route('admin.verification.show', $verificationRequest) }}" style="display:inline-block;background:#1f3d2e;color:#fff;padding:12px 18px;border-radius:8px;text-decoration:none;font-weight:bold;">Review verification request</a></p>
+@endcomponent
