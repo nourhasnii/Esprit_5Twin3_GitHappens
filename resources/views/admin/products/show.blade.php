@@ -24,7 +24,7 @@
                         <dl class="space-y-3">
                             <div><dt class="text-sm font-medium text-gray-500">Nom</dt><dd>{{ $product->name }}</dd></div>
                             <div><dt class="text-sm font-medium text-gray-500">Description</dt><dd>{{ $product->description ?: '-' }}</dd></div>
-                            <div><dt class="text-sm font-medium text-gray-500">Catégorie</dt><dd>{{ $product->category }}</dd></div>
+                            <div><dt class="text-sm font-medium text-gray-500">Catégorie</dt><dd>{{ $product->categoryModel?->name ?? $product->category }}</dd></div>
                             <div><dt class="text-sm font-medium text-gray-500">Unité</dt><dd>{{ $product->unit }}</dd></div>
                             <div><dt class="text-sm font-medium text-gray-500">Code-barres</dt><dd>{{ $product->barcode ?: '-' }}</dd></div>
                         </dl>

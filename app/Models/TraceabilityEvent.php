@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class TraceabilityEvent extends Model
 {
+    use HasFactory;
     public const TYPES = [
         'production',
         'processing',
