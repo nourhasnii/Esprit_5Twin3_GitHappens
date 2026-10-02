@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-dashboard-layout>
     <x-slot name="header">
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
             <div>
@@ -186,4 +186,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+</x-dashboard-layout>

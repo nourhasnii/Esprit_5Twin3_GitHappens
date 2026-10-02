@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Carbon\CarbonInterface;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Certification extends Model
 {
+    use HasFactory;
     public const STATUS_VALID = 'valid';
     public const STATUS_EXPIRING = 'expiring';
     public const STATUS_EXPIRED = 'expired';

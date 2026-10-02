@@ -14,9 +14,23 @@
     </div>
 
     <div>
-        <label for="category" class="block text-sm font-medium text-gray-700">Catégorie</label>
-        <input id="category" type="text" name="category" value="{{ old('category', $product->category ?? '') }}" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-        @error('category')<p class="mt-1 text-xs text-red-500">{{ $message }}</p>@enderror
+        <label for="category_id" class="block text-sm font-medium text-gray-700 dark:text-white/80">Catégorie</label>
+        @if($categories->isNotEmpty())
+            <select id="category_id" name="category_id" required class="mt-1 block w-full rounded-md border-gray-300 bg-white shadow-sm focus:border-[#E3A23C] focus:ring-[#E3A23C]/30 dark:border-white/10 dark:bg-[#1E3527] dark:text-white">
+                <option value="">Sélectionner une catégorie</option>
+                @foreach($categories as $category)
+                    <option value="{{ $category->id }}" @selected((string) old('category_id', $product->category_id ?? '') === (string) $category->id)>{{ $category->name }}{{ ! $category->is_active ? ' · inactive' : '' }}</option>
+                @endforeach
+            </select>
+            @if(isset($product) && ! $product->category_id && $product->category)
+                <p class="mt-1 text-xs text-ink/50 dark:text-white/50">Catégorie historique : {{ $product->category }}. Sélectionnez une catégorie pour associer le produit.</p>
+            @endif
+            @error('category_id')<p class="mt-1 text-xs text-red-500">{{ $message }}</p>@enderror
+        @else
+            <input id="category" type="text" name="category" value="{{ old('category', $product->category ?? '') }}" required class="mt-1 block w-full rounded-md border-gray-300 bg-white shadow-sm focus:border-[#E3A23C] focus:ring-[#E3A23C]/30 dark:border-white/10 dark:bg-[#1E3527] dark:text-white">
+            <p class="mt-1 text-xs text-ink/50 dark:text-white/50">Aucune catégorie active. La catégorie historique sera conservée.</p>
+            @error('category')<p class="mt-1 text-xs text-red-500">{{ $message }}</p>@enderror
+        @endif
     </div>
 
     <div>

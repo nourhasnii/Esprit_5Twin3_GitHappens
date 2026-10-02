@@ -43,4 +43,10 @@ return [
         ],
     ],
 
+    'ollama' => [
+        'endpoint' => env('OLLAMA_ENDPOINT', 'http://localhost:11434/api/generate'),
+        'model' => env('OLLAMA_MODEL', 'qwen2.5vl'),
+        'timeout' => (int) env('OLLAMA_TIMEOUT', 300),
+    ],
+
 ];

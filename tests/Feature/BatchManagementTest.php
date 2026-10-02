@@ -3,8 +3,11 @@
 use App\Models\Batch;
 use App\Models\Product;
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 
 it('allows an authenticated user to manage batches', function () {
+    Storage::fake('public');
+
     $user = User::factory()->create();
     $product = Product::create([
         'name' => 'Tomates bio',
@@ -29,8 +32,17 @@ it('allows an authenticated user to manage batches', function () {
         ->assertRedirect(route('admin.batches.index'));
 
     $batch = Batch::where('lot_number', 'LOT-TEST-001')->firstOrFail();
+    expect($batch->qr_code_path)->toBe('qrcodes/batches/' . $batch->id . '.' . (extension_loaded('imagick') ? 'png' : 'svg'));
+    Storage::disk('public')->assertExists($batch->qr_code_path);
 
-    $this->actingAs($user)->get(route('admin.batches.show', $batch))->assertOk();
+    $this->actingAs($user)->get(route('admin.batches.show', $batch))->assertOk()->assertSee('Scan to view batch traceability');
+    $this->actingAs($user)->get(route('admin.batches.qr', $batch))->assertOk();
+    $this->actingAs($user)->post(route('admin.batches.regenerate-qr', $batch))->assertRedirect(route('admin.batches.show', $batch));
+    Storage::disk('public')->delete($batch->qr_code_path);
+    $this->actingAs($user)->get(route('admin.batches.show', $batch))->assertOk()->assertSee('QR code unavailable');
+    $this->actingAs($user)->get(route('admin.batches.qr', $batch))->assertRedirect(route('admin.batches.show', $batch));
+    $this->actingAs($user)->post(route('admin.batches.regenerate-qr', $batch))->assertRedirect(route('admin.batches.show', $batch));
+    Storage::disk('public')->assertExists($batch->qr_code_path);
 
     $this->actingAs($user)
         ->put(route('admin.batches.update', $batch), [
@@ -46,6 +58,7 @@ it('allows an authenticated user to manage batches', function () {
         ->assertRedirect(route('admin.batches.index'));
 
     expect($batch->fresh()->status)->toBe('recalled');
+    Storage::disk('public')->assertExists($batch->fresh()->qr_code_path);
 
     $this->actingAs($user)
         ->delete(route('admin.batches.destroy', $batch))

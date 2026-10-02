@@ -67,6 +67,12 @@
                                     </a>
                                 </li>
                                 <li>
+                                    <a href="<?php echo e(route('admin.categories.index')); ?>" class="<?php echo e(request()->routeIs('admin.categories.*') ? 'bg-[#E3A23C] text-[#16281E] font-semibold' : 'text-white/70 hover:bg-white/5'); ?> group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors" @click="sidebarOpen = false">
+                                        <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h5M8 17h3"/><circle cx="18" cy="16" r="2"/></svg>
+                                        <span>Categories</span>
+                                    </a>
+                                </li>
+                                <li>
                                     <a href="<?php echo e(route('admin.batches.index')); ?>" class="<?php echo e(request()->routeIs('admin.batches.*') && ! request()->routeIs('admin.batches.traceability') ? 'bg-[#E3A23C] text-[#16281E] font-semibold' : 'text-white/70 hover:bg-white/5'); ?> group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors" @click="sidebarOpen = false">
                                         <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 8h16v11H4zM4 8l3-4h10l3 4M9 12h6"/></svg>
                                         <span>Batches / Lots</span>
@@ -84,9 +90,27 @@
                                     </a>
                                 </li>
                                 <li>
+                                    <a href="<?php echo e(route('admin.certifications.intelligence')); ?>" class="<?php echo e(request()->routeIs('admin.certifications.intelligence') ? 'bg-[#E3A23C] text-[#16281E] font-semibold' : 'text-white/70 hover:bg-white/5'); ?> group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors" @click="sidebarOpen = false">
+                                        <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 2l1.8 5.2L19 9l-5.2 1.8L12 16l-1.8-5.2L5 9l5.2-1.8L12 2Z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15Z"/></svg>
+                                        <span>Certification Intelligence</span>
+                                    </a>
+                                </li>
+                                <li>
                                     <a href="<?php echo e(route('account.verification.edit')); ?>" class="<?php echo e(request()->routeIs('account.verification.*') ? 'bg-[#E3A23C] text-[#16281E] font-semibold' : 'text-white/70 hover:bg-white/5'); ?> group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors" @click="sidebarOpen = false">
                                         <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg>
                                         <span>Verification</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="<?php echo e(route('admin.quality-checks.index')); ?>" class="<?php echo e(request()->routeIs('admin.quality-checks.*') ? 'bg-[#E3A23C] text-[#16281E] font-semibold' : 'text-white/70 hover:bg-white/5'); ?> group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors" @click="sidebarOpen = false">
+                                        <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h5"/><path d="m16 17 2 2 3-4"/></svg>
+                                        <span>Analyses Qualité</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="<?php echo e(route('admin.ocr-checks.index')); ?>" class="<?php echo e(request()->routeIs('admin.ocr-checks.*') ? 'bg-[#E3A23C] text-[#16281E] font-semibold' : 'text-white/70 hover:bg-white/5'); ?> group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors" @click="sidebarOpen = false">
+                                        <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h5M8 17h3"/><path d="m17 15 2 2 3-4"/></svg>
+                                        <span>OCR / Étiquettes</span>
                                     </a>
                                 </li>
                             </ul>
