@@ -73,3 +73,4 @@ Route::get('/products', [FrontProductController::class, 'index'])->name('front.p
 Route::get('/products/{product}', [FrontProductController::class, 'show'])->name('front.products.show');
 
 require __DIR__.'/auth.php';
+require __DIR__.'/stock.php';
