@@ -32,10 +32,27 @@ class DatabaseSeeder extends Seeder
 
         $this->call(AdminSeeder::class);
 
-        $user = User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $user = User::firstOrCreate(
+            ['email' => 'test@example.com'],
+            [
+                'name' => 'Test User',
+                'password' => \Illuminate\Database\Eloquent\Factories\Factory::$password
+                    ?? \Illuminate\Support\Facades\Hash::make('password'),
+                'email_verified_at' => now(),
+                'remember_token' => \Illuminate\Support\Str::random(10),
+            ]
+        );
+        if (! $user->hasRole($roleProducteur)) {
+            $user->assignRole($roleProducteur);
+        }
+
+        $this->call([
+            CategorySeeder::class,
+            ProductSeeder::class,
+            CertificationSeeder::class,
+            BatchSeeder::class,
+            QualityCheckSeeder::class,
+            TraceabilityEventSeeder::class,
         ]);
-        $user->assignRole($roleProducteur);
     }
 }

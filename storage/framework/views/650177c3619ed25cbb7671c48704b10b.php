@@ -82,7 +82,7 @@ unset($__errorArgs, $__bag); ?></div></div></section>
 
 <div class="mt-8 flex flex-col-reverse gap-3 border-t border-ink/8 pt-6 sm:flex-row sm:items-center sm:justify-end"><a href="<?php echo e(route('admin.certifications.index')); ?>" class="rounded-xl px-5 py-3 text-center text-sm font-semibold text-ink/60 transition hover:bg-ink/5 hover:text-ink">Cancel</a><button type="submit" class="rounded-xl bg-forest px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-forest-dark"><?php echo e($submitLabel); ?></button></div>
 
-<?php if (! $__env->hasRenderedOnce('22753c8f-4cc5-4e75-90e9-37a3d1b0b63b')): $__env->markAsRenderedOnce('22753c8f-4cc5-4e75-90e9-37a3d1b0b63b'); ?>
+<?php if (! $__env->hasRenderedOnce('679a3202-6736-4282-8c3d-5c5e76a44924')): $__env->markAsRenderedOnce('679a3202-6736-4282-8c3d-5c5e76a44924'); ?>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const fileInput = document.getElementById('document');

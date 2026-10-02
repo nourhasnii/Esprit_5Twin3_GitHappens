@@ -3,12 +3,15 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\BatchController;
 use App\Http\Controllers\Admin\CertificationController;
 use App\Http\Controllers\Admin\TraceabilityEventController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VerificationRequestController;
 use App\Http\Controllers\Admin\AuditLogController;
+use App\Http\Controllers\Admin\QualityCheckController;
+use App\Http\Controllers\Admin\OcrCheckController;
 use App\Http\Controllers\Admin\VerificationDocumentController;
 use App\Http\Controllers\AccountActivationController;
 use App\Http\Controllers\AccountVerificationController;
@@ -36,10 +39,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Back Office (Admin)
     Route::prefix('admin')->name('admin.')->middleware('active.account')->group(function () {
         Route::resource('products', ProductController::class);
+        Route::resource('categories', CategoryController::class)->except(['show']);
+        Route::get('batches/{batch}/qr', [BatchController::class, 'downloadQr'])->name('batches.qr');
+        Route::post('batches/{batch}/regenerate-qr', [BatchController::class, 'regenerateQr'])->name('batches.regenerate-qr');
         Route::resource('batches', BatchController::class);
         Route::get('batches/{batch}/traceability', [TraceabilityEventController::class, 'timeline'])->name('batches.traceability');
+
+        Route::get('certifications/intelligence', [CertificationController::class, 'intelligence'])->name('certifications.intelligence');
+        Route::match(['get', 'post'], 'certifications/intelligence/analyze', [CertificationController::class, 'analyze'])->name('certifications.intelligence.analyze.store');
         Route::resource('certifications', CertificationController::class);
+
         Route::resource('events', TraceabilityEventController::class);
+        Route::resource('quality-checks', QualityCheckController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
+        Route::resource('ocr-checks', OcrCheckController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
     });
 
     Route::prefix('admin')->name('admin.')->middleware('can:manage_users')->group(function () {

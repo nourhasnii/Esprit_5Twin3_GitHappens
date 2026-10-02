@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
+    use HasFactory;
     protected $fillable = [
         'name',
         'description',
+        'category_id',
         'category',
         'origin_country',
         'origin_region',
@@ -34,6 +37,11 @@ class Product extends Model
         return $this->belongsTo(User::class, 'producer_id');
     }
 
+    public function categoryModel()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
+
     public function batches()
     {
         return $this->hasMany(Batch::class);
@@ -43,4 +51,8 @@ class Product extends Model
     {
         return $this->hasMany(Certification::class);
     }
+    public function qualityChecks()
+{
+    return $this->hasMany(QualityCheck::class);
+}
 }

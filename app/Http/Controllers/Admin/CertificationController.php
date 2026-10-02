@@ -3,8 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\AnalyzeCertificationIntelligenceJob;
 use App\Models\Certification;
+use App\Models\CertificationAIAnalysis;
 use App\Models\Product;
+use App\Services\CertificationAIService;
+use App\Services\CertificationIntelligenceService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
@@ -38,6 +43,64 @@ class CertificationController extends Controller
         $products = Product::orderBy('name')->get(['id', 'name', 'category']);
 
         return view('admin.certifications.index', compact('certifications', 'products', 'total', 'valid', 'expiring', 'expired'));
+    }
+
+    public function intelligence(
+        CertificationIntelligenceService $intelligenceService,
+    ) {
+        $this->authorize('manage_products', Product::class);
+
+        $intelligence = $intelligenceService->generate();
+        $latestSaved = CertificationAIAnalysis::latestSaved();
+        $latestAttempt = CertificationAIAnalysis::latestAttempt();
+        $history = CertificationAIAnalysis::query()
+            ->latest('created_at')
+            ->limit(15)
+            ->get();
+
+        return view('admin.certifications.intelligence', [
+            'intelligence' => $intelligence,
+            'ai_analysis' => $latestSaved,
+            'used_ai_cache' => false,
+            'analysis_status' => $latestAttempt?->status,
+            'history' => $history,
+        ]);
+    }
+
+    public function analyze(
+        Request $request,
+        CertificationIntelligenceService $intelligenceService,
+    ) {
+        $this->authorize('manage_products', Product::class);
+
+        if ($request->isMethod('get')) {
+            return redirect()->route('admin.certifications.intelligence');
+        }
+
+        $request->validate([
+            'refresh' => ['nullable', 'boolean'],
+        ]);
+
+        $deterministicData = $intelligenceService->generate();
+        $analysis = CertificationAIAnalysis::query()->create([
+            'summary' => 'Certification AI analysis is pending.',
+            'risk_explanation' => 'Deterministic risk metrics remain the source of truth while AI analysis runs.',
+            'key_insights' => [],
+            'priority_actions' => [],
+            'business_impact' => 'AI business impact will be available when analysis completes.',
+            'compliance_score' => (int) round((float) ($deterministicData['compliance']['score'] ?? 0)),
+            'risk_score' => (int) round((float) ($deterministicData['risk']['score'] ?? 0)),
+            'risk_level' => $deterministicData['risk']['level'] ?? null,
+            'compliance_level' => $deterministicData['compliance']['level'] ?? null,
+            'model' => config('services.ollama.model'),
+            'prompt_version' => CertificationAIService::PROMPT_VERSION,
+            'status' => 'pending',
+        ]);
+
+        AnalyzeCertificationIntelligenceJob::dispatch($analysis, $deterministicData);
+
+        return redirect()->route('admin.certifications.intelligence')
+            ->with('success', 'Analyse IA en attente. Les métriques déterministes restent disponibles.');
     }
 
     public function create()
@@ -124,6 +187,9 @@ class CertificationController extends Controller
         return redirect()->route('admin.certifications.index')->with('success', 'Certification deleted successfully.');
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function validatedData(Request $request, ?Certification $certification = null): array
     {
         return $request->validate([

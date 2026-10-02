@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Batch;
 use App\Models\Product;
+use App\Services\BatchQrCodeService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class BatchController extends Controller
@@ -54,8 +56,29 @@ class BatchController extends Controller
     public function show(Batch $batch)
     {
         $batch->load('product');
+        $qrCodeExists = $batch->qr_code_path && Storage::disk('public')->exists($batch->qr_code_path);
 
-        return view('admin.batches.show', compact('batch'));
+        return view('admin.batches.show', compact('batch', 'qrCodeExists'));
+    }
+
+    public function downloadQr(Batch $batch)
+    {
+        $disk = Storage::disk('public');
+
+        if (! $batch->qr_code_path || ! $disk->exists($batch->qr_code_path)) {
+            return redirect()->route('admin.batches.show', $batch)->with('error', 'QR code is not available.');
+        }
+
+        $extension = pathinfo($batch->qr_code_path, PATHINFO_EXTENSION);
+
+        return response()->download($disk->path($batch->qr_code_path), 'batch-' . $batch->lot_number . '-qr.' . $extension);
+    }
+
+    public function regenerateQr(Batch $batch, BatchQrCodeService $qrCodeService)
+    {
+        $qrCodeService->generate($batch);
+
+        return redirect()->route('admin.batches.show', $batch)->with('success', 'QR code regenerated.');
     }
 
     /**
