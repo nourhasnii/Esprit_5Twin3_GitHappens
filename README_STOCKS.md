@@ -51,6 +51,7 @@ Le module s'ajoute au projet FoodLens **sans modifier les fichiers existants**, 
    ```bash
    php artisan db:seed --class=StockModuleDemoSeeder
    php artisan db:seed --class=ForecastDemoSeeder
+   php artisan db:seed --class=StockRandomSeeder   # facultatif : réseau aléatoire généré par les factories
    ```
    - `StockModuleDemoSeeder` crée 2 produits laitiers et 2 lots (LOT-2026-001 à J+12, LOT-2026-002 à J+2), 8 sites, 3 associations fictives, les stocks et 30 jours de ventes.
    - `ForecastDemoSeeder` ajoute « Lben 1 L » avec 8 semaines de ventes réalistes.
@@ -60,6 +61,36 @@ Le module s'ajoute au projet FoodLens **sans modifier les fichiers existants**, 
 - `APP_TIMEZONE`/`timezone` réglé sur `Africa/Tunis` dans `config/app.php`, pour des heures de mouvement locales ;
 - `APP_LOCALE=fr`, pour les messages de validation en français (`lang/fr`) ;
 - `STOCK_MAP_TILES=https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png`, pour des noms de villes en français sur les cartes.
+
+## 2 bis. Factories et seeders
+
+### Factories (`database/factories`)
+
+| Factory | Exemples d'utilisation | États disponibles |
+|---|---|---|
+| `SiteFactory` | `Site::factory()->retailStore()->count(5)->create()` | `production()`, `warehouse()`, `distributionCenter()`, `retailStore()`, `association()`, `inactive()`, `withoutCoordinates()`, `inCity('Sfax')` |
+| `StockFactory` | `Stock::factory()->belowThreshold()->create()` | `forBatch($batch)`, `belowThreshold()`, `empty()` |
+| `StockMovementFactory` | `StockMovement::factory()->count(30)->sale()->from($magasin)->create()` | `into($site)`, `sale()`, `from($site)`, `donation()`, `transfer($de, $vers)`, `on($date)` |
+| `OptimizationRecommendationFactory` | `OptimizationRecommendation::factory()->lowScore()->rejected()->create()` | `accepted()`, `rejected()`, `lowScore()` |
+| `ProductFactory` | `ProductFactory::new()->dairy()->create()` | `dairy()` |
+| `BatchFactory` | `BatchFactory::new()->expiringIn(2)->create()` | `expiringIn($jours)`, `pastExpiry()`, `expired()`, `recalled()` |
+
+- **Données réalistes** : les sites sont générés dans de vraies villes tunisiennes, avec leurs coordonnées GPS, et leur code dépend du type (`MAG-`, `ENT-`, `ASSO-`…). Les produits sont des produits tunisiens.
+- **Modèles de l'équipe intacts** : `ProductFactory` et `BatchFactory` respectent le format FoodLens et s'utilisent avec `::new()`. Les modèles `Product` et `Batch` de l'équipe ne sont donc pas modifiés.
+- **Cohérence des stocks** : la quantité d'une ligne de stock est la somme de ses mouvements. Après avoir créé des mouvements par factory, lancez `StockService::recalculate(true)`, ou la commande `php artisan stocks:recalculate --fix`.
+
+### Seeders (`database/seeders`)
+
+| Seeder | Rôle | Factories utilisées |
+|---|---|---|
+| `StockModuleDemoSeeder` | Démo complète, avec des valeurs fixées pour la soutenance | `ProductFactory`, `BatchFactory` |
+| `SiteSeeder` | 8 sites tunisiens et 3 associations, avec des codes fixes | — |
+| `StockDemoSeeder` | Stocks et 30 jours de ventes de la démo | — |
+| `ForecastDemoSeeder` | « Lben 1 L » : 8 semaines de ventes réalistes et une livraison par semaine | `ProductFactory`, `StockFactory`, `StockMovementFactory` |
+| `StockRandomSeeder` | Réseau aléatoire : 7 sites, 3 produits, plus de 500 mouvements. Peut être relancé à volonté | toutes |
+
+Ordre conseillé : `php artisan db:seed`, puis `StockModuleDemoSeeder`, `ForecastDemoSeeder`, et éventuellement `StockRandomSeeder`.
+
 
 ## 3. Modèle de données
 

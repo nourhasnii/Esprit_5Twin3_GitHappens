@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\StockMovementType;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
@@ -11,6 +12,9 @@ use Illuminate\Support\Str;
 
 class StockMovement extends Model
 {
+    /** @use HasFactory<\Database\Factories\StockMovementFactory> */
+    use HasFactory;
+
     protected $fillable = [
         'reference', 'type', 'product_id', 'batch_id', 'source_site_id', 'destination_site_id',
         'quantity', 'reason', 'notes', 'user_id', 'moved_at',

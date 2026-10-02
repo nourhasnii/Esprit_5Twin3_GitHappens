@@ -3,11 +3,15 @@
 namespace App\Models;
 
 use App\Enums\RecommendationStatus;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OptimizationRecommendation extends Model
 {
+    /** @use HasFactory<\Database\Factories\OptimizationRecommendationFactory> */
+    use HasFactory;
+
     protected $fillable = [
         'batch_id', 'product_id', 'source_site_id', 'recommended_site_id', 'chosen_site_id',
         'quantity', 'score', 'distance_km', 'co2_kg', 'days_to_expiry',

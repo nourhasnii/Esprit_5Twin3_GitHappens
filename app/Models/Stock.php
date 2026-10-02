@@ -4,11 +4,15 @@ namespace App\Models;
 
 use App\Support\BatchAttributes;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Stock extends Model
 {
+    /** @use HasFactory<\Database\Factories\StockFactory> */
+    use HasFactory;
+
     protected $fillable = [
         'site_id', 'product_id', 'batch_id', 'quantity', 'min_threshold', 'last_movement_at',
     ];
