@@ -4,16 +4,11 @@
 @use('App\Services\Optimization\OptimizationEngine')
 
 @section('title', 'Trouver une destination')
+@section('eyebrow', 'Optimization workspace')
+@section('description', 'Choisissez un lot et son site d’origine pour comparer les destinations faisables.')
+@section('page-action')<a class="btn btn-ghost" href="{{ route('optimization.index') }}">Retour aux recommandations</a>@endsection
 
 @section('content')
-<div class="page-head">
-    <div>
-        <a class="back" href="{{ route('optimization.index') }}">Retour aux recommandations</a>
-        <h1>Trouver la meilleure destination d’un lot</h1>
-        <p class="lede">Choisissez le lot et l’endroit où il se trouve. Le moteur évalue tous les autres sites actifs et justifie son choix.</p>
-    </div>
-</div>
-
 <div style="display:grid; grid-template-columns: minmax(0, 3fr) minmax(260px, 2fr); gap: 20px; align-items: start;" class="split">
     <form method="POST" action="{{ route('optimization.store') }}" class="panel" id="optim-form">
         @csrf

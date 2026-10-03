@@ -35,10 +35,11 @@
     <x-slot name="header">
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
             <div>
-                <h2 class="font-fraunces font-bold text-2xl text-ink leading-tight">
+                <p class="text-xs font-bold uppercase tracking-[0.18em] text-amber-warm">Certification workspace</p>
+                <h1 class="mt-1 font-fraunces font-bold text-3xl text-ink leading-tight dark:text-white">
                     {{ __('Certification Intelligence') }}
-                </h2>
-                <p class="text-sm text-ink/50 mt-1">Analyse déterministe + IA locale (Ollama) de votre conformité certifications.</p>
+                </h1>
+                <p class="text-sm text-ink/55 dark:text-white/55 mt-2">Analyse déterministe et IA locale de la conformité des certifications.</p>
             </div>
             <div class="flex items-center gap-2">
                 <a href="{{ route('admin.certifications.index') }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white hover:bg-cream text-ink border border-ink/10 rounded-lg text-sm font-semibold transition-colors">

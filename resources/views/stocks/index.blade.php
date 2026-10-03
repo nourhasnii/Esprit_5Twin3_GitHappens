@@ -3,20 +3,15 @@
 @use('App\Support\BatchAttributes')
 @use('App\Models\Stock')
 
-@section('title', 'Vue globale des stocks')
+@section('eyebrow', 'Inventory workspace')
+@section('title', 'Stocks par site')
+@section('description', 'Quantités par produit et par lot sur chaque site actif. Les lots rappelés ou périmés restent comptés en stock physique mais ne sont pas disponibles.')
+@section('page-action')
+    <a class="btn btn-ghost" href="{{ route('stock-movements.create') }}">Enregistrer un mouvement</a>
+    <a class="btn btn-primary" href="{{ route('stocks.create') }}">Ajouter une ligne de stock</a>
+@endsection
 
 @section('content')
-<div class="page-head">
-    <div>
-        <h1>Stocks par site</h1>
-        <p class="lede">Quantités par produit et par lot sur chaque site actif. Les lots rappelés ou périmés restent comptés en stock physique mais ne sont pas disponibles.</p>
-    </div>
-    <div class="actions">
-        <a class="btn btn-ghost" href="{{ route('stock-movements.create') }}">Enregistrer un mouvement</a>
-        <a class="btn btn-primary" href="{{ route('stocks.create') }}">Ajouter une ligne de stock</a>
-    </div>
-</div>
-
 @include('partials.impact')
 
 <div class="figures">

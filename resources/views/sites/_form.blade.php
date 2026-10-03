@@ -59,6 +59,7 @@
     <div class="field wide">
         <input type="hidden" name="is_active" value="0">
         <label class="check"><input type="checkbox" name="is_active" value="1" @checked(old('is_active', $site->is_active))> Site actif (reçoit du stock et apparaît dans l’optimisation)</label>
+        @error('is_active')<p class="error">{{ $message }}</p>@enderror
     </div>
 </div>
 

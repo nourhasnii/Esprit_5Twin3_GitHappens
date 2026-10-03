@@ -2,10 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\RecommendationStatus;
 use App\Models\Batch;
 use App\Models\Certification;
+use App\Models\OptimizationRecommendation;
 use App\Models\Product;
+use App\Models\Site;
+use App\Models\Stock;
+use App\Models\StockMovement;
 use App\Models\TraceabilityEvent;
+use App\Services\Stock\StockService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -65,6 +71,16 @@ class DashboardController extends Controller
                 ];
             });
 
+        $lowStockCount = app(StockService::class)->lowStock()->count();
+        $stockOverview = [
+            'sites' => Site::active()->count(),
+            'items' => Stock::count(),
+            'total_quantity' => (float) Stock::sum('quantity'),
+            'low_stock' => $lowStockCount,
+            'pending_optimizations' => OptimizationRecommendation::where('status', RecommendationStatus::Pending->value)->count(),
+            'movements_today' => StockMovement::whereDate('moved_at', today())->count(),
+        ];
+
         $lastDecisions = $this->buildLastDecisions($user);
         $toReview = $this->buildToReview($user);
 
@@ -73,6 +89,7 @@ class DashboardController extends Controller
             'greetingName',
             'alertCount',
             'kpis',
+            'stockOverview',
             'recentBatches',
             'lastDecisions',
             'toReview',

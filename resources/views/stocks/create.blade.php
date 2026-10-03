@@ -2,16 +2,11 @@
 @use('App\Support\BatchAttributes')
 
 @section('title', 'Nouvelle ligne de stock')
+@section('eyebrow', 'Inventory workspace')
+@section('description', 'Enregistrez le stock initial; il sera ajouté à l’historique comme un mouvement d’entrée.')
+@section('page-action')<a class="btn btn-ghost" href="{{ route('stocks.index') }}">Retour aux stocks</a>@endsection
 
 @section('content')
-<div class="page-head">
-    <div>
-        <a class="back" href="{{ route('stocks.index') }}">Retour aux stocks</a>
-        <h1>Nouvelle ligne de stock</h1>
-        <p class="lede">La quantité initiale est enregistrée comme un mouvement d’entrée, pour que l’historique reste complet.</p>
-    </div>
-</div>
-
 <form method="POST" action="{{ route('stocks.store') }}" class="panel">
     @csrf
     <div class="form-grid">

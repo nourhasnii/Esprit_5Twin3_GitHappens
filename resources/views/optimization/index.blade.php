@@ -2,19 +2,14 @@
 @use('App\Support\Fmt')
 @use('App\Support\BatchAttributes')
 
-@section('title', 'Optimisation des destinations')
+@section('eyebrow', 'Optimization workspace')
+@section('title', 'Recommandations')
+@section('description', 'Classez les destinations selon la demande, la DLC, la distance, la capacité et le CO₂; chaque proposition reste soumise à votre validation.')
+@section('page-action')
+    <a class="btn btn-primary" href="{{ route('optimization.create') }}">Trouver une destination</a>
+@endsection
 
 @section('content')
-<div class="page-head">
-    <div>
-        <h1>Optimisation des destinations</h1>
-        <p class="lede">Le moteur classe les sites selon la demande, la DLC, la distance, la capacité et le CO₂, puis vous laisse valider, modifier ou rejeter sa proposition.</p>
-    </div>
-    <div class="actions">
-        <a class="btn btn-primary" href="{{ route('optimization.create') }}">Trouver une destination pour un lot</a>
-    </div>
-</div>
-
 @include('partials.impact')
 
 <section class="panel">

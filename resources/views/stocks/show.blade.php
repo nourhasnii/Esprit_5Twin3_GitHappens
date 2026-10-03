@@ -3,24 +3,18 @@
 @use('App\Support\BatchAttributes')
 
 @section('title', 'Historique de stock')
+@section('eyebrow', 'Inventory workspace')
+@section('description', $stock->product?->name.' à '.$stock->site?->name.' · '.($stock->batch ? 'Lot '.BatchAttributes::code($stock->batch) : 'Stock suivi sans lot').(BatchAttributes::expiryDate($stock->batch) ? ' · DLC le '.BatchAttributes::expiryDate($stock->batch)->format('d/m/Y') : ''))
+@section('page-action')
+    <a class="btn btn-ghost" href="{{ route('stocks.index', ['site_id' => $stock->site_id]) }}">Retour aux stocks</a>
+    <a class="btn btn-ghost" href="{{ route('stock-movements.create', ['type' => 'adjustment']) }}">Ajuster le stock</a>
+    @if ($stock->batch && $stock->availableQuantity() > 0)
+        <a class="btn btn-primary" href="{{ route('optimization.create', ['batch_id' => $stock->batch_id]) }}">Optimiser</a>
+    @endif
+@endsection
 
 @section('content')
 @php $expiry = BatchAttributes::expiryDate($stock->batch); $days = BatchAttributes::daysToExpiry($stock->batch); @endphp
-<div class="page-head">
-    <div>
-        <a class="back" href="{{ route('stocks.index', ['site_id' => $stock->site_id]) }}">Retour aux stocks du site</a>
-        <h1>{{ $stock->product?->name }} à {{ $stock->site?->name }}</h1>
-        <p class="lede">
-            {{ $stock->batch ? 'Lot '.BatchAttributes::code($stock->batch) : 'Stock suivi sans lot' }}@if ($expiry), DLC le {{ $expiry->format('d/m/Y') }} ({{ $days >= 0 ? 'dans '.$days.' jour(s)' : 'dépassée' }})@endif.
-        </p>
-    </div>
-    <div class="actions">
-        <a class="btn btn-ghost" href="{{ route('stock-movements.create', ['type' => 'adjustment']) }}">Ajuster après inventaire</a>
-        @if ($stock->batch && $stock->availableQuantity() > 0)
-            <a class="btn btn-primary" href="{{ route('optimization.create', ['batch_id' => $stock->batch_id]) }}">Trouver la meilleure destination</a>
-        @endif
-    </div>
-</div>
 
 <div class="figures">
     <div class="figure"><strong>{{ Fmt::q($stock->quantity) }}</strong><span>en stock sur cette ligne</span></div>

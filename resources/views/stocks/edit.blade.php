@@ -2,16 +2,11 @@
 @use('App\Support\Fmt')
 
 @section('title', 'Seuil de rupture')
+@section('eyebrow', 'Inventory workspace')
+@section('description', 'Le seuil s’applique à ce produit sur ce site; les quantités ne changent que par des mouvements.')
+@section('page-action')<a class="btn btn-ghost" href="{{ route('stocks.index', ['site_id' => $stock->site_id]) }}">Retour aux stocks du site</a>@endsection
 
 @section('content')
-<div class="page-head">
-    <div>
-        <a class="back" href="{{ route('stocks.index', ['site_id' => $stock->site_id]) }}">Retour aux stocks du site</a>
-        <h1>Seuil de {{ $stock->product?->name }}</h1>
-        <p class="lede">Sur {{ $stock->site?->name }}. Le seuil s’applique au produit sur ce site, tous lots confondus. Les quantités, elles, ne changent que par des mouvements.</p>
-    </div>
-</div>
-
 <form method="POST" action="{{ route('stocks.update', $stock) }}" class="panel">
     @csrf @method('PUT')
     <div class="form-grid">

@@ -1,19 +1,14 @@
 @extends('layouts.stock')
 @use('App\Support\Fmt')
 
+@section('eyebrow', 'Network workspace')
 @section('title', 'Sites')
+@section('description', 'Gérez les entrepôts, plateformes et magasins du réseau; leurs coordonnées alimentent les calculs de distance.')
+@section('page-action')
+    <a class="btn btn-primary" href="{{ route('sites.create') }}">Ajouter un site</a>
+@endsection
 
 @section('content')
-<div class="page-head">
-    <div>
-        <h1>Sites de stockage</h1>
-        <p class="lede">Entrepôts, plateformes et magasins. Les coordonnées GPS servent au calcul des distances de l’optimisation.</p>
-    </div>
-    <div class="actions">
-        <a class="btn btn-primary" href="{{ route('sites.create') }}">Ajouter un site</a>
-    </div>
-</div>
-
 @php
     $mapSites = $sites->filter->hasCoordinates()->map(fn ($site) => [
         'id' => $site->id,

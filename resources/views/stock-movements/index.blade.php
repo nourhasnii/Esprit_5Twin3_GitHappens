@@ -3,19 +3,14 @@
 @use('App\Support\BatchAttributes')
 @use('App\Enums\StockMovementType')
 
+@section('eyebrow', 'Inventory workspace')
 @section('title', 'Mouvements de stock')
+@section('description', 'Chaque entrée, sortie, transfert ou ajustement, dans l’ordre où il a eu lieu. Les stocks sont recalculables à partir de cet historique.')
+@section('page-action')
+    <a class="btn btn-primary" href="{{ route('stock-movements.create') }}">Enregistrer un mouvement</a>
+@endsection
 
 @section('content')
-<div class="page-head">
-    <div>
-        <h1>Mouvements de stock</h1>
-        <p class="lede">Chaque entrée, sortie, transfert ou ajustement, dans l’ordre où il a eu lieu. Les stocks sont recalculables à partir de cet historique.</p>
-    </div>
-    <div class="actions">
-        <a class="btn btn-primary" href="{{ route('stock-movements.create') }}">Enregistrer un mouvement</a>
-    </div>
-</div>
-
 <div class="figures">
     @foreach (StockMovementType::cases() as $type)
         @php $t = $totals->get($type->value); @endphp

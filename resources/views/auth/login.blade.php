@@ -13,7 +13,7 @@
             <div>
                 <x-input-label for="email" :value="__('Adresse email')" />
                 <x-text-input id="email" class="block mt-1 w-full px-4 py-3" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" placeholder="vous@exemple.com" />
-                <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                @error('email')<p class="field-validation-error mt-2 text-sm text-red-600">{{ $message }}</p>@enderror
             </div>
 
             <div>
@@ -25,13 +25,13 @@
                                     required autocomplete="current-password"
                                     placeholder="••••••••" />
                 </div>
-                <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                @error('password')<p class="field-validation-error mt-2 text-sm text-red-600">{{ $message }}</p>@enderror
             </div>
 
             <div class="flex items-center justify-between">
                 <label for="remember_me" class="inline-flex items-center cursor-pointer group">
                     <div class="relative">
-                        <input id="remember_me" type="checkbox" class="sr-only peer" name="remember">
+                        <input id="remember_me" type="checkbox" class="sr-only peer" name="remember" @checked(old('remember'))>
                         <div class="w-5 h-5 border-2 border-ink/20 rounded-md peer-checked:bg-forest peer-checked:border-forest transition-all duration-150 group-hover:border-forest/50"></div>
                         <svg class="w-3 h-3 text-white absolute top-1 left-1 opacity-0 peer-checked:opacity-100 transition-opacity duration-150 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                             <path d="M20 6L9 17L4 12"/>

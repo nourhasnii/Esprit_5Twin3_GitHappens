@@ -15,7 +15,7 @@
                             name="password"
                             required autocomplete="current-password" />
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+            @error('password')<p class="field-validation-error mt-2 text-sm text-red-600">{{ $message }}</p>@enderror
         </div>
 
         <div class="flex justify-end mt-4">

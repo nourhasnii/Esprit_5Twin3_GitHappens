@@ -37,3 +37,42 @@ input:-webkit-autofill:active {
 	-webkit-text-fill-color: #24352d;
 	transition: background-color 5000s ease-in-out 0s;
 }
+
+form :is(input, select, textarea):has(+ .field-validation-error),
+form :is(input, select, textarea):has(+ p.error),
+form :is(input, select, textarea):has(+ p[class*="text-red-"]),
+form :is(input, select, textarea):has(+ p[class*="text-rose-"]),
+form .field:has(> .field-validation-error, > p.error, > p[class*="text-red-"], > p[class*="text-rose-"]) > :is(input, select, textarea),
+form div:has(> :is(input, select, textarea) ~ .field-validation-error) > :is(input, select, textarea),
+form div:has(> :is(input, select, textarea) ~ p.error) > :is(input, select, textarea),
+form div:has(> :is(input, select, textarea) ~ p[class*="text-red-"]) > :is(input, select, textarea),
+form div:has(> :is(input, select, textarea) ~ p[class*="text-rose-"]) > :is(input, select, textarea) {
+	border-color: #b23a3a !important;
+	box-shadow: 0 0 0 1px rgba(178, 58, 58, 0.2) !important;
+}
+
+form label:has(> input[type='checkbox']):has(> .field-validation-error) input[type='checkbox'],
+form .field:has(> .error, > .field-validation-error) .check input[type='checkbox'] {
+	outline: 1px solid #b23a3a;
+	outline-offset: 2px;
+}
+
+form :is(div, section):has(> label > input[type='file']):has(> .field-validation-error, > p.error, > p[class*="text-red-"], > p[class*="text-rose-"]) > label {
+	border-color: #b23a3a !important;
+}
+
+form label:has(> input[type='checkbox']):has(+ p[class*="text-red-"]) input[type='checkbox'],
+form label:has(> input[type='checkbox']):has(+ p[class*="text-rose-"]) input[type='checkbox'],
+form .field:has(> .error, > .field-validation-error) .check input[type='checkbox'] {
+	outline: 1px solid #b23a3a;
+	outline-offset: 2px;
+}
+
+form section:has(> div input[type='radio']):has(> p.error) input[type='radio'] + span,
+form section:has(> div input[type='radio']):has(> p[class*="text-red-"]) input[type='radio'] + span,
+form section:has(> div input[type='radio']):has(> p[class*="text-rose-"]) input[type='radio'] + span,
+form fieldset.choices:has(+ p.error) label.choice,
+form div:has(> ul.field-validation-error) input[type='radio'] + span,
+form div:has(> p.field-validation-error) input[type='radio'] + span {
+	border-color: #b23a3a !important;
+}

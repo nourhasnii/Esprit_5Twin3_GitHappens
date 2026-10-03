@@ -3,6 +3,7 @@
         <div>
             <p class="text-xs font-bold uppercase tracking-[0.18em] text-amber-warm">Workspace</p>
             <h1 class="mt-1 font-fraunces text-3xl font-bold text-ink">Vue d'ensemble</h1>
+            <p class="mt-2 text-sm text-ink/55 dark:text-white/55">Suivez l’activité, les alertes et les opérations de NutriTrace.</p>
         </div>
     </x-slot>
 
@@ -18,24 +19,25 @@
                 <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg>
                 @if($alertCount > 0)<span class="absolute right-0.5 top-0.5 h-2 w-2 rounded-full bg-[#E3A23C] ring-2 ring-white"></span>@endif
             </button>
-            <div class="inline-flex items-center rounded-full border border-ink/10 bg-white p-1 shadow-sm dark:border-white/10 dark:bg-[#1b2923]" role="group" aria-label="Choisir le thème">
-                <button type="button" @click="theme = 'light'; applyTheme()" :class="theme === 'light' ? 'bg-[#E3A23C] text-[#16281E] shadow-sm' : 'text-ink/50 hover:bg-cream dark:text-white/55 dark:hover:bg-white/5'" class="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition-colors" :aria-pressed="theme === 'light'">
-                    <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>
-                    Clair
-                </button>
-                <button type="button" @click="theme = 'dark'; applyTheme()" :class="theme === 'dark' ? 'bg-[#16281E] text-white shadow-sm' : 'text-ink/50 hover:bg-cream dark:text-white/55 dark:hover:bg-white/5'" class="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition-colors" :aria-pressed="theme === 'dark'">
-                    <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20.5 15.5A8.5 8.5 0 0 1 8.5 3.5 8.5 8.5 0 1 0 20.5 15.5Z"/></svg>
-                    Sombre
-                </button>
-            </div>
             <div class="flex items-center gap-2">
                 <span class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-forest text-sm font-semibold text-white ring-2 ring-white">{{ strtoupper(mb_substr($user->name, 0, 1)) }}</span>
                 <span class="hidden text-sm font-semibold text-ink xl:inline">{{ $user->name }}</span>
             </div>
+            <a href="{{ route('front.products.index') }}" target="_blank" rel="noopener" class="rounded-xl px-3 py-2 text-sm font-semibold text-ink/55 transition hover:bg-cream dark:text-white/60 dark:hover:bg-white/5" title="Catalogue public">Catalogue</a>
+            <div class="rounded-full border border-ink/10 p-1 shadow-sm dark:border-white/10">
+                <button type="button" role="switch" @click="theme = theme === 'light' ? 'dark' : 'light'; applyTheme()" class="relative h-8 w-16 rounded-full transition-colors" data-theme-switch :aria-checked="theme === 'dark'" :aria-label="theme === 'dark' ? 'Passer en mode clair' : 'Passer en mode sombre'" title="Changer de thème">
+                    <svg x-cloak x-show="theme === 'dark'" class="absolute left-1.5 h-3 w-3 text-white/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l-1.42-1.42m11.3-11.3 1.42 1.42"/></svg>
+                    <svg x-cloak x-show="theme === 'light'" class="absolute right-1.5 h-3 w-3 text-forest/45" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20.5 15.5A8.5 8.5 0 0 1 8.5 3.5 8.5 8.5 0 1 0 20.5 15.5Z"/></svg>
+                    <span class="absolute inset-y-1 left-1 grid h-6 w-6 place-items-center rounded-full bg-white text-[#1F3D2E] shadow-md transition-transform duration-200" :class="theme === 'dark' ? 'translate-x-8' : 'translate-x-0'">
+                        <svg x-cloak x-show="theme === 'light'" class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>
+                        <svg x-cloak x-show="theme === 'dark'" class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20.5 15.5A8.5 8.5 0 0 1 8.5 3.5 8.5 8.5 0 1 0 20.5 15.5Z"/></svg>
+                    </span>
+                </button>
+            </div>
         </div>
     </x-slot>
 
-    <main class="p-8 space-y-8">
+    <main class="space-y-8">
         @if(session('success'))
             <div class="w-full rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm font-medium text-emerald-800">
                 {{ session('success') }}
@@ -103,6 +105,53 @@
             </div>
         </section>
 
+        <section class="w-full rounded-2xl border border-[#DCE7DE] bg-white p-5 shadow-[0_14px_35px_-28px_rgba(31,61,46,0.7)] dark:border-white/10 dark:bg-[#1E3527] dark:shadow-[0_14px_35px_-25px_rgba(227,162,60,0.25)]">
+            <div class="flex items-center justify-between gap-4">
+                <h3 class="text-base font-bold text-ink dark:text-white">Quick Access</h3>
+                <span class="text-xs font-medium uppercase tracking-[0.12em] text-gray-400 dark:text-white/40">Workspace</span>
+            </div>
+            <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-7">
+                <a href="{{ app('router')->has('admin.products.index') ? route('admin.products.index') : '#' }}" class="rounded-xl border border-[#DCE7DE] bg-[#EEF3EC] px-4 py-3 text-sm font-semibold text-ink transition hover:border-[#C7D9C9] dark:border-white/10 dark:bg-[#24452F] dark:text-white">Products</a>
+                <a href="{{ app('router')->has('admin.batches.index') ? route('admin.batches.index') : '#' }}" class="rounded-xl border border-[#DCE7DE] bg-[#FBEFE0] px-4 py-3 text-sm font-semibold text-ink transition hover:border-[#E7D0A6] dark:border-white/10 dark:bg-[#5A421F] dark:text-white">Batches</a>
+                <a href="{{ route('stocks.index') }}" class="rounded-xl border border-[#DCE7DE] bg-[#EAF3F0] px-4 py-3 text-sm font-semibold text-ink transition hover:border-[#C5D9D2] dark:border-white/10 dark:bg-[#1E4A42] dark:text-white">Stocks</a>
+                <a href="{{ route('stock-movements.index') }}" class="rounded-xl border border-[#DCE7DE] bg-[#F3F3E9] px-4 py-3 text-sm font-semibold text-ink transition hover:border-[#D7DAB3] dark:border-white/10 dark:bg-[#524E1F] dark:text-white">Movements</a>
+                <a href="{{ route('optimization.index') }}" class="rounded-xl border border-[#DCE7DE] bg-[#EEF3EC] px-4 py-3 text-sm font-semibold text-ink transition hover:border-[#C7D9C9] dark:border-white/10 dark:bg-[#24452F] dark:text-white">Optimization</a>
+                <a href="{{ route('forecast.index') }}" class="rounded-xl border border-[#DCE7DE] bg-[#F5E7E2] px-4 py-3 text-sm font-semibold text-ink transition hover:border-[#E5C5B7] dark:border-white/10 dark:bg-[#5A2B22] dark:text-white">Forecast</a>
+                <a href="{{ app('router')->has('admin.verification.index') ? route('admin.verification.index') : '#' }}" class="rounded-xl border border-[#DCE7DE] bg-[#F5E7E2] px-4 py-3 text-sm font-semibold text-ink transition hover:border-[#E5C5B7] dark:border-white/10 dark:bg-[#5A2B22] dark:text-white">Alerts / risks</a>
+            </div>
+        </section>
+
+        <section class="w-full rounded-2xl border border-[#DCE7DE] bg-white p-5 shadow-[0_14px_35px_-28px_rgba(31,61,46,0.7)] dark:border-white/10 dark:bg-[#1E3527] dark:shadow-[0_14px_35px_-25px_rgba(227,162,60,0.25)]">
+            <div class="flex items-center justify-between gap-4">
+                <h3 class="text-base font-bold text-ink dark:text-white">Stock &amp; Optimization</h3>
+                <a href="{{ route('stocks.index') }}" class="text-sm font-semibold text-[#E3A23C] hover:text-[#C98B2E] hover:underline">Open module</a>
+            </div>
+            <div class="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
+                <div class="rounded-xl border border-[#DCE7DE] bg-[#EEF3EC] p-4 dark:border-white/10 dark:bg-[#24452F]">
+                    <p class="text-xs uppercase tracking-[0.12em] text-gray-500 dark:text-white/50">Sites</p>
+                    <p class="mt-2 text-2xl font-bold text-ink dark:text-white">{{ number_format($stockOverview['sites'] ?? 0, 0, ',', ' ') }}</p>
+                </div>
+                <div class="rounded-xl border border-[#DCE7DE] bg-[#FBEFE0] p-4 dark:border-white/10 dark:bg-[#5A421F]">
+                    <p class="text-xs uppercase tracking-[0.12em] text-gray-500 dark:text-white/50">Units</p>
+                    <p class="mt-2 text-2xl font-bold text-ink dark:text-white">{{ number_format((float) ($stockOverview['total_quantity'] ?? 0), 0, ',', ' ') }}</p>
+                </div>
+                <div class="rounded-xl border border-[#DCE7DE] bg-[#F5E7E2] p-4 dark:border-white/10 dark:bg-[#5A2B22]">
+                    <p class="text-xs uppercase tracking-[0.12em] text-gray-500 dark:text-white/50">Low stock</p>
+                    <p class="mt-2 text-2xl font-bold text-ink dark:text-white">{{ number_format($stockOverview['low_stock'] ?? 0, 0, ',', ' ') }}</p>
+                </div>
+                <div class="rounded-xl border border-[#DCE7DE] bg-[#EAF3F0] p-4 dark:border-white/10 dark:bg-[#1E4A42]">
+                    <p class="text-xs uppercase tracking-[0.12em] text-gray-500 dark:text-white/50">Pending</p>
+                    <p class="mt-2 text-2xl font-bold text-ink dark:text-white">{{ number_format($stockOverview['pending_optimizations'] ?? 0, 0, ',', ' ') }}</p>
+                </div>
+            </div>
+            <div class="mt-4 flex flex-wrap gap-3">
+                <a href="{{ route('stocks.index') }}" class="inline-flex items-center rounded-full bg-[#16281E] px-4 py-2 text-sm font-semibold text-white hover:bg-[#20402E]">Overview</a>
+                <a href="{{ route('stock-movements.index') }}" class="inline-flex items-center rounded-full border border-[#DCE7DE] bg-white px-4 py-2 text-sm font-semibold text-ink hover:border-[#C7D9C9] dark:border-white/10 dark:bg-[#1E3527] dark:text-white">Movements</a>
+                <a href="{{ route('optimization.index') }}" class="inline-flex items-center rounded-full border border-[#DCE7DE] bg-white px-4 py-2 text-sm font-semibold text-ink hover:border-[#C7D9C9] dark:border-white/10 dark:bg-[#1E3527] dark:text-white">Optimization</a>
+                <a href="{{ route('forecast.index') }}" class="inline-flex items-center rounded-full border border-[#DCE7DE] bg-white px-4 py-2 text-sm font-semibold text-ink hover:border-[#C7D9C9] dark:border-white/10 dark:bg-[#1E3527] dark:text-white">Forecast</a>
+            </div>
+        </section>
+
         <section class="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             @foreach($kpis as $kpi)
                 <div class="w-full rounded-2xl border border-[#DCE7DE] bg-white p-5 shadow-[0_14px_35px_-28px_rgba(31,61,46,0.7)] dark:border-white/10 dark:bg-[#1E3527] dark:shadow-[0_14px_35px_-25px_rgba(227,162,60,0.25)]">
@@ -129,6 +178,10 @@
 
         <section class="w-full grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="md:col-span-2 w-full space-y-4">
+                <div class="w-full flex items-center justify-between gap-4">
+                    <h3 class="text-lg font-bold text-ink dark:text-white">Recent Activity</h3>
+                    <span class="text-xs font-medium uppercase tracking-[0.12em] text-gray-400 dark:text-white/40">Live</span>
+                </div>
                 <div class="w-full flex justify-between items-center gap-4">
                     <h3 class="text-lg font-bold text-ink dark:text-white">Derniers lots</h3>
                     @if(app('router')->has('admin.batches.index'))

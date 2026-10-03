@@ -93,6 +93,7 @@
     <label class="flex items-center gap-3 md:col-span-2">
         <input type="checkbox" name="is_organic" value="1" @checked(old('is_organic', $product->is_organic ?? false)) class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500">
         <span class="text-sm font-medium text-gray-700">Produit biologique</span>
+        @error('is_organic')<span class="field-validation-error text-xs text-red-500">{{ $message }}</span>@enderror
     </label>
 </div>
 

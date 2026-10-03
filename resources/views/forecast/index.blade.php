@@ -3,16 +3,11 @@
 @use('App\Services\Forecast\DemandForecaster')
 @use('Carbon\CarbonImmutable')
 
+@section('eyebrow', 'Forecast workspace')
 @section('title', 'Prévisions de la demande')
+@section('description', 'Prévisions basées sur les ventes historiques et le calendrier tunisien; elles alimentent l’optimisation sans afficher de données simulées comme des ventes réelles.')
 
 @section('content')
-<div class="page-head">
-    <div>
-        <h1>Prévisions de la demande</h1>
-        <p class="lede">L’IA apprend le rythme des ventes de chaque magasin et tient compte du calendrier tunisien : Ramadan, Aïd, rentrée scolaire, saison estivale. Ces prévisions alimentent le moteur d’optimisation et le plan anti-gaspillage.</p>
-    </div>
-</div>
-
 <form class="filters" method="GET" action="{{ route('forecast.index') }}">
     <div class="field">
         <label for="f-site">Site</label>

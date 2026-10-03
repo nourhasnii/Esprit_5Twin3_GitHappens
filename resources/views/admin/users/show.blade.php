@@ -52,6 +52,12 @@
                 <form method="POST" action="{{ route('admin.users.status', $user) }}" class="mt-4">
                     @csrf
                     <input type="hidden" name="account_status" value="{{ $user->account_status === 'suspended' ? 'active' : 'suspended' }}">
+                    @error('account_status')<p class="field-validation-error mb-2 text-sm text-red-600">{{ $message }}</p>@enderror
+                    @if($user->account_status !== 'suspended')
+                        <label for="reason" class="mb-1 block text-sm font-semibold text-ink dark:text-white">Suspension reason</label>
+                        <textarea id="reason" name="reason" rows="3" maxlength="2000" class="mb-3 block w-full rounded-xl border-ink/10 bg-white dark:border-white/10 dark:bg-white/5">{{ old('reason') }}</textarea>
+                        @error('reason')<p class="field-validation-error mb-3 text-sm text-red-600">{{ $message }}</p>@enderror
+                    @endif
                     <button class="rounded-xl border border-ink/10 px-4 py-2.5 text-sm font-semibold dark:border-white/10 dark:text-white">
                         {{ $user->account_status === 'suspended' ? 'Reactivate account' : 'Suspend account' }}
                     </button>

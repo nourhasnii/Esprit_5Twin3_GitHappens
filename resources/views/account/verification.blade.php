@@ -1,4 +1,43 @@
 <x-dashboard-layout>
     <x-slot name="header"><p class="text-xs font-bold uppercase tracking-[0.18em] text-amber-warm">Account verification</p><h1 class="mt-1 font-fraunces text-2xl font-semibold text-ink dark:text-white">Complete your professional profile</h1></x-slot>
-    <div class="mx-auto max-w-2xl rounded-2xl border border-ink/8 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#1b2923]"><p class="text-sm text-ink/60 dark:text-white/60">Submit the missing information and one supporting document for another review.</p><form method="POST" action="{{ route('account.verification.update') }}" enctype="multipart/form-data" class="mt-6 space-y-5">@csrf<div><x-input-label for="organization_name" :value="__('Organization name')" /><x-text-input id="organization_name" name="organization_name" class="mt-1 block w-full" :value="old('organization_name', $user->organization_name)" required /></div><div class="grid gap-5 sm:grid-cols-2"><div><x-input-label for="country" :value="__('Country')" /><x-text-input id="country" name="country" class="mt-1 block w-full" :value="old('country', $user->country)" /></div><div><x-input-label for="region" :value="__('Region')" /><x-text-input id="region" name="region" class="mt-1 block w-full" :value="old('region', $user->region)" /></div></div><div><x-input-label for="address" :value="__('Address')" /><textarea id="address" name="address" rows="3" required class="mt-1 block w-full rounded-xl border-ink/10 dark:border-white/10 dark:bg-white/5">{{ old('address', $user->address) }}</textarea></div><div><x-input-label for="document_type" :value="__('Document type')" /><x-text-input id="document_type" name="document_type" class="mt-1 block w-full" placeholder="Professional registration" required /></div><div><x-input-label for="document" :value="__('Supporting document')" /><input id="document" name="document" type="file" accept=".pdf,.jpg,.jpeg,.png" required class="mt-1 block w-full rounded-xl border border-ink/10 p-3 text-sm dark:border-white/10" /><p class="mt-1 text-xs text-ink/45">PDF, JPG or PNG up to 5 MB.</p></div><x-primary-button class="w-full justify-center">Submit for review</x-primary-button></form></div>
+    <div class="mx-auto max-w-2xl rounded-2xl border border-ink/8 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#1b2923]">
+        <p class="text-sm text-ink/60 dark:text-white/60">Submit the missing information and one supporting document for another review.</p>
+        <form method="POST" action="{{ route('account.verification.update') }}" enctype="multipart/form-data" class="mt-6 space-y-5">
+            @csrf
+            <div>
+                <x-input-label for="organization_name" :value="__('Organization name')" />
+                <x-text-input id="organization_name" name="organization_name" class="mt-1 block w-full" :value="old('organization_name', $user->organization_name)" required />
+                @error('organization_name')<p class="field-validation-error mt-1.5 text-sm text-red-600">{{ $message }}</p>@enderror
+            </div>
+            <div class="grid gap-5 sm:grid-cols-2">
+                <div>
+                    <x-input-label for="country" :value="__('Country')" />
+                    <x-text-input id="country" name="country" class="mt-1 block w-full" :value="old('country', $user->country)" />
+                    @error('country')<p class="field-validation-error mt-1.5 text-sm text-red-600">{{ $message }}</p>@enderror
+                </div>
+                <div>
+                    <x-input-label for="region" :value="__('Region')" />
+                    <x-text-input id="region" name="region" class="mt-1 block w-full" :value="old('region', $user->region)" />
+                    @error('region')<p class="field-validation-error mt-1.5 text-sm text-red-600">{{ $message }}</p>@enderror
+                </div>
+            </div>
+            <div>
+                <x-input-label for="address" :value="__('Address')" />
+                <textarea id="address" name="address" rows="3" required class="mt-1 block w-full rounded-xl border-ink/10 dark:border-white/10 dark:bg-white/5">{{ old('address', $user->address) }}</textarea>
+                @error('address')<p class="field-validation-error mt-1.5 text-sm text-red-600">{{ $message }}</p>@enderror
+            </div>
+            <div>
+                <x-input-label for="document_type" :value="__('Document type')" />
+                <x-text-input id="document_type" name="document_type" class="mt-1 block w-full" :value="old('document_type')" placeholder="Professional registration" required />
+                @error('document_type')<p class="field-validation-error mt-1.5 text-sm text-red-600">{{ $message }}</p>@enderror
+            </div>
+            <div>
+                <x-input-label for="document" :value="__('Supporting document')" />
+                <input id="document" name="document" type="file" accept=".pdf,.jpg,.jpeg,.png" required class="mt-1 block w-full rounded-xl border border-ink/10 p-3 text-sm dark:border-white/10" />
+                @error('document')<p class="field-validation-error mt-1.5 text-sm text-red-600">{{ $message }}</p>@enderror
+                <p class="mt-1 text-xs text-ink/45">PDF, JPG or PNG up to 5 MB.</p>
+            </div>
+            <x-primary-button class="w-full justify-center">Submit for review</x-primary-button>
+        </form>
+    </div>
 </x-dashboard-layout>

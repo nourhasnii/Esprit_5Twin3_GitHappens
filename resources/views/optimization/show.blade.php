@@ -4,6 +4,12 @@
 @use('App\Enums\RecommendationStatus')
 
 @section('title', 'Recommandation n° '.$recommendation->id)
+@section('eyebrow', 'Optimization workspace')
+@section('description', 'Destination du lot '.BatchAttributes::code($recommendation->batch).', calculée le '.$recommendation->created_at->format('d/m/Y à H:i').'.')
+@section('page-action')
+    <a class="btn btn-ghost" href="{{ route('optimization.index') }}">Retour aux recommandations</a>
+    <span class="tag tag-{{ $recommendation->status->value }}">{{ $recommendation->status->label() }}</span>
+@endsection
 
 @section('content')
 @php
@@ -23,15 +29,6 @@
     $tone = $r->score >= 70 ? 'var(--pine)' : ($r->score >= 40 ? '#c48a1a' : 'var(--brick)');
     $rank = 0;
 @endphp
-
-<div class="page-head">
-    <div>
-        <a class="back" href="{{ route('optimization.index') }}">Retour aux recommandations</a>
-        <h1>Destination du lot {{ BatchAttributes::code($r->batch) }}</h1>
-        <p class="lede">Recommandation n° {{ $r->id }}, calculée le {{ $r->created_at->format('d/m/Y à H:i') }}.</p>
-    </div>
-    <span class="tag tag-{{ $r->status->value }}" style="font-size:.9rem; padding:5px 12px;">{{ $r->status->label() }}</span>
-</div>
 
 <section class="panel verdict">
     <div class="dial" style="--p: {{ $r->score }}; --dial: {{ $tone }};" role="img" aria-label="Score {{ Fmt::n($r->score) }} sur 100">

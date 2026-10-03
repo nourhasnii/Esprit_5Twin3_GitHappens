@@ -3,16 +3,11 @@
 @use('App\Enums\StockMovementType')
 
 @section('title', 'Enregistrer un mouvement')
+@section('eyebrow', 'Inventory workspace')
+@section('description', 'Chaque mouvement met à jour immédiatement le stock du ou des sites concernés.')
+@section('page-action')<a class="btn btn-ghost" href="{{ route('stock-movements.index') }}">Retour aux mouvements</a>@endsection
 
 @section('content')
-<div class="page-head">
-    <div>
-        <a class="back" href="{{ route('stock-movements.index') }}">Retour aux mouvements</a>
-        <h1>Enregistrer un mouvement</h1>
-        <p class="lede">Le stock des sites concernés est mis à jour immédiatement. Une sortie supérieure au stock ou une entrée au-delà de la capacité du site est refusée.</p>
-    </div>
-</div>
-
 <form method="POST" action="{{ route('stock-movements.store') }}" class="panel" id="movement-form">
     @csrf
     <fieldset class="choices">
@@ -25,6 +20,7 @@
             </label>
         @endforeach
     </fieldset>
+    @error('type')<p class="error">{{ $message }}</p>@enderror
 
     <div class="form-grid">
         <div class="field">
@@ -108,6 +104,7 @@
         <div class="field wide">
             <label for="notes">Commentaire</label>
             <textarea id="notes" name="notes" maxlength="2000">{{ old('notes') }}</textarea>
+            @error('notes')<p class="error">{{ $message }}</p>@enderror
         </div>
     </div>
 

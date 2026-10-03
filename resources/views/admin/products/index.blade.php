@@ -1,11 +1,21 @@
+@php
+    $productQuery = app('App\\Models\\Product')->newQuery();
+    $productStats = [
+        'total' => (clone $productQuery)->count(),
+        'certified' => (clone $productQuery)->whereHas('certifications')->count(),
+        'carbon' => (clone $productQuery)->whereNotNull('carbon_footprint')->avg('carbon_footprint'),
+        'flagged' => (clone $productQuery)->where('verification_status', 'rejected')->count(),
+    ];
+@endphp
 <x-dashboard-layout>
     <x-slot name="header">
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
             <div>
-                <h2 class="font-fraunces font-bold text-2xl text-ink leading-tight">
+                <p class="text-xs font-bold uppercase tracking-[0.18em] text-amber-warm">Product workspace</p>
+                <h1 class="mt-1 font-fraunces font-bold text-3xl text-ink leading-tight dark:text-white">
                     {{ __('Produits') }}
-                </h2>
-                <p class="text-sm text-ink/50 mt-1">Gérez votre catalogue de produits et leur traçabilité.</p>
+                </h1>
+                <p class="text-sm text-ink/55 dark:text-white/55 mt-2">Gérez votre catalogue de produits et leur traçabilité.</p>
             </div>
             <a href="{{ route('admin.products.create') }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-amber-warm hover:bg-amber-light text-white font-semibold rounded-lg transition-all duration-150 shadow-sm shadow-amber-warm/20 hover:shadow-amber-warm/30">
                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -16,7 +26,7 @@
         </div>
     </x-slot>
 
-    <div class="py-10">
+    <div class="py-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             @if(session('success'))
                 <div class="mb-6 px-5 py-4 rounded-xl bg-forest/5 border border-forest/15 text-forest text-sm font-medium flex items-center gap-3">
@@ -29,7 +39,22 @@
                 </div>
             @endif
 
-            <div class="bg-white overflow-hidden rounded-2xl border border-ink/5 shadow-lg shadow-ink/[0.03]">
+            <section class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label="Statistiques produits">
+                @foreach([
+                    ['label' => 'Total produits', 'value' => number_format($productStats['total'], 0, ',', ' '), 'icon' => '□', 'tone' => 'bg-forest/10 text-forest'],
+                    ['label' => 'Certifiés', 'value' => number_format($productStats['certified'], 0, ',', ' '), 'icon' => '✓', 'tone' => 'bg-emerald-100 text-emerald-700'],
+                    ['label' => 'Empreinte moyenne (kg CO₂)', 'value' => $productStats['carbon'] !== null ? number_format((float) $productStats['carbon'], 1, ',', ' ') : '—', 'icon' => '◌', 'tone' => 'bg-amber-100 text-amber-800'],
+                    ['label' => 'Écarts signalés', 'value' => number_format($productStats['flagged'], 0, ',', ' '), 'icon' => '!', 'tone' => 'bg-red-100 text-red-700'],
+                ] as $stat)
+                    <article class="dashboard-stat-card rounded-2xl border p-5 shadow-sm">
+                        <span class="flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold {{ $stat['tone'] }}">{{ $stat['icon'] }}</span>
+                        <p class="mt-4 font-fraunces text-3xl font-bold text-ink dark:text-white">{{ $stat['value'] }}</p>
+                        <p class="mt-1 text-xs font-medium text-ink/55 dark:text-white/55">{{ $stat['label'] }}</p>
+                    </article>
+                @endforeach
+            </section>
+
+            <div class="overflow-hidden rounded-2xl border border-ink/10 bg-white shadow-sm dark:border-white/10 dark:bg-[#1b2923]">
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-ink/5">
                         <thead class="bg-cream/50">
@@ -46,7 +71,7 @@
                                 <tr class="hover:bg-cream/40 transition-colors duration-100">
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center gap-3.5">
-                                            <div class="w-11 h-11 rounded-xl bg-cream border border-ink/5 flex items-center justify-center overflow-hidden shrink-0">
+                                            <div class="w-11 h-11 rounded-xl bg-[#F1F3F0] border border-ink/5 flex items-center justify-center overflow-hidden shrink-0 dark:bg-[#152A20] dark:border-white/10">
                                                 @if($product->image)
                                                     <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
                                                 @else
@@ -86,7 +111,9 @@
                                                         <circle cx="12" cy="12" r="10" opacity="0.25"/>
                                                     </svg>
                                                 </div>
-                                                <span class="font-semibold text-sm text-ink">{{ $product->carbon_footprint }} <span class="text-xs text-ink/50 font-normal">kg CO₂</span></span>
+                                                @php($carbon = (float) $product->carbon_footprint)
+                                                @php($carbonTone = $carbon <= 2 ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-400/15 dark:text-emerald-300' : ($carbon <= 5 ? 'bg-amber-100 text-amber-800 dark:bg-amber-400/15 dark:text-amber-300' : 'bg-red-100 text-red-800 dark:bg-red-400/15 dark:text-red-300'))
+                                                <span class="inline-flex rounded-full px-2.5 py-1 text-xs font-semibold {{ $carbonTone }}">{{ $product->carbon_footprint }} kg CO₂</span>
                                             </div>
                                         @else
                                             <span class="text-ink/30 text-xs">Non renseignée</span>
@@ -120,19 +147,19 @@
                                                 </span>
                                             @endif
                                             @if(!$product->is_organic && !$product->is_local && !$product->is_fair_trade)
-                                                <span class="text-ink/30 text-xs">Aucune</span>
+                                                <span class="inline-flex rounded-full bg-ink/5 px-2.5 py-1 text-[11px] font-medium text-ink/45 dark:bg-white/10 dark:text-white/45">Aucune</span>
                                             @endif
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <div class="inline-flex items-center gap-1">
-                                            <a href="{{ route('admin.products.show', $product) }}" class="w-8 h-8 inline-flex items-center justify-center rounded-lg text-ink/50 hover:text-forest hover:bg-forest/10 transition-colors" title="Voir">
+                                            <a href="{{ route('admin.products.show', $product) }}" class="h-9 w-9 inline-flex items-center justify-center rounded-full text-ink/50 hover:text-forest hover:bg-forest/10 transition-colors dark:text-white/55" title="Voir" aria-label="Voir le produit">
                                                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                                                     <path d="M1 12S6 4 12 4S23 12 23 12S18 20 12 20S1 12 1 12Z"/>
                                                     <circle cx="12" cy="12" r="3"/>
                                                 </svg>
                                             </a>
-                                            <a href="{{ route('admin.products.edit', $product) }}" class="w-8 h-8 inline-flex items-center justify-center rounded-lg text-ink/50 hover:text-amber-warm hover:bg-amber-warm/10 transition-colors" title="Modifier">
+                                            <a href="{{ route('admin.products.edit', $product) }}" class="h-9 w-9 inline-flex items-center justify-center rounded-full text-ink/50 hover:text-amber-warm hover:bg-amber-warm/10 transition-colors dark:text-white/55" title="Modifier" aria-label="Modifier le produit">
                                                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                                                     <path d="M12 20H21"/>
                                                     <path d="M16.5 3.5C16.8978 3.10217 17.4374 2.87868 18 2.87868C18.5626 2.87868 19.1022 3.10217 19.5 3.5C19.8978 3.89783 20.1213 4.43743 20.1213 5C20.1213 5.56257 19.8978 6.10217 19.5 6.5L7 19L3 20L4 16L16.5 3.5Z"/>
@@ -141,7 +168,7 @@
                                             <form action="{{ route('admin.products.destroy', $product) }}" method="POST" class="inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="w-8 h-8 inline-flex items-center justify-center rounded-lg text-ink/50 hover:text-red-500 hover:bg-red-500/10 transition-colors" title="Supprimer">
+                                                <button type="submit" class="h-9 w-9 inline-flex items-center justify-center rounded-full text-ink/50 hover:text-red-600 hover:bg-red-500/10 transition-colors dark:text-white/55" title="Supprimer" aria-label="Supprimer le produit">
                                                     <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                                                         <path d="M3 6H21"/>
                                                         <path d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6"/>
