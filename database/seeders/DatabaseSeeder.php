@@ -53,6 +53,8 @@ class DatabaseSeeder extends Seeder
             BatchSeeder::class,
             QualityCheckSeeder::class,
             TraceabilityEventSeeder::class,
+            TransportConditionSeeder::class,
+            AlertSeeder::class,
         ]);
     }
 }
