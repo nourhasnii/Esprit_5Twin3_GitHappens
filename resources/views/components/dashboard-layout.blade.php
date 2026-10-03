@@ -124,6 +124,18 @@
                                         <span>Traceability</span>
                                     </a>
                                 </li>
+                                <li>
+                                    <a href="{{ route('admin.transport-conditions.index') }}" class="{{ request()->routeIs('admin.transport-conditions.*') ? 'bg-[#E3A23C] text-[#16281E] font-semibold' : 'text-white/70 hover:bg-white/5' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors" @click="sidebarOpen = false">
+                                        <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 3v18M5 8h14M5 16h14"/><path d="M7 3h10M7 21h10"/></svg>
+                                        <span>Transport Conditions</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('admin.alerts.index') }}" class="{{ request()->routeIs('admin.alerts.*') ? 'bg-[#E3A23C] text-[#16281E] font-semibold' : 'text-white/70 hover:bg-white/5' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors" @click="sidebarOpen = false">
+                                        <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="m12 3 9 16H3L12 3Z"/><path d="M12 9v4M12 16h.01"/></svg>
+                                        <span>Alerts</span>
+                                    </a>
+                                </li>
                             </ul>
                         </div>
 

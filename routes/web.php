@@ -12,6 +12,8 @@ use App\Http\Controllers\Admin\VerificationRequestController;
 use App\Http\Controllers\Admin\AuditLogController;
 use App\Http\Controllers\Admin\QualityCheckController;
 use App\Http\Controllers\Admin\OcrCheckController;
+use App\Http\Controllers\Admin\TransportConditionController;
+use App\Http\Controllers\Admin\AlertController;
 use App\Http\Controllers\Admin\VerificationDocumentController;
 use App\Http\Controllers\AccountActivationController;
 use App\Http\Controllers\AccountVerificationController;
@@ -50,6 +52,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('certifications', CertificationController::class);
 
         Route::resource('events', TraceabilityEventController::class);
+        Route::resource('transport-conditions', TransportConditionController::class);
+        Route::patch('alerts/{alert}/resolve', [AlertController::class, 'resolve'])->name('alerts.resolve');
+        Route::patch('alerts/{alert}/ignore', [AlertController::class, 'ignore'])->name('alerts.ignore');
+        Route::patch('alerts/{alert}/acknowledge', [AlertController::class, 'acknowledge'])->name('alerts.acknowledge');
+        Route::resource('alerts', AlertController::class);
         Route::resource('quality-checks', QualityCheckController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
         Route::resource('ocr-checks', OcrCheckController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
     });
