@@ -10,7 +10,7 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-{
+{ if (Schema::hasColumn('batches', 'qr_code_path')) { return; }
     Schema::table('batches', function (Blueprint $table) {
         $table->string('qr_code_path')->nullable()->after('status');
     });

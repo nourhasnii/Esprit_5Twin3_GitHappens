@@ -7,6 +7,8 @@ use App\Http\Requests\Admin\StoreTransportConditionRequest;
 use App\Http\Requests\Admin\UpdateTransportConditionRequest;
 use App\Models\Batch;
 use App\Models\TransportCondition;
+use App\Services\ColdChainAlertService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -36,12 +38,16 @@ class TransportConditionController extends Controller
         ]);
     }
 
-    public function store(StoreTransportConditionRequest $request): RedirectResponse
+    public function store(StoreTransportConditionRequest $request, ColdChainAlertService $alertService): RedirectResponse
     {
-        TransportCondition::create([
-            ...$request->validated(),
-            'created_by' => $request->user()->id,
-        ]);
+        DB::transaction(function () use ($request, $alertService): void {
+            $condition = TransportCondition::create([
+                ...$request->validated(),
+                'created_by' => $request->user()->id,
+            ]);
+
+            $alertService->syncAlert($condition);
+        });
 
         return redirect()->route('admin.transport-conditions.index')->with('success', 'Transport condition created successfully.');
     }
@@ -61,9 +67,12 @@ class TransportConditionController extends Controller
         ]);
     }
 
-    public function update(UpdateTransportConditionRequest $request, TransportCondition $transportCondition): RedirectResponse
+    public function update(UpdateTransportConditionRequest $request, TransportCondition $transportCondition, ColdChainAlertService $alertService): RedirectResponse
     {
-        $transportCondition->update($request->validated());
+        DB::transaction(function () use ($request, $transportCondition, $alertService): void {
+            $transportCondition->update($request->validated());
+            $alertService->syncAlert($transportCondition->fresh());
+        });
 
         return redirect()->route('admin.transport-conditions.index')->with('success', 'Transport condition updated successfully.');
     }

@@ -31,6 +31,7 @@ class AlertController extends Controller
             'openCount' => Alert::open()->count(),
             'criticalCount' => Alert::where('severity', 'critical')->whereNotIn('status', ['resolved', 'ignored'])->count(),
             'averageRiskScore' => Alert::whereNotNull('risk_score')->avg('risk_score'),
+            'lastAlerts' => Alert::with('batch')->latest()->limit(5)->get(),
         ]);
     }
 
