@@ -22,8 +22,8 @@
                     @foreach($products as $product)
                         <a href="{{ route('front.products.show', $product) }}" class="group overflow-hidden rounded-2xl border border-ink/8 bg-white shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg">
                             <div class="flex h-44 items-center justify-center bg-forest/5">
-                                @if($product->image)
-                                    <img src="{{ $product->image }}" alt="{{ $product->name }}" class="h-full w-full object-cover">
+                                @if($product->image_url)
+                                    <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="h-full w-full object-cover">
                                 @else
                                     <span class="font-fraunces text-5xl font-semibold text-forest/25">{{ strtoupper(substr($product->name, 0, 1)) }}</span>
                                 @endif

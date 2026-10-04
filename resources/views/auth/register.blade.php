@@ -20,8 +20,28 @@
                 </div>
                 <div><x-input-label for="address" :value="__('Address')" /><textarea id="address" name="address" rows="3" class="mt-1 block w-full rounded-xl border-ink/10 bg-white text-sm dark:border-white/10 dark:bg-white/5">{{ old('address') }}</textarea>@error('address')<p class="field-validation-error mt-2 text-sm text-red-600">{{ $message }}</p>@enderror</div>
             </div>
-            <div><x-input-label for="password" :value="__('Password')" /><x-text-input id="password" class="mt-1 block w-full px-4 py-3" type="password" name="password" required autocomplete="new-password" />@error('password')<p class="field-validation-error mt-2 text-sm text-red-600">{{ $message }}</p>@enderror</div>
-            <div><x-input-label for="password_confirmation" :value="__('Confirm password')" /><x-text-input id="password_confirmation" class="mt-1 block w-full px-4 py-3" type="password" name="password_confirmation" required autocomplete="new-password" />@error('password_confirmation')<p class="field-validation-error mt-2 text-sm text-red-600">{{ $message }}</p>@enderror</div>
+            <div>
+                <x-input-label for="password" :value="__('Password')" />
+                <div x-data="{ visible: false }" class="relative mt-1">
+                    <x-text-input id="password" class="block w-full px-4 py-3 pr-12" type="password" x-bind:type="visible ? 'text' : 'password'" name="password" required autocomplete="new-password" />
+                    <button type="button" aria-label="Afficher le mot de passe" x-bind:aria-label="visible ? 'Masquer le mot de passe' : 'Afficher le mot de passe'" x-bind:aria-pressed="visible" x-on:click="visible = ! visible" class="absolute right-0 inline-flex items-center justify-center rounded-r-lg px-3 text-ink/50 transition hover:text-forest focus:outline-none focus:ring-2 focus:ring-inset focus:ring-amber-warm/40 dark:text-white/55 dark:hover:text-emerald-300" style="top: 50%; transform: translateY(-50%);">
+                        <svg x-cloak x-show="! visible" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="3"/></svg>
+                        <svg x-cloak x-show="visible" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 3l18 18M10.6 6.2A10.8 10.8 0 0 1 12 6c6 0 9.5 6 9.5 6a15.8 15.8 0 0 1-3.1 3.7M6.2 6.2C3.8 7.7 2.5 12 2.5 12s3.5 6 9.5 6a10.8 10.8 0 0 0 3.1-.5"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>
+                    </button>
+                </div>
+                @error('password')<p class="field-validation-error mt-2 text-sm text-red-600">{{ $message }}</p>@enderror
+            </div>
+            <div>
+                <x-input-label for="password_confirmation" :value="__('Confirm password')" />
+                <div x-data="{ visible: false }" class="relative mt-1">
+                    <x-text-input id="password_confirmation" class="block w-full px-4 py-3 pr-12" type="password" x-bind:type="visible ? 'text' : 'password'" name="password_confirmation" required autocomplete="new-password" />
+                    <button type="button" aria-label="Afficher le mot de passe" x-bind:aria-label="visible ? 'Masquer le mot de passe' : 'Afficher le mot de passe'" x-bind:aria-pressed="visible" x-on:click="visible = ! visible" class="absolute right-0 inline-flex items-center justify-center rounded-r-lg px-3 text-ink/50 transition hover:text-forest focus:outline-none focus:ring-2 focus:ring-inset focus:ring-amber-warm/40 dark:text-white/55 dark:hover:text-emerald-300" style="top: 50%; transform: translateY(-50%);">
+                        <svg x-cloak x-show="! visible" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="3"/></svg>
+                        <svg x-cloak x-show="visible" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 3l18 18M10.6 6.2A10.8 10.8 0 0 1 12 6c6 0 9.5 6 9.5 6a15.8 15.8 0 0 1-3.1 3.7M6.2 6.2C3.8 7.7 2.5 12 2.5 12s3.5 6 9.5 6a10.8 10.8 0 0 0 3.1-.5"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>
+                    </button>
+                </div>
+                @error('password_confirmation')<p class="field-validation-error mt-2 text-sm text-red-600">{{ $message }}</p>@enderror
+            </div>
             <x-primary-button class="mt-2 w-full justify-center py-3 text-base">{{ __('Create account') }}</x-primary-button>
             <p class="pt-1 text-center text-sm text-ink/60 dark:text-white/60">Already registered? <a class="font-semibold text-forest underline dark:text-emerald-300" href="{{ route('login') }}">Sign in</a></p>
         </form>

@@ -10,7 +10,7 @@
         <div class="mx-auto max-w-4xl sm:px-6 lg:px-8">
             <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                 <div class="p-6 text-ink dark:text-white">
-                    <form action="{{ route('admin.products.update', $product) }}" method="POST">
+                    <form action="{{ route('admin.products.update', $product) }}" method="POST" enctype="multipart/form-data">
                         @method('PUT')
                         @include('admin.products._form', ['submitLabel' => 'Mettre à jour'])
                     </form>

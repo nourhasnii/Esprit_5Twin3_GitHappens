@@ -16,9 +16,22 @@
         <div class="mx-auto max-w-4xl sm:px-6 lg:px-8">
             <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                 <div class="grid grid-cols-1 gap-8 p-6 text-ink dark:text-white md:grid-cols-2">
-                    @if($product->image)
-                        <div class="md:col-span-2"><img src="{{ $product->image }}" alt="{{ $product->name }}" class="max-h-72 w-full rounded object-contain"></div>
-                    @endif
+                    <div class="md:col-span-2">
+                        <div class="mx-auto flex min-h-[240px] max-w-2xl items-center justify-center rounded-xl border border-ink/10 bg-cream/40 p-6 dark:border-white/10 dark:bg-white/5">
+                            @if($product->image_url)
+                                <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="max-h-[420px] w-full rounded-lg object-contain">
+                            @else
+                                <div class="flex flex-col items-center gap-3 text-ink/35 dark:text-white/35">
+                                    <svg class="h-12 w-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                                        <path d="M21 15L16 10L5 21"/>
+                                    </svg>
+                                    <p class="text-sm">Aucune image disponible</p>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
                     <div>
                         <h3 class="mb-4 text-lg font-semibold">Informations générales</h3>
                         <dl class="space-y-3">

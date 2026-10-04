@@ -71,11 +71,11 @@
                                 <tr class="hover:bg-cream/40 transition-colors duration-100">
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center gap-3.5">
-                                            <div class="w-11 h-11 rounded-xl bg-[#F1F3F0] border border-ink/5 flex items-center justify-center overflow-hidden shrink-0 dark:bg-[#152A20] dark:border-white/10">
-                                                @if($product->image)
-                                                    <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                                            <div class="h-10 w-10 rounded-lg bg-[#F1F3F0] border border-ink/5 flex items-center justify-center overflow-hidden shrink-0 dark:bg-[#152A20] dark:border-white/10">
+                                                @if($product->image_url)
+                                                    <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="h-10 w-10 rounded-lg object-cover">
                                                 @else
-                                                    <svg class="w-5 h-5 text-ink/30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                                    <svg class="h-5 w-5 text-ink/30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                                                         <rect x="3" y="3" width="18" height="18" rx="2"/>
                                                         <circle cx="8.5" cy="8.5" r="1.5"/>
                                                         <path d="M21 15L16 10L5 21"/>

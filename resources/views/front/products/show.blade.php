@@ -12,8 +12,8 @@
             <div class="overflow-hidden rounded-2xl border border-ink/8 bg-white shadow-sm">
                 <div class="grid lg:grid-cols-[0.9fr_1.1fr]">
                     <div class="flex min-h-72 items-center justify-center bg-forest/5 lg:min-h-full">
-                        @if($product->image)
-                            <img src="{{ $product->image }}" alt="{{ $product->name }}" class="h-full max-h-[30rem] w-full object-cover">
+                        @if($product->image_url)
+                            <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="h-full max-h-[30rem] w-full object-cover">
                         @else
                             <span class="font-fraunces text-8xl font-semibold text-forest/25">{{ strtoupper(substr($product->name, 0, 1)) }}</span>
                         @endif

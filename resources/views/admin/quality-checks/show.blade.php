@@ -14,7 +14,28 @@
         @if($qualityCheck->status === 'pending')<div class="flex items-center gap-4 rounded-2xl border border-amber-200 bg-amber-50 p-5 text-amber-900 dark:border-amber-300/20 dark:bg-amber-400/10 dark:text-amber-200"><div class="h-10 w-10 animate-pulse rounded-full bg-amber-warm/20 p-2"><svg class="h-6 w-6 text-amber-warm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="9"/></svg></div><div><p class="font-semibold">Analyse en cours via Ollama…</p><p class="mt-1 text-sm opacity-80">Rafraîchissez dans quelques secondes.</p></div></div>@endif
         <div class="grid gap-6 lg:grid-cols-[.85fr_1.15fr]">
             <div class="space-y-6">
-                <div class="overflow-hidden rounded-2xl border border-ink/8 bg-white shadow-sm dark:border-white/10 dark:bg-[#1E3527]"><div class="flex max-h-[420px] min-h-[240px] w-full items-center justify-center bg-cream p-4 sm:p-6 dark:bg-[#16281E]">@if($qualityCheck->image_path)<img src="{{ asset('storage/' . $qualityCheck->image_path) }}" alt="Image analysée" class="max-h-[380px] max-w-full rounded-xl object-contain shadow-sm">@else<div class="flex h-full min-h-[220px] w-full items-center justify-center text-ink/30 dark:text-white/30">Aucune image</div>@endif</div><div class="p-6"><p class="text-xs font-bold uppercase tracking-[0.18em] text-amber-warm">Produit</p><h2 class="mt-2 font-fraunces text-2xl font-bold text-ink dark:text-white">{{ $qualityCheck->product?->name ?? 'Produit supprimé' }}</h2><p class="mt-1 text-sm text-ink/55 dark:text-white/55">{{ $qualityCheck->product?->category ?? 'Catégorie non renseignée' }}</p><dl class="mt-5 space-y-3 text-sm"><div class="flex justify-between gap-4"><dt class="text-ink/50 dark:text-white/50">Créé par</dt><dd class="font-semibold text-ink dark:text-white">{{ $qualityCheck->creator?->name ?? 'Système' }}</dd></div><div class="flex justify-between gap-4"><dt class="text-ink/50 dark:text-white/50">Date</dt><dd class="font-semibold text-ink dark:text-white">{{ $qualityCheck->created_at?->format('d/m/Y H:i') }}</dd></div></dl></div></div>
+                <div class="overflow-hidden rounded-2xl border border-ink/8 bg-white shadow-sm dark:border-white/10 dark:bg-[#1E3527]">
+                    <div class="flex max-h-[420px] min-h-[240px] w-full items-center justify-center bg-cream p-4 sm:p-6 dark:bg-[#16281E]">
+                        @if($qualityCheck->image_path && \Illuminate\Support\Facades\Storage::disk('public')->exists(ltrim($qualityCheck->image_path, '/')))
+                            <img src="{{ asset('storage/quality-checks-public/' . basename(ltrim($qualityCheck->image_path, '/'))) }}" alt="Image analysée" class="max-h-[380px] max-w-full rounded-xl object-contain shadow-sm">
+                        @else
+                            <div class="flex h-full min-h-[220px] w-full items-center justify-center text-ink/30 dark:text-white/30">Aucune image</div>
+                        @endif
+                    </div>
+                    <div class="p-6">
+                        <p class="text-xs font-bold uppercase tracking-[0.18em] text-amber-warm">Produit</p>
+                        <h2 class="mt-2 font-fraunces text-2xl font-bold text-ink dark:text-white">{{ $qualityCheck->product?->name ?? 'Produit supprimé' }}</h2>
+                        <p class="mt-1 text-sm text-ink/55 dark:text-white/55">{{ $qualityCheck->product?->category ?? 'Catégorie non renseignée' }}</p>
+                        <div class="mt-5 flex min-h-[180px] items-center justify-center rounded-xl bg-cream p-4 dark:bg-[#16281E]">
+                            @if($qualityCheck->product && !empty($qualityCheck->product->image_url))
+                                <img src="{{ $qualityCheck->product->image_url }}" alt="{{ $qualityCheck->product->name }}" class="max-h-[320px] w-full rounded-xl object-contain">
+                            @else
+                                <span class="font-fraunces text-5xl font-semibold text-forest/25 dark:text-emerald-300/25">{{ strtoupper(substr($qualityCheck->product?->name ?? '?', 0, 1)) }}</span>
+                            @endif
+                        </div>
+                        <dl class="mt-5 space-y-3 text-sm"><div class="flex justify-between gap-4"><dt class="text-ink/50 dark:text-white/50">Créé par</dt><dd class="font-semibold text-ink dark:text-white">{{ $qualityCheck->creator?->name ?? 'Système' }}</dd></div><div class="flex justify-between gap-4"><dt class="text-ink/50 dark:text-white/50">Date</dt><dd class="font-semibold text-ink dark:text-white">{{ $qualityCheck->created_at?->format('d/m/Y H:i') }}</dd></div></dl>
+                    </div>
+                </div>
                 <div class="flex flex-wrap gap-3"><a href="{{ route('admin.quality-checks.index') }}" class="inline-flex items-center rounded-xl border border-ink/10 px-4 py-2.5 text-sm font-semibold text-ink/70 hover:bg-cream dark:border-white/10 dark:text-white/70 dark:hover:bg-white/5">Retour aux analyses</a><form action="{{ route('admin.quality-checks.destroy', $qualityCheck) }}" method="POST" onsubmit="return confirm('Supprimer cette analyse ?')">@csrf @method('DELETE')<button class="rounded-xl border border-rose-200 px-4 py-2.5 text-sm font-semibold text-rose-700 hover:bg-rose-50 dark:border-rose-300/20 dark:text-rose-300 dark:hover:bg-rose-400/10">Supprimer</button></form></div>
             </div>
             <div class="space-y-6">

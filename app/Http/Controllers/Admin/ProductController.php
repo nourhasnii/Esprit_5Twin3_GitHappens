@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreProductRequest;
+use App\Http\Requests\Admin\UpdateProductRequest;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -59,9 +62,22 @@ class ProductController extends Controller
         return view('admin.products.create', compact('producers', 'categories'));
     }
 
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
-        Product::create($this->validatedData($request));
+        $data = $request->validated();
+        $data['category'] = Category::whereKey($data['category_id'])->value('name');
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('products', 'public');
+
+            if (! $imagePath) {
+                return back()->withInput()->withErrors(['image' => 'Impossible d’enregistrer l’image.']);
+            }
+
+            $data['image'] = $imagePath;
+        }
+
+        Product::create($data);
 
         return redirect()->route('admin.products.index')
             ->with('success', 'Produit créé avec succès.');
@@ -78,17 +94,44 @@ class ProductController extends Controller
     {
         $producers = User::orderBy('name')->get(['id', 'name']);
         $categories = Category::query()
-            ->where('is_active', true)
-            ->when($product->category_id, fn ($query) => $query->orWhereKey($product->category_id))
+            ->where(function ($query) use ($product) {
+                $query->where('is_active', true);
+
+                if ($product->category_id) {
+                    $query->orWhere('id', $product->category_id);
+                }
+            })
             ->orderBy('name')
             ->get();
 
         return view('admin.products.edit', compact('product', 'producers', 'categories'));
     }
 
-    public function update(Request $request, Product $product)
+    public function update(UpdateProductRequest $request, Product $product)
     {
-        $product->update($this->validatedData($request, $product));
+        $data = $request->validated();
+        $data['category'] = Category::whereKey($data['category_id'])->value('name');
+
+        $oldImage = $product->image;
+        $newImageUploaded = $request->hasFile('image');
+
+        if ($newImageUploaded) {
+            $imagePath = $request->file('image')->store('products', 'public');
+
+            if (! $imagePath) {
+                return back()->withInput()->withErrors(['image' => 'Impossible d’enregistrer l’image.']);
+            }
+
+            $data['image'] = $imagePath;
+        } else {
+            unset($data['image']);
+        }
+
+        $product->update($data);
+
+        if ($newImageUploaded && $oldImage && $oldImage !== $data['image'] && ! Str::startsWith($oldImage, ['http://', 'https://'])) {
+            Storage::disk('public')->delete($oldImage);
+        }
 
         return redirect()->route('admin.products.index')
             ->with('success', 'Produit mis à jour avec succès.');
@@ -102,41 +145,4 @@ class ProductController extends Controller
             ->with('success', 'Produit supprimé avec succès.');
     }
 
-    private function validatedData(Request $request, ?Product $product = null): array
-    {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
-            'category_id' => [
-                'nullable',
-                Rule::exists('categories', 'id')->where(function ($query) use ($product) {
-                    $query->where('is_active', true);
-
-                    if ($product?->category_id) {
-                        $query->orWhere('id', $product->category_id);
-                    }
-                }),
-            ],
-            'category' => ['nullable', 'string', 'max:100'],
-            'origin_country' => ['required', 'string', 'max:100'],
-            'origin_region' => ['nullable', 'string', 'max:150'],
-            'producer_id' => ['required', 'exists:users,id'],
-            'unit' => ['required', 'string', 'max:50'],
-            'image' => ['nullable', 'string', 'max:2048'],
-            'barcode' => ['nullable', 'string', 'max:255', 'unique:products,barcode,' . ($product?->id ?? 'NULL')],
-            'is_organic' => ['nullable', 'boolean'],
-            'carbon_footprint' => ['nullable', 'numeric', 'min:0'],
-            'verification_status' => ['required', 'in:pending,verified,rejected'],
-        ]);
-
-        $validated['is_organic'] = $request->boolean('is_organic');
-
-        if (! empty($validated['category_id'])) {
-            $validated['category'] = Category::whereKey($validated['category_id'])->value('name');
-        } else {
-            $validated['category'] = $validated['category'] ?? $product?->category ?? 'Autres';
-        }
-
-        return $validated;
-    }
 }

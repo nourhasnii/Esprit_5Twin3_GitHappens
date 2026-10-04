@@ -3,13 +3,13 @@
 <div class="space-y-6">
     <div>
         <label for="name" class="block text-sm font-semibold text-ink dark:text-white/85">Nom de la catégorie</label>
-        <input id="name" name="name" type="text" value="{{ old('name', $category->name ?? '') }}" required maxlength="255" class="mt-2 block w-full rounded-xl border-ink/10 bg-cream px-4 py-3 text-sm focus:border-amber-warm focus:ring-amber-warm/20 dark:border-white/10 dark:bg-[#16281E] dark:text-white">
-        @error('name')<p class="mt-1 text-xs text-rose-600 dark:text-rose-300">{{ $message }}</p>@enderror
+        <input id="name" name="name" type="text" value="{{ old('name', $category->name ?? '') }}" required minlength="3" maxlength="80" class="mt-2 block w-full rounded-xl {{ $errors->has('name') ? 'border-rose-400' : 'border-ink/10 dark:border-white/10' }} bg-cream px-4 py-3 text-sm focus:border-amber-warm focus:ring-amber-warm/20 dark:bg-[#16281E] dark:text-white">
+        @error('name')<p class="mt-1 text-sm text-rose-600 dark:text-rose-300">{{ $message }}</p>@enderror
     </div>
     <div>
         <label for="description" class="block text-sm font-semibold text-ink dark:text-white/85">Description <span class="font-normal text-ink/45 dark:text-white/45">(facultatif)</span></label>
-        <textarea id="description" name="description" rows="4" class="mt-2 block w-full rounded-xl border-ink/10 bg-cream px-4 py-3 text-sm focus:border-amber-warm focus:ring-amber-warm/20 dark:border-white/10 dark:bg-[#16281E] dark:text-white">{{ old('description', $category->description ?? '') }}</textarea>
-        @error('description')<p class="mt-1 text-xs text-rose-600 dark:text-rose-300">{{ $message }}</p>@enderror
+        <textarea id="description" name="description" rows="4" minlength="10" maxlength="500" class="mt-2 block w-full rounded-xl {{ $errors->has('description') ? 'border-rose-400' : 'border-ink/10 dark:border-white/10' }} bg-cream px-4 py-3 text-sm focus:border-amber-warm focus:ring-amber-warm/20 dark:bg-[#16281E] dark:text-white">{{ old('description', $category->description ?? '') }}</textarea>
+        @error('description')<p class="mt-1 text-sm text-rose-600 dark:text-rose-300">{{ $message }}</p>@enderror
     </div>
     <input type="hidden" name="is_active" value="0">
     <label for="is_active" class="flex items-center gap-3 rounded-xl border border-ink/8 bg-cream/60 p-4 dark:border-white/10 dark:bg-[#16281E]">
@@ -23,3 +23,10 @@
     <a href="{{ route('admin.categories.index') }}" class="rounded-xl px-5 py-3 text-center text-sm font-semibold text-ink/60 hover:bg-ink/5 dark:text-white/60 dark:hover:bg-white/5">Annuler</a>
     <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-xl bg-forest px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-forest-dark">{{ $submitLabel }}</button>
 </div>
+
+<script>
+    (() => {
+        const form = document.currentScript.closest('form');
+        form.noValidate = true;
+    })();
+</script>

@@ -3,12 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreCategoryRequest;
+use App\Http\Requests\Admin\UpdateCategoryRequest;
 use App\Models\Category;
 use App\Models\Product;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
 
 class CategoryController extends Controller
 {
@@ -28,11 +26,11 @@ class CategoryController extends Controller
         return view('admin.categories.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreCategoryRequest $request)
     {
         $this->authorize('manage_products', Product::class);
 
-        Category::create($this->validatedData($request));
+        Category::create($request->validated());
 
         return redirect()->route('admin.categories.index')->with('success', 'Catégorie créée avec succès.');
     }
@@ -44,11 +42,11 @@ class CategoryController extends Controller
         return view('admin.categories.edit', compact('category'));
     }
 
-    public function update(Request $request, Category $category)
+    public function update(UpdateCategoryRequest $request, Category $category)
     {
         $this->authorize('manage_products', Product::class);
 
-        $category->update($this->validatedData($request, $category));
+        $category->update($request->validated());
 
         return redirect()->route('admin.categories.index')->with('success', 'Catégorie mise à jour avec succès.');
     }
@@ -60,22 +58,5 @@ class CategoryController extends Controller
         $category->delete();
 
         return redirect()->route('admin.categories.index')->with('success', 'Catégorie supprimée. Les produits associés conservent leur catégorie historique.');
-    }
-
-    private function validatedData(Request $request, ?Category $category = null): array
-    {
-        $input = $request->all();
-        $input['slug'] = Str::slug((string) ($input['name'] ?? ''));
-
-        $validated = Validator::make($input, [
-            'name' => ['required', 'string', 'max:255', Rule::unique('categories', 'name')->ignore($category?->id)],
-            'slug' => ['required', 'string', 'max:255', Rule::unique('categories', 'slug')->ignore($category?->id)],
-            'description' => ['nullable', 'string'],
-            'is_active' => ['nullable', 'boolean'],
-        ])->validate();
-
-        $validated['is_active'] = $request->boolean('is_active');
-
-        return $validated;
     }
 }

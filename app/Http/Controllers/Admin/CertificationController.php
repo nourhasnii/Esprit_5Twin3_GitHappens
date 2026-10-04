@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreCertificationRequest;
+use App\Http\Requests\Admin\UpdateCertificationRequest;
 use App\Jobs\AnalyzeCertificationIntelligenceJob;
 use App\Models\Certification;
 use App\Models\CertificationAIAnalysis;
@@ -12,7 +14,6 @@ use App\Services\CertificationIntelligenceService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule;
 use Throwable;
 
 class CertificationController extends Controller
@@ -110,9 +111,9 @@ class CertificationController extends Controller
         return view('admin.certifications.create', compact('products'));
     }
 
-    public function store(Request $request)
+    public function store(StoreCertificationRequest $request)
     {
-        $validated = $this->validatedData($request);
+        $validated = $request->validated();
         $documentPath = $request->hasFile('document')
             ? $request->file('document')->store('certifications', 'public')
             : null;
@@ -130,7 +131,7 @@ class CertificationController extends Controller
             throw $exception;
         }
 
-        return redirect()->route('admin.certifications.index')->with('success', 'Certification added successfully.');
+        return redirect()->route('admin.certifications.index')->with('success', 'Certification créée avec succès.');
     }
 
     public function show(Certification $certification)
@@ -147,9 +148,9 @@ class CertificationController extends Controller
         return view('admin.certifications.edit', compact('certification', 'products'));
     }
 
-    public function update(Request $request, Certification $certification)
+    public function update(UpdateCertificationRequest $request, Certification $certification)
     {
-        $validated = $this->validatedData($request, $certification);
+        $validated = $request->validated();
         $oldDocument = $certification->document_path;
         $newDocument = $request->hasFile('document')
             ? $request->file('document')->store('certifications', 'public')
@@ -172,7 +173,7 @@ class CertificationController extends Controller
             Storage::disk('public')->delete($oldDocument);
         }
 
-        return redirect()->route('admin.certifications.index')->with('success', 'Certification updated successfully.');
+        return redirect()->route('admin.certifications.index')->with('success', 'Certification mise à jour avec succès.');
     }
 
     public function destroy(Certification $certification)
@@ -187,21 +188,4 @@ class CertificationController extends Controller
         return redirect()->route('admin.certifications.index')->with('success', 'Certification deleted successfully.');
     }
 
-    /**
-     * @return array<string, mixed>
-     */
-    private function validatedData(Request $request, ?Certification $certification = null): array
-    {
-        return $request->validate([
-            'product_id' => ['required', 'exists:products,id'],
-            'name' => ['required', 'string', 'max:255'],
-            'certificate_number' => ['required', 'string', 'max:255', Rule::unique('certifications', 'certificate_number')->ignore($certification?->id)],
-            'issuing_organization' => ['required', 'string', 'max:255'],
-            'issued_at' => ['required', 'date'],
-            'expires_at' => ['required', 'date', 'after_or_equal:issued_at'],
-            'document' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
-            'status' => ['required', Rule::in(Certification::STATUSES)],
-            'notes' => ['nullable', 'string'],
-        ]);
-    }
 }

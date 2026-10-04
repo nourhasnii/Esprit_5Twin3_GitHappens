@@ -4,6 +4,7 @@ use App\Models\Batch;
 use App\Models\Product;
 use App\Models\TraceabilityEvent;
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 
 it('manages traceability events and renders a chronological timeline', function () {
     $actor = User::factory()->create();
@@ -107,4 +108,92 @@ it('validates event coordinates, type and quantities', function () {
         ])
         ->assertRedirect(route('admin.events.create'))
         ->assertSessionHasErrors(['event_type', 'latitude', 'longitude', 'quantity']);
+});
+
+it('returns French validation errors for invalid event create and update submissions', function () {
+    Storage::fake('public');
+
+    $user = User::factory()->create();
+    $product = Product::create([
+        'name' => 'Oranges',
+        'category' => 'Fruits',
+        'origin_country' => 'Tunisie',
+        'producer_id' => $user->id,
+        'unit' => 'kg',
+        'verification_status' => 'verified',
+    ]);
+    $batch = Batch::create([
+        'product_id' => $product->id,
+        'lot_number' => 'ORA-TEST-001',
+        'production_date' => '2026-09-10',
+        'expiration_date' => '2026-10-10',
+        'quantity' => 100,
+        'unit' => 'kg',
+        'status' => 'active',
+    ]);
+    $event = TraceabilityEvent::create([
+        'batch_id' => $batch->id,
+        'event_type' => 'production',
+        'event_date' => '2026-09-10 08:00',
+        'location' => 'Nabeul, Tunisia',
+    ]);
+    $invalidData = [
+        'batch_id' => '',
+        'event_type' => '',
+        'event_date' => 'not-a-date',
+        'location' => 'AB',
+        'actor_id' => 999999,
+        'latitude' => 91,
+        'longitude' => -181,
+        'quantity' => -1,
+        'description' => 'Court',
+    ];
+
+    $this->actingAs($user)
+        ->from(route('admin.events.create'))
+        ->post(route('admin.events.store'), $invalidData)
+        ->assertRedirect(route('admin.events.create'))
+        ->assertSessionHasErrors([
+            'batch_id', 'event_type', 'event_date', 'location', 'actor_id', 'latitude', 'longitude', 'quantity', 'description',
+        ]);
+
+    expect(session('errors')->first('batch_id'))->toBe('Veuillez sélectionner un lot.')
+        ->and(session('errors')->first('event_type'))->toBe('Veuillez sélectionner un type d’événement.')
+        ->and(session('errors')->first('location'))->toBe('Le lieu doit contenir au moins 3 caractères.')
+        ->and(session('errors')->first('description'))->toBe('La description doit contenir au moins 10 caractères.');
+
+    $this->actingAs($user)
+        ->from(route('admin.events.create'))
+        ->post(route('admin.events.store'), [
+            'batch_id' => $batch->id,
+            'event_type' => 'production',
+            'event_date' => '2026-09-10 08:00',
+            'location' => 'Nabeul',
+            'quantity' => 16,
+        ])
+        ->assertRedirect(route('admin.events.create'))
+        ->assertSessionHasErrors(['quantity'])
+        ->assertSessionDoesntHaveErrors('location')
+        ->assertSessionHas('_old_input.location', 'Nabeul');
+
+    expect(session('errors')->first('quantity'))->toBe('La quantité ne peut pas dépasser 15.');
+
+    $this->actingAs($user)
+        ->from(route('admin.events.create'))
+        ->post(route('admin.events.store'), [
+            'batch_id' => $batch->id,
+            'event_type' => 'production',
+            'event_date' => now()->addDays(7)->format('Y-m-d\\TH:i'),
+            'location' => 'Nabeul',
+        ])
+        ->assertRedirect(route('admin.events.create'))
+        ->assertSessionHasErrors(['event_date']);
+
+    expect(session('errors')->first('event_date'))->toBe('La date de l’événement ne peut pas être dans le futur.');
+
+    $this->actingAs($user)
+        ->from(route('admin.events.edit', $event))
+        ->put(route('admin.events.update', $event), $invalidData)
+        ->assertRedirect(route('admin.events.edit', $event))
+        ->assertSessionHasErrors(['batch_id', 'event_type', 'event_date', 'location', 'description']);
 });

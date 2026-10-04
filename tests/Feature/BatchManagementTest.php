@@ -92,3 +92,66 @@ it('validates expiration after production and positive quantity', function () {
         ->assertRedirect(route('admin.batches.create'))
         ->assertSessionHasErrors(['expiration_date', 'quantity']);
 });
+
+it('returns French validation errors for invalid batch create and update submissions', function () {
+    Storage::fake('public');
+
+    $user = User::factory()->create();
+    $product = Product::create([
+        'name' => 'Carottes bio',
+        'category' => 'Légumes',
+        'origin_country' => 'Tunisie',
+        'producer_id' => $user->id,
+        'unit' => 'kg',
+        'verification_status' => 'verified',
+    ]);
+    $batch = Batch::create([
+        'product_id' => $product->id,
+        'lot_number' => 'CAR-TEST-001',
+        'production_date' => '2026-09-10',
+        'expiration_date' => '2026-10-10',
+        'quantity' => 100,
+        'unit' => 'kg',
+        'status' => 'active',
+    ]);
+    $duplicate = Batch::create([
+        'product_id' => $product->id,
+        'lot_number' => 'CAR-TEST-002',
+        'production_date' => '2026-09-10',
+        'expiration_date' => '2026-10-10',
+        'quantity' => 100,
+        'unit' => 'kg',
+        'status' => 'active',
+    ]);
+
+    $invalidData = [
+        'product_id' => '',
+        'lot_number' => $duplicate->lot_number,
+        'production_date' => now()->addDay()->toDateString(),
+        'expiration_date' => now()->addDay()->toDateString(),
+        'quantity' => 0,
+        'unit' => str_repeat('u', 21),
+        'carbon_footprint' => 100000,
+        'status' => 'unknown',
+    ];
+
+    $this->actingAs($user)
+        ->from(route('admin.batches.create'))
+        ->post(route('admin.batches.store'), $invalidData)
+        ->assertRedirect(route('admin.batches.create'))
+        ->assertSessionHasErrors([
+            'product_id', 'lot_number', 'production_date', 'expiration_date', 'quantity', 'unit', 'carbon_footprint', 'status',
+        ]);
+
+    expect(session('errors')->first('product_id'))->toBe('Veuillez sélectionner un produit.')
+        ->and(session('errors')->first('lot_number'))->toBe('Ce numéro de lot existe déjà.')
+        ->and(session('errors')->first('production_date'))->toBe('La date de production ne peut pas être dans le futur.')
+        ->and(session('errors')->first('expiration_date'))->toBe("La date d'expiration doit être postérieure à la date de production.")
+        ->and(session('errors')->first('quantity'))->toBe('La quantité doit être supérieure à 0.');
+
+    $this->actingAs($user)
+        ->from(route('admin.batches.edit', $batch))
+        ->put(route('admin.batches.update', $batch), array_merge($invalidData, ['product_id' => $product->id]))
+        ->assertRedirect(route('admin.batches.edit', $batch))
+        ->assertSessionHasErrors(['lot_number', 'expiration_date', 'quantity']);
+});

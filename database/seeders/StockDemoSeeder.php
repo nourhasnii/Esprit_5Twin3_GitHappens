@@ -28,12 +28,23 @@ class StockDemoSeeder extends Seeder
         'MAG-KAI' => ['rate' => 0, 'left' => 250],
     ];
 
+    /** Lots de démonstration créés par StockModuleDemoSeeder / DemoDataSeeder */
+    private const DEMO_LOTS = ['LOT-2026-001', 'LOT-2026-002'];
+
     public function run(StockService $stocks): void
     {
         $this->call(SiteSeeder::class);
 
-        $batches = Batch::query()->with('product')->get()
-            ->reject(fn (Batch $b) => BatchAttributes::isBlocked($b) || BatchAttributes::isExpired($b))
+        $valid = Batch::query()->with('product')->get()
+            ->reject(fn (Batch $b) => BatchAttributes::isBlocked($b) || BatchAttributes::isExpired($b));
+
+        // Priorité aux lots de démonstration (yaourt puis lait) : la base peut déjà contenir
+        // d'autres lots, par exemple ceux des autres modules de l'équipe
+        $demo = $valid
+            ->filter(fn (Batch $b) => in_array(BatchAttributes::code($b), self::DEMO_LOTS, true))
+            ->sortBy(fn (Batch $b) => array_search(BatchAttributes::code($b), self::DEMO_LOTS, true));
+
+        $batches = ($demo->isNotEmpty() ? $demo : $valid)
             ->unique('product_id')
             ->take(2)
             ->values();
