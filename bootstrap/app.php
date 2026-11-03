@@ -11,6 +11,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Derrière le proxy HTTPS de Render : URLs et cookies en https
+        $middleware->trustProxies(at: '*');
+
         // Langue de l'interface (fr, en, ar) mémorisée en session
         $middleware->web(append: [\App\Http\Middleware\SetLocale::class]);
 
