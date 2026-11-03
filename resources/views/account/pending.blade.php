@@ -52,7 +52,7 @@
 
         @if($isRejected && $user->rejection_reason)
             <div class="mx-auto mt-5 max-w-sm rounded-2xl bg-rose-500/10 px-4 py-3 text-left text-sm text-rose-700">
-                <p class="font-semibold">Motif</p>
+                <p class="font-semibold">{{ __('Motif') }}</p>
                 <p class="mt-1">{{ $user->rejection_reason }}</p>
             </div>
         @endif
@@ -61,7 +61,7 @@
             <div class="mt-6">
                 <a href="{{ route('account.verification.edit') }}"
                    class="inline-flex w-full items-center justify-center rounded-full bg-[#1F3D2E] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#16281E]">
-                    Compléter mon dossier
+                    {{ __('Compléter mon dossier') }}
                 </a>
             </div>
         @endif
@@ -69,9 +69,9 @@
         <div class="mt-8 border-t border-ink/8 pt-6">
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <x-secondary-button type="submit" class="w-full justify-center">Se déconnecter</x-secondary-button>
+                <x-secondary-button type="submit" class="w-full justify-center">{{ __('Se déconnecter') }}</x-secondary-button>
             </form>
-            <a href="{{ url('/') }}" class="mt-3 inline-block text-xs font-medium text-ink/50 underline-offset-4 hover:text-ink hover:underline">Retour au site</a>
+            <a href="{{ url('/') }}" class="mt-3 inline-block text-xs font-medium text-ink/50 underline-offset-4 hover:text-ink hover:underline">{{ __('Retour au site') }}</a>
         </div>
     </div>
 </x-guest-layout>

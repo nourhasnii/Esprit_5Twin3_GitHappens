@@ -8,7 +8,7 @@
         <span style="width: {{ min(100, round($rate * 100, 1)) }}%"></span>
     </div>
     <div class="capacity-legend">
-        <span><b>{{ \App\Support\Fmt::n($rate * 100) }} %</b> occupé</span>
-        <span><b>{{ \App\Support\Fmt::q($used) }}</b> sur {{ \App\Support\Fmt::q($capacity) }}</span>
+        <span><b>{{ \App\Support\Fmt::n($rate * 100) }} %</b> {{ __('occupé') }}</span>
+        <span><b>{{ \App\Support\Fmt::q($used) }}</b> {{ __('sur :capacity', ['capacity' => \App\Support\Fmt::q($capacity)]) }}</span>
     </div>
 </div>

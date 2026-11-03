@@ -101,7 +101,7 @@ class CertificationController extends Controller
         AnalyzeCertificationIntelligenceJob::dispatch($analysis, $deterministicData);
 
         return redirect()->route('admin.certifications.intelligence')
-            ->with('success', 'Analyse IA en attente. Les métriques déterministes restent disponibles.');
+            ->with('success', __('Analyse IA en attente. Les métriques déterministes restent disponibles.'));
     }
 
     public function create()
@@ -131,7 +131,7 @@ class CertificationController extends Controller
             throw $exception;
         }
 
-        return redirect()->route('admin.certifications.index')->with('success', 'Certification créée avec succès.');
+        return redirect()->route('admin.certifications.index')->with('success', __('Certification créée avec succès.'));
     }
 
     public function show(Certification $certification)
@@ -173,7 +173,7 @@ class CertificationController extends Controller
             Storage::disk('public')->delete($oldDocument);
         }
 
-        return redirect()->route('admin.certifications.index')->with('success', 'Certification mise à jour avec succès.');
+        return redirect()->route('admin.certifications.index')->with('success', __('Certification mise à jour avec succès.'));
     }
 
     public function destroy(Certification $certification)
@@ -185,7 +185,7 @@ class CertificationController extends Controller
             Storage::disk('public')->delete($documentPath);
         }
 
-        return redirect()->route('admin.certifications.index')->with('success', 'Certification deleted successfully.');
+        return redirect()->route('admin.certifications.index')->with('success', __('Certification deleted successfully.'));
     }
 
 }

@@ -82,6 +82,19 @@ return [
 
     'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
 
+    /*
+    | Langues proposées dans le sélecteur (code => nom affiché dans sa propre langue).
+    | Les textes de l'interface sont dans lang/fr.json, lang/en.json et lang/ar.json ;
+    | l'arabe s'affiche de droite à gauche (rtl_locales).
+    */
+    'available_locales' => [
+        'fr' => 'Français',
+        'en' => 'English',
+        'ar' => 'العربية',
+    ],
+
+    'rtl_locales' => ['ar'],
+
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
 
     /*

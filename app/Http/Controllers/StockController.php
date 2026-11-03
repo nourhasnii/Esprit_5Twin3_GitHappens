@@ -116,7 +116,7 @@ class StockController extends Controller
     {
         $line = $this->stocks->openLine($request->validated(), $request->user());
 
-        return redirect()->route('stocks.show', $line)->with('success', 'Ligne de stock créée.');
+        return redirect()->route('stocks.show', $line)->with('success', __('Ligne de stock créée.'));
     }
 
     public function show(Stock $stock): View
@@ -165,11 +165,11 @@ class StockController extends Controller
     public function destroy(Stock $stock): RedirectResponse
     {
         if ($stock->quantity > 0) {
-            return back()->with('error', 'Cette ligne contient encore du stock : enregistrez une sortie ou un ajustement à zéro avant de la supprimer.');
+            return back()->with('error', __('Cette ligne contient encore du stock : enregistrez une sortie ou un ajustement à zéro avant de la supprimer.'));
         }
 
         $stock->delete();
 
-        return redirect()->route('stocks.index')->with('success', 'Ligne de stock supprimée.');
+        return redirect()->route('stocks.index')->with('success', __('Ligne de stock supprimée.'));
     }
 }

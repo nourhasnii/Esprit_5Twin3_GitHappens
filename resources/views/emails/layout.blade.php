@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ in_array(app()->getLocale(), config('app.rtl_locales', []), true) ? 'rtl' : 'ltr' }}">
 <body style="margin:0;background:#f4f6f2;color:#1c1c1a;font-family:Arial,sans-serif;line-height:1.6;">
     <div style="max-width:640px;margin:32px auto;padding:0 16px;">
         <div style="background:#1f3d2e;color:#fff;padding:24px 28px;border-radius:16px 16px 0 0;">

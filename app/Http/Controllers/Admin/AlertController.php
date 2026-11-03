@@ -59,7 +59,7 @@ class AlertController extends Controller
 
         return redirect()
             ->route('admin.alerts.index')
-            ->with('success', 'Alert created successfully.');
+            ->with('success', __('Alert created successfully.'));
     }
 
     public function show(Alert $alert, ColdChainAlertService $alertService): View
@@ -101,7 +101,7 @@ class AlertController extends Controller
 
         return redirect()
             ->route('admin.alerts.index')
-            ->with('success', 'Alert updated successfully.');
+            ->with('success', __('Alert updated successfully.'));
     }
 
     public function destroy(Alert $alert): RedirectResponse
@@ -110,7 +110,7 @@ class AlertController extends Controller
 
         return redirect()
             ->route('admin.alerts.index')
-            ->with('success', 'Alert deleted successfully.');
+            ->with('success', __('Alert deleted successfully.'));
     }
 
     public function resolve(Request $request, Alert $alert): RedirectResponse
@@ -121,7 +121,7 @@ class AlertController extends Controller
             'resolved_by' => $request->user()->id,
         ]);
 
-        return back()->with('success', 'Alert resolved successfully.');
+        return back()->with('success', __('Alert resolved successfully.'));
     }
 
     public function ignore(Alert $alert): RedirectResponse
@@ -132,7 +132,7 @@ class AlertController extends Controller
             'resolved_by' => null,
         ]);
 
-        return back()->with('success', 'Alert ignored successfully.');
+        return back()->with('success', __('Alert ignored successfully.'));
     }
 
     public function acknowledge(Alert $alert): RedirectResponse
@@ -141,7 +141,7 @@ class AlertController extends Controller
             'status' => 'acknowledged',
         ]);
 
-        return back()->with('success', 'Alert acknowledged successfully.');
+        return back()->with('success', __('Alert acknowledged successfully.'));
     }
 
     private function syncBatchFromCondition(array $data): array

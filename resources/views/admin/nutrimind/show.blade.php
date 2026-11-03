@@ -71,15 +71,15 @@
     <x-slot name="header">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <p class="text-xs font-bold uppercase tracking-[0.18em] text-amber-warm">NutriMind · {{ $entityTypeLabel }}</p>
+                <p class="text-xs font-bold uppercase tracking-[0.18em] text-amber-warm">{{ __('NutriMind · :entitytypelabel', ['entitytypelabel' => $entityTypeLabel]) }}</p>
                 <h1 class="mt-1 font-fraunces text-3xl font-bold leading-tight text-ink dark:text-white">{{ $entityLabel }}</h1>
-                <p class="mt-2 text-sm text-ink/55 dark:text-white/55">Évaluation explicable, impact, simulation et recommandations correctives.</p>
+                <p class="mt-2 text-sm text-ink/55 dark:text-white/55">{{ __('Évaluation explicable, impact, simulation et recommandations correctives.') }}</p>
             </div>
             <div class="flex items-center gap-2">
                 <a href="{{ route('admin.nutrimind.index') }}"
                    class="inline-flex items-center gap-2 rounded-lg border border-ink/10 bg-white px-4 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-cream dark:border-white/10 dark:bg-[#1b2923] dark:text-white">
                     <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19 5 12l7-7"/></svg>
-                    Vue d’ensemble
+                    {{ __('Vue d’ensemble') }}
                 </a>
                 <form method="POST" action="{{ route('admin.nutrimind.assess', ['type' => $type, 'id' => $entity->getKey()]) }}"
                       x-data="{ submitting: false }" @submit="submitting = true">
@@ -87,8 +87,8 @@
                     <button type="submit" :disabled="submitting"
                             class="inline-flex items-center gap-2 rounded-lg bg-forest px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-forest-dark disabled:cursor-not-allowed disabled:opacity-60">
                         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
-                        <span x-show="!submitting">Enregistrer l’évaluation</span>
-                        <span x-show="submitting" x-cloak>Enregistrement…</span>
+                        <span x-show="!submitting">{{ __('Enregistrer l’évaluation') }}</span>
+                        <span x-show="submitting" x-cloak>{{ __('Enregistrement…') }}</span>
                     </button>
                 </form>
             </div>
@@ -103,59 +103,59 @@
         {{-- Risque + complétude + impact --}}
         <section class="grid grid-cols-1 gap-4 lg:grid-cols-4">
             <div class="flex flex-col items-center justify-center rounded-2xl border border-ink/5 bg-white p-5 shadow-lg shadow-ink/[0.03] dark:border-white/10 dark:bg-[#1b2923]">
-                <x-dashboard.risk-gauge :score="$evaluation['score']" :severity="$evaluation['severity']" caption="Score de risque" />
+                <x-dashboard.risk-gauge :score="$evaluation['score']" :severity="$evaluation['severity']" :caption="__('Score de risque')" />
                 @if($evaluation['critical_override'])
                     <p class="mt-3 rounded-lg bg-red-500/10 px-3 py-1.5 text-center text-[11px] font-semibold text-red-700 dark:text-red-300">
-                        Incident de sécurité confirmé — sévérité critique forcée.
+                        {{ __('Incident de sécurité confirmé — sévérité critique forcée.') }}
                     </p>
                 @endif
             </div>
 
             <div class="rounded-2xl border border-ink/5 bg-white p-5 shadow-lg shadow-ink/[0.03] dark:border-white/10 dark:bg-[#1b2923]">
-                <p class="text-[11px] font-bold uppercase tracking-wider text-ink/45 dark:text-white/45">Complétude des données</p>
+                <p class="text-[11px] font-bold uppercase tracking-wider text-ink/45 dark:text-white/45">{{ __('Complétude des données') }}</p>
                 <p class="mt-2 font-fraunces text-3xl font-bold text-ink dark:text-white">{{ number_format($evaluation['data_completeness'], 0) }}<span class="text-lg text-ink/40">%</span></p>
                 <div class="mt-3 h-2 overflow-hidden rounded-full bg-ink/5 dark:bg-white/10">
                     <div class="h-full bg-forest transition-all" style="width: {{ max(0, min(100, (float) $evaluation['data_completeness'])) }}%"></div>
                 </div>
-                <p class="mt-3 text-xs text-ink/55 dark:text-white/55">{{ count($evaluation['missing_findings']) }} information(s) manquante(s), hors score.</p>
+                <p class="mt-3 text-xs text-ink/55 dark:text-white/55">{{ __(':missing_findings information(s) manquante(s), hors score.', ['missing_findings' => count($evaluation['missing_findings'])]) }}</p>
             </div>
 
             <div class="rounded-2xl border border-ink/5 bg-white p-5 shadow-lg shadow-ink/[0.03] dark:border-white/10 dark:bg-[#1b2923]">
-                <p class="text-[11px] font-bold uppercase tracking-wider text-ink/45 dark:text-white/45">Constatations</p>
+                <p class="text-[11px] font-bold uppercase tracking-wider text-ink/45 dark:text-white/45">{{ __('Constatations') }}</p>
                 <div class="mt-3 grid grid-cols-3 gap-2 text-center">
                     <div>
                         <p class="font-fraunces text-2xl font-bold text-red-600 dark:text-red-300">{{ $evaluation['counts']['critical'] ?? 0 }}</p>
-                        <p class="text-[10px] font-bold uppercase tracking-wider text-ink/40 dark:text-white/40">Critiques</p>
+                        <p class="text-[10px] font-bold uppercase tracking-wider text-ink/40 dark:text-white/40">{{ __('Critiques') }}</p>
                     </div>
                     <div>
                         <p class="font-fraunces text-2xl font-bold text-amber-warm">{{ $evaluation['counts']['warning'] ?? 0 }}</p>
-                        <p class="text-[10px] font-bold uppercase tracking-wider text-ink/40 dark:text-white/40">Alerte</p>
+                        <p class="text-[10px] font-bold uppercase tracking-wider text-ink/40 dark:text-white/40">{{ __('Alerte') }}</p>
                     </div>
                     <div>
                         <p class="font-fraunces text-2xl font-bold text-emerald-600 dark:text-emerald-300">{{ $evaluation['counts']['info'] ?? 0 }}</p>
-                        <p class="text-[10px] font-bold uppercase tracking-wider text-ink/40 dark:text-white/40">Info</p>
+                        <p class="text-[10px] font-bold uppercase tracking-wider text-ink/40 dark:text-white/40">{{ __('Info') }}</p>
                     </div>
                 </div>
-                <p class="mt-3 text-xs text-ink/55 dark:text-white/55">Version du jeu de règles : {{ $evaluation['rule_set_version'] }}.</p>
+                <p class="mt-3 text-xs text-ink/55 dark:text-white/55">{{ __('Version du jeu de règles : :rule_set_version.', ['rule_set_version' => $evaluation['rule_set_version']]) }}</p>
             </div>
 
             <div class="rounded-2xl border border-ink/5 bg-white p-5 shadow-lg shadow-ink/[0.03] dark:border-white/10 dark:bg-[#1b2923]">
-                <p class="text-[11px] font-bold uppercase tracking-wider text-ink/45 dark:text-white/45">Impact (graphe)</p>
+                <p class="text-[11px] font-bold uppercase tracking-wider text-ink/45 dark:text-white/45">{{ __('Impact (graphe)') }}</p>
                 <div class="mt-3 space-y-2 text-sm">
                     <div class="flex items-center justify-between">
-                        <span class="text-ink/60 dark:text-white/60">Confirmé</span>
+                        <span class="text-ink/60 dark:text-white/60">{{ __('Confirmé') }}</span>
                         <span class="font-bold text-red-600 dark:text-red-300">{{ $impact['summary']['confirmed'] ?? 0 }}</span>
                     </div>
                     <div class="flex items-center justify-between">
-                        <span class="text-ink/60 dark:text-white/60">Potentiel</span>
+                        <span class="text-ink/60 dark:text-white/60">{{ __('Potentiel') }}</span>
                         <span class="font-bold text-amber-warm">{{ $impact['summary']['potential'] ?? 0 }}</span>
                     </div>
                     <div class="flex items-center justify-between">
-                        <span class="text-ink/60 dark:text-white/60">Incertain</span>
+                        <span class="text-ink/60 dark:text-white/60">{{ __('Incertain') }}</span>
                         <span class="font-bold text-ink/70 dark:text-white/70">{{ $impact['summary']['unknown'] ?? 0 }}</span>
                     </div>
                 </div>
-                <p class="mt-3 text-xs text-ink/55 dark:text-white/55">{{ count($impact['nodes']) }} entité(s) explorée(s), profondeur ≤ {{ $impact['bounds']['max_depth'] }}.</p>
+                <p class="mt-3 text-xs text-ink/55 dark:text-white/55">{{ __(':nodes entité(s) explorée(s), profondeur ≤ :max_depth.', ['nodes' => count($impact['nodes']), 'max_depth' => $impact['bounds']['max_depth']]) }}</p>
             </div>
         </section>
 
@@ -163,8 +163,8 @@
         <section class="grid grid-cols-1 gap-4 lg:grid-cols-3">
             <div class="rounded-2xl border border-ink/5 bg-white p-5 shadow-lg shadow-ink/[0.03] dark:border-white/10 dark:bg-[#1b2923] lg:col-span-2">
                 <div class="mb-4 flex items-center justify-between">
-                    <h3 class="font-fraunces text-lg font-bold text-ink dark:text-white">Facteurs contributifs</h3>
-                    <span class="text-[11px] font-bold uppercase tracking-wider text-ink/40 dark:text-white/40">chaque point est justifié</span>
+                    <h3 class="font-fraunces text-lg font-bold text-ink dark:text-white">{{ __('Facteurs contributifs') }}</h3>
+                    <span class="text-[11px] font-bold uppercase tracking-wider text-ink/40 dark:text-white/40">{{ __('chaque point est justifié') }}</span>
                 </div>
                 <ul class="space-y-3">
                     @forelse($riskFindings as $finding)
@@ -181,19 +181,19 @@
                                 <div class="h-1.5 flex-1 overflow-hidden rounded-full bg-ink/5 dark:bg-white/10">
                                     <div class="h-full bg-red-500/70" style="width: {{ round((float) $finding['contribution'] / $maxContribution * 100) }}%"></div>
                                 </div>
-                                <span class="text-[11px] text-ink/50 dark:text-white/50">Source : {{ $finding['source_label'] ?? '—' }}</span>
+                                <span class="text-[11px] text-ink/50 dark:text-white/50">{{ __('Source : :source_label', ['source_label' => $finding['source_label'] ?? '—']) }}</span>
                             </div>
                         </li>
                     @empty
                         <li class="rounded-xl border border-dashed border-emerald-500/20 bg-emerald-500/5 p-6 text-center text-sm italic text-emerald-700 dark:text-emerald-300">
-                            Aucun risque confirmé — le score est de 0.
+                            {{ __('Aucun risque confirmé — le score est de 0.') }}
                         </li>
                     @endforelse
                 </ul>
             </div>
 
             <div class="rounded-2xl border border-ink/5 bg-white p-5 shadow-lg shadow-ink/[0.03] dark:border-white/10 dark:bg-[#1b2923]">
-                <h3 class="mb-4 font-fraunces text-lg font-bold text-ink dark:text-white">Informations manquantes</h3>
+                <h3 class="mb-4 font-fraunces text-lg font-bold text-ink dark:text-white">{{ __('Informations manquantes') }}</h3>
                 <ul class="space-y-2.5">
                     @forelse($evaluation['missing_findings'] as $finding)
                         <li class="flex items-start gap-3 rounded-xl bg-ink/5 p-3 dark:bg-white/5">
@@ -207,7 +207,7 @@
                         </li>
                     @empty
                         <li class="rounded-xl border border-dashed border-ink/10 p-6 text-center text-sm italic text-ink/40 dark:border-white/10 dark:text-white/40">
-                            Toutes les données attendues sont présentes.
+                            {{ __('Toutes les données attendues sont présentes.') }}
                         </li>
                     @endforelse
                 </ul>
@@ -218,8 +218,8 @@
         <section class="rounded-2xl border border-ink/5 bg-white p-5 shadow-lg shadow-ink/[0.03] dark:border-white/10 dark:bg-[#1b2923]">
             <div class="mb-4 flex items-center justify-between">
                 <div>
-                    <h3 class="font-fraunces text-lg font-bold text-ink dark:text-white">Recommandations correctives</h3>
-                    <p class="text-xs text-ink/50 dark:text-white/50">Les actions réutilisent les workflows existants ; aucune action n’est déclenchée automatiquement.</p>
+                    <h3 class="font-fraunces text-lg font-bold text-ink dark:text-white">{{ __('Recommandations correctives') }}</h3>
+                    <p class="text-xs text-ink/50 dark:text-white/50">{{ __('Les actions réutilisent les workflows existants ; aucune action n’est déclenchée automatiquement.') }}</p>
                 </div>
             </div>
             <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
@@ -229,7 +229,7 @@
                             <span class="inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider {{ $severityBadge($recommendation['severity']) }}">{{ $severityLabel($recommendation['severity']) }}</span>
                             @if($recommendation['consequential'])
                                 <span class="inline-flex items-center gap-1 rounded-full bg-red-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-red-700 dark:text-red-300">
-                                    Action sensible
+                                    {{ __('Action sensible') }}
                                 </span>
                             @endif
                         </div>
@@ -237,7 +237,7 @@
                         @if($recommendation['guidance'])
                             <p class="mt-1 text-sm leading-relaxed text-ink/70 dark:text-white/70">{{ $recommendation['guidance'] }}</p>
                         @endif
-                        <p class="mt-2 text-xs text-ink/50 dark:text-white/50">Constatation : {{ $recommendation['reason'] }}</p>
+                        <p class="mt-2 text-xs text-ink/50 dark:text-white/50">{{ __('Constatation : :reason', ['reason' => $recommendation['reason']]) }}</p>
 
                         <div class="mt-3 flex flex-wrap items-center gap-2 pt-3 border-t border-ink/5 dark:border-white/10">
                             @if($recommendation['action'])
@@ -248,7 +248,7 @@
                                     <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                                 </a>
                             @else
-                                <span class="text-[11px] italic text-ink/45 dark:text-white/45">Aucun workflow dédié — suivez la recommandation ci-dessus.</span>
+                                <span class="text-[11px] italic text-ink/45 dark:text-white/45">{{ __('Aucun workflow dédié — suivez la recommandation ci-dessus.') }}</span>
                             @endif
 
                             <form method="POST" action="{{ route('admin.nutrimind.actions.store', ['type' => $type, 'id' => $entity->getKey()]) }}" class="inline">
@@ -257,14 +257,14 @@
                                 <input type="hidden" name="label" value="{{ $recommendation['title'] }}">
                                 <button type="submit" class="inline-flex items-center gap-1.5 rounded-lg border border-ink/10 px-3 py-1.5 text-xs font-semibold text-ink/70 transition-colors hover:bg-white dark:border-white/10 dark:text-white/70">
                                     <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
-                                    Journaliser
+                                    {{ __('Journaliser') }}
                                 </button>
                             </form>
                         </div>
                     </div>
                 @empty
                     <div class="md:col-span-2 rounded-xl border border-dashed border-emerald-500/20 bg-emerald-500/5 p-6 text-center text-sm italic text-emerald-700 dark:text-emerald-300">
-                        Aucune recommandation : aucune constatation de risque ni donnée manquante.
+                        {{ __('Aucune recommandation : aucune constatation de risque ni donnée manquante.') }}
                     </div>
                 @endforelse
             </div>
@@ -274,18 +274,18 @@
         <section class="rounded-2xl border border-ink/5 bg-white p-5 shadow-lg shadow-ink/[0.03] dark:border-white/10 dark:bg-[#1b2923]">
             <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
                 <div>
-                    <h3 class="font-fraunces text-lg font-bold text-ink dark:text-white">Graphe d’impact</h3>
-                    <p class="text-xs text-ink/50 dark:text-white/50">Dépendances directes et indirectes issues des relations réelles. Un nœud n’est visité qu’une fois.</p>
+                    <h3 class="font-fraunces text-lg font-bold text-ink dark:text-white">{{ __('Graphe d’impact') }}</h3>
+                    <p class="text-xs text-ink/50 dark:text-white/50">{{ __('Dépendances directes et indirectes issues des relations réelles. Un nœud n’est visité qu’une fois.') }}</p>
                 </div>
                 <div class="flex flex-wrap items-center gap-3 text-[11px] font-semibold">
-                    <span class="inline-flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-full" style="background:#b23a3a"></span>Confirmé</span>
-                    <span class="inline-flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-full" style="background:#c17817"></span>Potentiel</span>
-                    <span class="inline-flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-full" style="background:#9aa5a0"></span>Incertain</span>
+                    <span class="inline-flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-full" style="background:#b23a3a"></span>{{ __('Confirmé') }}</span>
+                    <span class="inline-flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-full" style="background:#c17817"></span>{{ __('Potentiel') }}</span>
+                    <span class="inline-flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-full" style="background:#9aa5a0"></span>{{ __('Incertain') }}</span>
                 </div>
             </div>
 
             <div class="overflow-x-auto rounded-xl bg-cream/40 p-2 dark:bg-white/5">
-                <svg viewBox="0 0 {{ $graphWidth }} {{ $graphHeight }}" width="{{ max(640, $graphWidth) }}" height="{{ $graphHeight }}" role="img" aria-label="Graphe d’impact des entités affectées" class="max-w-none">
+                <svg viewBox="0 0 {{ $graphWidth }} {{ $graphHeight }}" width="{{ max(640, $graphWidth) }}" height="{{ $graphHeight }}" role="img" aria-label="{{ __('Graphe d’impact des entités affectées') }}" class="max-w-none">
                     @foreach($impact['edges'] as $edge)
                         @php($from = $positions[$edge['from']] ?? null)
                         @php($to = $positions[$edge['to']] ?? null)
@@ -324,12 +324,12 @@
 
             @if($impact['bounds']['truncated'])
                 <p class="mt-3 rounded-lg bg-amber-warm/10 px-3 py-2 text-xs font-medium text-amber-warm">
-                    Exploration tronquée : le nombre de nœuds a atteint la limite ({{ $impact['bounds']['max_nodes'] }}).
+                    {{ __('Exploration tronquée : le nombre de nœuds a atteint la limite (:max_nodes).', ['max_nodes' => $impact['bounds']['max_nodes']]) }}
                 </p>
             @endif
 
             <details class="mt-4">
-                <summary class="cursor-pointer text-sm font-semibold text-ink/70 dark:text-white/70">Détail des chemins de dépendance</summary>
+                <summary class="cursor-pointer text-sm font-semibold text-ink/70 dark:text-white/70">{{ __('Détail des chemins de dépendance') }}</summary>
                 <ul class="mt-3 space-y-2">
                     @foreach($impact['nodes'] as $node)
                         @continue(empty($node['path']))
@@ -347,8 +347,8 @@
         {{-- Simulation what-if --}}
         <section class="rounded-2xl border border-ink/5 bg-white p-5 shadow-lg shadow-ink/[0.03] dark:border-white/10 dark:bg-[#1b2923]">
             <div class="mb-4">
-                <h3 class="font-fraunces text-lg font-bold text-ink dark:text-white">Simulation « what-if »</h3>
-                <p class="text-xs text-ink/50 dark:text-white/50">Compare l’état réel à un scénario hypothétique. Aucune donnée réelle n’est modifiée.</p>
+                <h3 class="font-fraunces text-lg font-bold text-ink dark:text-white">{{ __('Simulation « what-if »') }}</h3>
+                <p class="text-xs text-ink/50 dark:text-white/50">{{ __('Compare l’état réel à un scénario hypothétique. Aucune donnée réelle n’est modifiée.') }}</p>
             </div>
 
             <form method="GET" action="{{ route('admin.nutrimind.show', ['type' => $type, 'id' => $entity->getKey()]) }}" class="mb-5">
@@ -367,10 +367,10 @@
                 <div class="mt-4 flex items-center gap-2">
                     <button type="submit" class="inline-flex items-center gap-2 rounded-lg bg-forest px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-forest-dark">
                         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 3v4M3 5h4M6 17v4M4 19h4M13 3l2.5 6.5L22 12l-6.5 2.5L13 21l-2.5-6.5L4 12l6.5-2.5L13 3Z"/></svg>
-                        Lancer la simulation
+                        {{ __('Lancer la simulation') }}
                     </button>
                     @if($simulation)
-                        <a href="{{ route('admin.nutrimind.show', ['type' => $type, 'id' => $entity->getKey()]) }}" class="text-sm font-semibold text-ink/60 hover:text-ink dark:text-white/60">Réinitialiser</a>
+                        <a href="{{ route('admin.nutrimind.show', ['type' => $type, 'id' => $entity->getKey()]) }}" class="text-sm font-semibold text-ink/60 hover:text-ink dark:text-white/60">{{ __('Réinitialiser') }}</a>
                     @endif
                 </div>
             </form>
@@ -378,16 +378,16 @@
             @if($simulation)
                 <div class="rounded-xl border border-amber-warm/25 bg-amber-warm/5 p-4">
                     <p class="mb-4 text-[11px] font-bold uppercase tracking-wider text-amber-warm">
-                        Résultat hypothétique — scénario(s) : {{ collect($simulation['scenarios'])->pluck('label')->implode(', ') }}
+                        {{ __('Résultat hypothétique — scénario(s) : :label', ['label' => collect($simulation['scenarios'])->pluck('label')->implode(', ')]) }}
                     </p>
                     <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
                         <div class="rounded-xl border border-ink/5 bg-white p-4 text-center dark:border-white/10 dark:bg-[#1b2923]">
-                            <p class="text-[11px] font-bold uppercase tracking-wider text-ink/45 dark:text-white/45">Réel</p>
+                            <p class="text-[11px] font-bold uppercase tracking-wider text-ink/45 dark:text-white/45">{{ __('Réel') }}</p>
                             <p class="mt-1 font-fraunces text-3xl font-bold text-ink dark:text-white">{{ number_format($simulation['baseline']['score'], 0) }}</p>
                             <span class="mt-1 inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider {{ $severityBadge($simulation['baseline']['severity']) }}">{{ $severityLabel($simulation['baseline']['severity']) }}</span>
                         </div>
                         <div class="flex flex-col items-center justify-center rounded-xl border border-ink/5 bg-white p-4 text-center dark:border-white/10 dark:bg-[#1b2923]">
-                            <p class="text-[11px] font-bold uppercase tracking-wider text-ink/45 dark:text-white/45">Écart</p>
+                            <p class="text-[11px] font-bold uppercase tracking-wider text-ink/45 dark:text-white/45">{{ __('Écart') }}</p>
                             <p class="mt-1 font-fraunces text-3xl font-bold {{ $simulation['delta']['score'] > 0 ? 'text-red-600 dark:text-red-300' : 'text-emerald-600 dark:text-emerald-300' }}">
                                 {{ $simulation['delta']['score'] > 0 ? '+' : '' }}{{ number_format($simulation['delta']['score'], 0) }}
                             </p>
@@ -396,7 +396,7 @@
                             @endif
                         </div>
                         <div class="rounded-xl border border-ink/5 bg-white p-4 text-center dark:border-white/10 dark:bg-[#1b2923]">
-                            <p class="text-[11px] font-bold uppercase tracking-wider text-ink/45 dark:text-white/45">Simulé</p>
+                            <p class="text-[11px] font-bold uppercase tracking-wider text-ink/45 dark:text-white/45">{{ __('Simulé') }}</p>
                             <p class="mt-1 font-fraunces text-3xl font-bold text-ink dark:text-white">{{ number_format($simulation['simulated']['score'], 0) }}</p>
                             <span class="mt-1 inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider {{ $severityBadge($simulation['simulated']['severity']) }}">{{ $severityLabel($simulation['simulated']['severity']) }}</span>
                         </div>
@@ -404,32 +404,32 @@
 
                     <div class="mt-4 grid grid-cols-1 gap-3 md:grid-cols-3">
                         <div class="rounded-lg border border-red-500/15 bg-white p-3 dark:border-white/10 dark:bg-[#1b2923]">
-                            <p class="text-[11px] font-bold uppercase tracking-wider text-red-600 dark:text-red-300">Nouvelles constatations</p>
+                            <p class="text-[11px] font-bold uppercase tracking-wider text-red-600 dark:text-red-300">{{ __('Nouvelles constatations') }}</p>
                             <ul class="mt-2 space-y-1 text-xs text-ink/75 dark:text-white/75">
                                 @forelse($simulation['findings']['new'] as $finding)
                                     <li>+ {{ $finding['label'] }} (+{{ rtrim(rtrim(number_format((float) $finding['contribution'], 2, '.', ''), '0'), '.') }})</li>
                                 @empty
-                                    <li class="italic text-ink/40 dark:text-white/40">Aucune</li>
+                                    <li class="italic text-ink/40 dark:text-white/40">{{ __('Aucune') }}</li>
                                 @endforelse
                             </ul>
                         </div>
                         <div class="rounded-lg border border-ink/5 bg-white p-3 dark:border-white/10 dark:bg-[#1b2923]">
-                            <p class="text-[11px] font-bold uppercase tracking-wider text-ink/50 dark:text-white/50">Constatations maintenues</p>
+                            <p class="text-[11px] font-bold uppercase tracking-wider text-ink/50 dark:text-white/50">{{ __('Constatations maintenues') }}</p>
                             <ul class="mt-2 space-y-1 text-xs text-ink/75 dark:text-white/75">
                                 @forelse($simulation['findings']['remaining'] as $finding)
                                     <li>= {{ $finding['label'] }}</li>
                                 @empty
-                                    <li class="italic text-ink/40 dark:text-white/40">Aucune</li>
+                                    <li class="italic text-ink/40 dark:text-white/40">{{ __('Aucune') }}</li>
                                 @endforelse
                             </ul>
                         </div>
                         <div class="rounded-lg border border-emerald-500/15 bg-white p-3 dark:border-white/10 dark:bg-[#1b2923]">
-                            <p class="text-[11px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-300">Levrées par l’hypothèse</p>
+                            <p class="text-[11px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-300">{{ __('Levrées par l’hypothèse') }}</p>
                             <ul class="mt-2 space-y-1 text-xs text-ink/75 dark:text-white/75">
                                 @forelse($simulation['findings']['resolved'] as $finding)
                                     <li>− {{ $finding['label'] }}</li>
                                 @empty
-                                    <li class="italic text-ink/40 dark:text-white/40">Aucune</li>
+                                    <li class="italic text-ink/40 dark:text-white/40">{{ __('Aucune') }}</li>
                                 @endforelse
                             </ul>
                         </div>
@@ -441,8 +441,8 @@
         {{-- Historique & comparaison --}}
         <section class="rounded-2xl border border-ink/5 bg-white p-5 shadow-lg shadow-ink/[0.03] dark:border-white/10 dark:bg-[#1b2923]">
             <div class="mb-4">
-                <h3 class="font-fraunces text-lg font-bold text-ink dark:text-white">Historique & comparaison</h3>
-                <p class="text-xs text-ink/50 dark:text-white/50">Les évaluations enregistrées ne sont jamais écrasées : la comparaison exige une preuve (constatation levée).</p>
+                <h3 class="font-fraunces text-lg font-bold text-ink dark:text-white">{{ __('Historique & comparaison') }}</h3>
+                <p class="text-xs text-ink/50 dark:text-white/50">{{ __('Les évaluations enregistrées ne sont jamais écrasées : la comparaison exige une preuve (constatation levée).') }}</p>
             </div>
 
             @if($comparison)
@@ -457,19 +457,19 @@
                     </div>
 
                     @if($comparison['conclusion'] === 'improvement_unconfirmed')
-                        <p class="mt-2 text-xs">Le score a baissé mais aucune constatation n’a été levée : vérifiez l’intégrité des données avant de conclure à une amélioration.</p>
+                        <p class="mt-2 text-xs">{{ __('Le score a baissé mais aucune constatation n’a été levée : vérifiez l’intégrité des données avant de conclure à une amélioration.') }}</p>
                     @endif
 
                     @if(!empty($comparison['evidence']))
                         <ul class="mt-3 space-y-1 text-xs">
                             @foreach($comparison['evidence'] as $proof)
-                                <li>✓ {{ $proof['label'] ?? $proof['rule'] }} — {{ $proof['source_label'] ?? 'source inconnue' }}</li>
+                                <li>✓ {{ $proof['label'] ?? $proof['rule'] }} — {{ $proof['source_label'] ?? __('source inconnue') }}</li>
                             @endforeach
                         </ul>
                     @endif
 
                     @if(!empty($comparison['new']))
-                        <p class="mt-3 text-xs font-semibold">{{ count($comparison['new']) }} nouvelle(s) constatation(s) apparue(s).</p>
+                        <p class="mt-3 text-xs font-semibold">{{ __(':new nouvelle(s) constatation(s) apparue(s).', ['new' => count($comparison['new'])]) }}</p>
                     @endif
                 </div>
             @endif
@@ -478,11 +478,11 @@
                 <table class="min-w-full text-sm">
                     <thead>
                         <tr class="text-left">
-                            <th class="px-3 py-2">Date</th>
-                            <th class="px-3 py-2">Score</th>
-                            <th class="px-3 py-2">Sévérité</th>
-                            <th class="px-3 py-2">Complétude</th>
-                            <th class="px-3 py-2">Recommandation</th>
+                            <th class="px-3 py-2">{{ __('Date') }}</th>
+                            <th class="px-3 py-2">{{ __('Score') }}</th>
+                            <th class="px-3 py-2">{{ __('Sévérité') }}</th>
+                            <th class="px-3 py-2">{{ __('Complétude') }}</th>
+                            <th class="px-3 py-2">{{ __('Recommandation') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -499,7 +499,7 @@
                         @empty
                             <tr>
                                 <td colspan="5" class="px-3 py-8 text-center text-sm italic text-ink/40 dark:text-white/40">
-                                    Aucune évaluation enregistrée. Utilisez « Enregistrer l’évaluation » pour créer une référence.
+                                    {{ __('Aucune évaluation enregistrée. Utilisez « Enregistrer l’évaluation » pour créer une référence.') }}
                                 </td>
                             </tr>
                         @endforelse

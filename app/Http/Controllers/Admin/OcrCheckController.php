@@ -55,7 +55,7 @@ class OcrCheckController extends Controller
 
         return redirect()
             ->route('admin.ocr-checks.show', $check)
-            ->with('success', 'Analyse lancée. Le résultat sera disponible après le traitement en arrière-plan.');
+            ->with('success', __('Analyse lancée. Le résultat sera disponible après le traitement en arrière-plan.'));
     }
 
     public function show(OcrCheck $ocrCheck)
@@ -78,6 +78,6 @@ class OcrCheckController extends Controller
 
         return redirect()
             ->route('admin.ocr-checks.index')
-            ->with('success', 'Analyse OCR supprimée.');
+            ->with('success', __('Analyse OCR supprimée.'));
     }
 }

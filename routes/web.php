@@ -28,6 +28,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [FrontHomeController::class, 'index'])->name('home');
 
+// Changement de langue de l'interface (fr, en, ar)
+Route::get('/locale/{locale}', \App\Http\Controllers\LocaleController::class)
+    ->whereIn('locale', ['fr', 'en', 'ar'])
+    ->name('locale.switch');
+
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware('auth')
     ->name('dashboard');

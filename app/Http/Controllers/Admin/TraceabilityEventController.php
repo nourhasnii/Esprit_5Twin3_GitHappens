@@ -77,7 +77,7 @@ class TraceabilityEventController extends Controller
     {
         $event->delete();
 
-        return redirect()->route('admin.events.index')->with('success', 'Traceability event deleted successfully.');
+        return redirect()->route('admin.events.index')->with('success', __('Traceability event deleted successfully.'));
     }
 
     public function timeline(Batch $batch)

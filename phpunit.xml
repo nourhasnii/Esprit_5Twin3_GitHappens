@@ -19,6 +19,9 @@
     </source>
     <php>
         <env name="APP_ENV" value="testing"/>
+        <!-- Langue neutre : __() renvoie le texte source, les tests restent indépendants des traductions -->
+        <env name="APP_LOCALE" value="src" force="true"/>
+        <env name="APP_FALLBACK_LOCALE" value="src" force="true"/>
         <env name="ADMIN_PASSWORD" value="testing-password-123" force="true"/>
         <env name="APP_MAINTENANCE_DRIVER" value="file"/>
         <env name="BCRYPT_ROUNDS" value="4"/>

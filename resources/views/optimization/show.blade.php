@@ -4,10 +4,10 @@
 @use('App\Enums\RecommendationStatus')
 
 @section('title', 'Recommandation n° '.$recommendation->id)
-@section('eyebrow', 'Optimization workspace')
+@section('eyebrow', __('Optimization workspace'))
 @section('description', 'Destination du lot '.BatchAttributes::code($recommendation->batch).', calculée le '.$recommendation->created_at->format('d/m/Y à H:i').'.')
 @section('page-action')
-    <a class="btn btn-ghost" href="{{ route('optimization.index') }}">Retour aux recommandations</a>
+    <a class="btn btn-ghost" href="{{ route('optimization.index') }}">{{ __('Retour aux recommandations') }}</a>
     <span class="tag tag-{{ $recommendation->status->value }}">{{ $recommendation->status->label() }}</span>
 @endsection
 
@@ -36,21 +36,21 @@
 <section class="panel verdict">
     <div class="dial" style="--p: {{ $r->score }}; --dial: {{ $tone }};" role="img" aria-label="Score {{ Fmt::n($r->score) }} sur 100">
         <div class="dial-ring"></div>
-        <div class="dial-value"><strong>{{ Fmt::n($r->score) }}</strong><span>sur 100</span></div>
+        <div class="dial-value"><strong>{{ Fmt::n($r->score) }}</strong><span>{{ __('sur 100') }}</span></div>
     </div>
     <div class="verdict-body">
         <p class="verdict-summary">{{ $explanation['summary'] ?? '' }}</p>
         <div class="route">
-            <div><span>Depuis</span><b>{{ $r->sourceSite?->name ?? '—' }}</b></div>
+            <div><span>{{ __('Depuis') }}</span><b>{{ $r->sourceSite?->name ?? '—' }}</b></div>
             <svg aria-hidden="true" viewBox="0 0 40 12" width="40" height="12"><path d="M0 6h36M31 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
-            <div><span>Vers</span><b>{{ $r->recommendedSite?->name ?? 'Aucun site faisable' }}</b></div>
+            <div><span>{{ __('Vers') }}</span><b>{{ $r->recommendedSite?->name ?? __('Aucun site faisable') }}</b></div>
         </div>
         <dl class="facts">
-            <div><dt>Produit</dt><dd>{{ $r->product?->name }}</dd></div>
-            <div><dt>Quantité</dt><dd>{{ Fmt::q($r->quantity) }} u.</dd></div>
-            <div><dt>{{ $realDlc ? 'DLC réelle 🌡️' : 'DLC' }}</dt><dd>{{ $expiry ? $expiry->format('d/m/Y') : 'Non renseignée' }}@if ($daysLabel) <span class="muted">({{ $daysLabel }})</span>@endif @if ($realDlc)<a class="muted small" href="{{ route('shelf-life.show', $r->batch_id) }}">imprimée <s>{{ $printedExpiry->format('d/m') }}</s></a>@endif</dd></div>
-            <div><dt>Trajet</dt><dd>{{ $r->distance_km !== null ? Fmt::n($r->distance_km).' km' : '—' }}</dd></div>
-            <div><dt>Émissions</dt><dd>{{ $r->co2_kg !== null ? Fmt::n($r->co2_kg, 1).' kg CO₂e' : '—' }}</dd></div>
+            <div><dt>{{ __('Produit') }}</dt><dd>{{ $r->product?->name }}</dd></div>
+            <div><dt>{{ __('Quantité') }}</dt><dd>{{ Fmt::q($r->quantity) }} u.</dd></div>
+            <div><dt>{{ $realDlc ? __('DLC réelle 🌡️') : __('DLC') }}</dt><dd>{{ $expiry ? $expiry->format('d/m/Y') : __('Non renseignée') }}@if ($daysLabel) <span class="muted">({{ $daysLabel }})</span>@endif @if ($realDlc)<a class="muted small" href="{{ route('shelf-life.show', $r->batch_id) }}">{{ __('imprimée') }} <s>{{ $printedExpiry->format('d/m') }}</s></a>@endif</dd></div>
+            <div><dt>{{ __('Trajet') }}</dt><dd>{{ $r->distance_km !== null ? Fmt::n($r->distance_km).' km' : '—' }}</dd></div>
+            <div><dt>{{ __('Émissions') }}</dt><dd>{{ $r->co2_kg !== null ? Fmt::n($r->co2_kg, 1).' kg CO₂e' : '—' }}</dd></div>
         </dl>
     </div>
 </section>
@@ -58,10 +58,10 @@
 @if ($lowScore)
     <div class="notice notice-warning" role="alert">
         @if ($lowScore['no_destination'])
-            <p class="notice-title">Aucune destination possible pour ce lot.</p>
+            <p class="notice-title">{{ __('Aucune destination possible pour ce lot.') }}</p>
         @else
-            <p class="notice-title">Destination peu satisfaisante : score inférieur à {{ Fmt::n($lowScore['threshold']) }}/100.</p>
-            <p style="margin:4px 0 0">Même le meilleur site reste un compromis. Point le plus faible : <b>{{ $lowScore['weakest'] }}</b>.</p>
+            <p class="notice-title">{{ __('Destination peu satisfaisante : score inférieur à :threshold/100.', ['threshold' => Fmt::n($lowScore['threshold'])]) }}</p>
+            <p style="margin:4px 0 0">{{ __('Même le meilleur site reste un compromis. Point le plus faible :') }} <b>{{ $lowScore['weakest'] }}</b>.</p>
         @endif
         @if ($lowScore['advice'])
             <p style="margin:6px 0 0">{{ $lowScore['advice'] }}</p>
@@ -69,23 +69,23 @@
         @if ($lowScore['absorbable'] !== null)
             <p style="margin:6px 0 0">
                 @if ($lowScore['absorbable'] <= 0)
-                    Si chaque magasin vend d’abord son stock actuel, <b>aucun ne peut écouler ce lot avant la DLC</b>.
+                    {{ __('Si chaque magasin vend d’abord son stock actuel,') }} <b>{{ __('aucun ne peut écouler ce lot avant la DLC') }}</b>.
                     @if ($rescue && ($rescue['applicable'] ?? false))
-                        Le plan ci-dessous applique la règle FEFO : ce lot, le plus proche de sa date limite, est mis en avant et vendu en priorité.
+                        {{ __('Le plan ci-dessous applique la règle FEFO : ce lot, le plus proche de sa date limite, est mis en avant et vendu en priorité.') }}
                     @endif
                 @else
-                    Si chaque magasin vend d’abord son stock actuel, l’ensemble des sites peut écouler environ <b>{{ Fmt::q($lowScore['absorbable']) }} u.</b> de ce lot avant la DLC, sur {{ Fmt::q($r->quantity) }} u.
+                    {{ __('Si chaque magasin vend d’abord son stock actuel, l’ensemble des sites peut écouler environ') }} <b>{{ Fmt::q($lowScore['absorbable']) }} u.</b> {{ __('de ce lot avant la DLC, sur :quantity u.', ['quantity' => Fmt::q($r->quantity)]) }}
                     @if ($lowScore['best_absorbable'] !== null)
-                        {{ $r->recommendedSite?->name }} peut en absorber environ {{ Fmt::q($lowScore['best_absorbable']) }} u.
+                        {{ __(':name peut en absorber environ :best_absorbable u.', ['name' => $r->recommendedSite?->name, 'best_absorbable' => Fmt::q($lowScore['best_absorbable'])]) }}
                     @endif
                 @endif
             </p>
         @endif
         @if ($rescue && ($rescue['applicable'] ?? false) && ! $rescue['applied'])
-            <a class="btn btn-primary" href="#plan-anti-gaspillage">Voir le plan anti-gaspillage ↓</a>
+            <a class="btn btn-primary" href="#plan-anti-gaspillage">{{ __('Voir le plan anti-gaspillage ↓') }}</a>
         @endif
         @if ($lowScore['retry_url'] && $r->status === RecommendationStatus::Pending)
-            <a class="btn btn-ghost" href="{{ $lowScore['retry_url'] }}">Relancer avec {{ Fmt::q($lowScore['best_absorbable']) }} u.</a>
+            <a class="btn btn-ghost" href="{{ $lowScore['retry_url'] }}">{{ __('Relancer avec :best_absorbable u.', ['best_absorbable' => Fmt::q($lowScore['best_absorbable'])]) }}</a>
         @endif
     </div>
 @endif
@@ -94,17 +94,17 @@
     <section class="panel rescue" id="plan-anti-gaspillage">
         <div class="panel-head">
             <div>
-                <h2><span aria-hidden="true">🌱</span> Plan anti-gaspillage</h2>
+                <h2><span aria-hidden="true">🌱</span> {{ __('Plan anti-gaspillage') }}</h2>
                 <p class="muted small">
                     @if ($rescue['applied'])
-                        Appliqué le {{ $r->rescue_applied_at->format('d/m/Y à H:i') }}@if ($r->rescuer) par {{ $r->rescuer->name }}@endif. Les transferts et les dons ci-dessous ont été enregistrés dans les mouvements.
+                        {{ __('Appliqué le :i', ['i' => $r->rescue_applied_at->format('d/m/Y à H:i')]) }}@if ($r->rescuer) {{ __('par :name', ['name' => $r->rescuer->name]) }}@endif{{ __('. Les transferts et les dons ci-dessous ont été enregistrés dans les mouvements.') }}
                     @else
-                        Aucun site ne peut écouler seul ce lot avant sa DLC. Le moteur combine trois leviers pour en sauver le maximum, du plus rentable au plus solidaire.
+                        {{ __('Aucun site ne peut écouler seul ce lot avant sa DLC. Le moteur combine trois leviers pour en sauver le maximum, du plus rentable au plus solidaire.') }}
                     @endif
                 </p>
             </div>
             @if ($rescue['applied'])
-                <span class="tag tag-rescued">Appliqué</span>
+                <span class="tag tag-rescued">{{ __('Appliqué') }}</span>
             @endif
         </div>
 
@@ -123,21 +123,21 @@
             <div class="rescue-summary">
                 <div class="rescue-compare">
                     <div class="rescue-case is-before">
-                        <span>Sans plan</span>
+                        <span>{{ __('Sans plan') }}</span>
                         <strong>{{ Fmt::q($impact['loss_without_plan']) }} u.</strong>
-                        <span>perdues à la DLC</span>
+                        <span>{{ __('perdues à la DLC') }}</span>
                     </div>
                     <span class="rescue-arrow" aria-hidden="true">→</span>
                     <div class="rescue-case is-after">
-                        <span>Avec le plan</span>
+                        <span>{{ __('Avec le plan') }}</span>
                         <strong>{{ Fmt::q($impact['loss_with_plan']) }} u.</strong>
-                        <span>perdues</span>
+                        <span>{{ __('perdues') }}</span>
                     </div>
                 </div>
                 <dl class="rescue-impact">
-                    <div><dt>Nourriture sauvée</dt><dd>{{ Fmt::n($impact['saved_kg'], 1) }} kg</dd></div>
-                    <div><dt>Repas offerts</dt><dd>{{ Fmt::q($impact['meals']) }}</dd></div>
-                    <div><dt>CO₂e évité, transport déduit</dt><dd>{{ Fmt::n($impact['co2_net_kg'], 1) }} kg</dd></div>
+                    <div><dt>{{ __('Nourriture sauvée') }}</dt><dd>{{ __(':saved_kg kg', ['saved_kg' => Fmt::n($impact['saved_kg'], 1)]) }}</dd></div>
+                    <div><dt>{{ __('Repas offerts') }}</dt><dd>{{ Fmt::q($impact['meals']) }}</dd></div>
+                    <div><dt>{{ __('CO₂e évité, transport déduit') }}</dt><dd>{{ __(':co2_net_kg kg', ['co2_net_kg' => Fmt::n($impact['co2_net_kg'], 1)]) }}</dd></div>
                 </dl>
             </div>
 
@@ -158,12 +158,12 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Destination</th>
-                                <th>Action</th>
-                                <th class="num">Quantité</th>
-                                <th>Promotion</th>
-                                <th class="num">Trajet</th>
-                                <th class="num">CO₂e transport</th>
+                                <th>{{ __('Destination') }}</th>
+                                <th>{{ __('Action') }}</th>
+                                <th class="num">{{ __('Quantité') }}</th>
+                                <th>{{ __('Promotion') }}</th>
+                                <th class="num">{{ __('Trajet') }}</th>
+                                <th class="num">{{ __('CO₂e transport') }}</th>
                                 @if ($rescue['applied'])<th></th>@endif
                             </tr>
                         </thead>
@@ -173,27 +173,27 @@
                                     <td><b>{{ $a['site_name'] }}</b>@if ($a['city'])<br><span class="muted small">{{ $a['city'] }}</span>@endif</td>
                                     <td>
                                         @switch($a['kind'])
-                                            @case('keep') <span class="tag tag-in">Vendre sur place</span> @break
-                                            @case('transfer') <span class="tag tag-transfer">Transfert</span> @break
-                                            @default <span class="tag tag-don">Don</span>
+                                            @case('keep') <span class="tag tag-in">{{ __('Vendre sur place') }}</span> @break
+                                            @case('transfer') <span class="tag tag-transfer">{{ __('Transfert') }}</span> @break
+                                            @default <span class="tag tag-don">{{ __('Don') }}</span>
                                         @endswitch
                                     </td>
                                     <td class="num"><b>{{ Fmt::q($a['quantity']) }} u.</b></td>
                                     <td>
                                         @if (($a['discount'] ?? 0) > 0)
-                                            −{{ $a['discount'] }} % <span class="muted small">(+{{ Fmt::q($a['promo_quantity']) }} u., {{ Fmt::n($a['daily'], 1) }} → {{ Fmt::n($a['boosted_daily'], 1) }} u./jour)</span>
+                                            −{{ $a['discount'] }} % <span class="muted small">{{ __('(+:promo_quantity u., :daily → :boosted_daily u./jour)', ['promo_quantity' => Fmt::q($a['promo_quantity']), 'daily' => Fmt::n($a['daily'], 1), 'boosted_daily' => Fmt::n($a['boosted_daily'], 1)]) }}</span>
                                         @elseif ($a['kind'] === 'donation')
-                                            <span class="muted small">≈ {{ Fmt::q($a['meals']) }} repas</span>
+                                            <span class="muted small">{{ __('≈ :meals repas', ['meals' => Fmt::q($a['meals'])]) }}</span>
                                         @else
                                             <span class="muted">—</span>
                                         @endif
                                     </td>
                                     <td class="num">{{ $a['kind'] === 'keep' ? '—' : Fmt::n($a['distance_km']).' km' }}</td>
-                                    <td class="num">{{ Fmt::n($a['co2_kg'], 1) }} kg</td>
+                                    <td class="num">{{ __(':co2_kg kg', ['co2_kg' => Fmt::n($a['co2_kg'], 1)]) }}</td>
                                     @if ($rescue['applied'])
                                         <td>
                                             @if ($a['kind'] === 'donation')
-                                                <a href="{{ route('optimization.donation', [$r, $a['site_id']]) }}" target="_blank">Bon de don</a>
+                                                <a href="{{ route('optimization.donation', [$r, $a['site_id']]) }}" target="_blank">{{ __('Bon de don') }}</a>
                                             @endif
                                         </td>
                                     @endif
@@ -203,12 +203,12 @@
                     </table>
                 </div>
 
-                <div id="rescue-map" class="map is-small" aria-label="Carte du plan anti-gaspillage"></div>
+                <div id="rescue-map" class="map is-small" aria-label="{{ __('Carte du plan anti-gaspillage') }}"></div>
                 <div class="map-legend">
-                    <span><i style="background:#12302b"></i>Origine</span>
-                    <span><i style="background:#0f6b58"></i>Transfert vers un magasin</span>
-                    <span><i style="background:#a8325e"></i>Don à une association</span>
-                    <span><i class="line dashed" style="border-color:#a8325e"></i>Trajet du don</span>
+                    <span><i style="background:#12302b"></i>{{ __('Origine') }}</span>
+                    <span><i style="background:#0f6b58"></i>{{ __('Transfert vers un magasin') }}</span>
+                    <span><i style="background:#a8325e"></i>{{ __('Don à une association') }}</span>
+                    <span><i class="line dashed" style="border-color:#a8325e"></i>{{ __('Trajet du don') }}</span>
                 </div>
             @endif
 
@@ -220,8 +220,8 @@
                 <form method="post" action="{{ route('optimization.rescue', $r) }}" class="rescue-apply"
                       onsubmit="return confirm('Appliquer le plan ? Les transferts et les dons seront enregistrés dans les mouvements de stock.');">
                     @csrf
-                    <button type="submit" class="btn btn-primary">Appliquer le plan anti-gaspillage</button>
-                    <p class="hint">Les transferts et les sorties « don » sont enregistrés immédiatement, depuis {{ $r->sourceSite?->name }}. La promotion est à mettre en place dans les magasins concernés.</p>
+                    <button type="submit" class="btn btn-primary">{{ __('Appliquer le plan anti-gaspillage') }}</button>
+                    <p class="hint">{{ __('Les transferts et les sorties « don » sont enregistrés immédiatement, depuis :name. La promotion est à mettre en place dans les magasins concernés.', ['name' => $r->sourceSite?->name]) }}</p>
                 </form>
             @endif
         @endif
@@ -230,14 +230,14 @@
 
 <div class="split">
     <section class="panel">
-        <h2>Pourquoi ce site</h2>
+        <h2>{{ __('Pourquoi ce site') }}</h2>
         <ul class="reasons">
             @foreach ($explanation['points'] ?? [] as $point)
                 <li>{{ $point }}</li>
             @endforeach
         </ul>
         @if (! empty($explanation['excluded']))
-            <h3 style="margin-top:18px">Sites écartés</h3>
+            <h3 style="margin-top:18px">{{ __('Sites écartés') }}</h3>
             <ul class="reasons excluded">
                 @foreach ($explanation['excluded'] as $name => $why)
                     <li><b>{{ $name }}</b> : {{ implode(' ; ', $why) }}.</li>
@@ -247,13 +247,13 @@
     </section>
 
     <section class="panel">
-        <h2>Pondération appliquée</h2>
-        <p class="muted small" style="margin:4px 0 14px">Part de chaque critère dans le score final.</p>
+        <h2>{{ __('Pondération appliquée') }}</h2>
+        <p class="muted small" style="margin:4px 0 14px">{{ __('Part de chaque critère dans le score final.') }}</p>
         <dl class="weights">
             @foreach ($criteria as $key => $label)
                 @php $w = ($r->weights[$key] ?? 0) * 100; @endphp
                 <div>
-                    <dt>{{ $label }}</dt>
+                    <dt>{{ __($label) }}</dt>
                     <dd><span class="bar"><span style="width: {{ round($w) }}%"></span></span>{{ Fmt::n($w) }} %</dd>
                 </div>
             @endforeach
@@ -265,21 +265,21 @@
     <section class="panel">
         <div class="panel-head">
             <div>
-                <h2>Carte du trajet</h2>
-                <p class="muted small">Chaque site évalué, coloré selon son score. Cliquez sur un point pour voir la distance, la durée et les émissions.</p>
+                <h2>{{ __('Carte du trajet') }}</h2>
+                <p class="muted small">{{ __('Chaque site évalué, coloré selon son score. Cliquez sur un point pour voir la distance, la durée et les émissions.') }}</p>
             </div>
         </div>
-        <div id="reco-map" class="map" aria-label="Carte du trajet recommandé"></div>
+        <div id="reco-map" class="map" aria-label="{{ __('Carte du trajet recommandé') }}"></div>
         <div class="map-legend">
-            <span><i style="background:#12302b"></i>Origine</span>
-            <span><i class="line" style="border-color:#0f6b58"></i>Trajet recommandé</span>
+            <span><i style="background:#12302b"></i>{{ __('Origine') }}</span>
+            <span><i class="line" style="border-color:#0f6b58"></i>{{ __('Trajet recommandé') }}</span>
             @if ($r->chosen_site_id && $r->chosen_site_id !== $r->recommended_site_id)
-                <span><i class="line dashed" style="border-color:#245d8a"></i>Destination retenue</span>
+                <span><i class="line dashed" style="border-color:#245d8a"></i>{{ __('Destination retenue') }}</span>
             @endif
-            <span><i style="background:#0f6b58"></i>Score ≥ 70</span>
+            <span><i style="background:#0f6b58"></i>{{ __('Score ≥ 70') }}</span>
             <span><i style="background:#c48a1a"></i>40 à 70</span>
-            <span><i style="background:#a3261d"></i>Moins de 40</span>
-            <span><i style="background:#8a9a95"></i>Exclu</span>
+            <span><i style="background:#a3261d"></i>{{ __('Moins de 40') }}</span>
+            <span><i style="background:#8a9a95"></i>{{ __('Exclu') }}</span>
         </div>
     </section>
 @endif
@@ -287,19 +287,19 @@
 <section class="panel">
     <div class="panel-head">
         <div>
-            <h2>Classement des sites</h2>
-            <p class="muted small">Notes de 0 à 100 par critère. Ouvrez un site pour voir le détail du calcul.</p>
+            <h2>{{ __('Classement des sites') }}</h2>
+            <p class="muted small">{{ __('Notes de 0 à 100 par critère. Ouvrez un site pour voir le détail du calcul.') }}</p>
         </div>
     </div>
     <div class="table-wrap">
         <table class="ranking">
             <thead>
             <tr>
-                <th class="num">Rang</th>
-                <th>Site</th>
-                <th class="num">Score</th>
+                <th class="num">{{ __('Rang') }}</th>
+                <th>{{ __('Site') }}</th>
+                <th class="num">{{ __('Score') }}</th>
                 @foreach ($criteria as $label)
-                    <th>{{ $label }}</th>
+                    <th>{{ __($label) }}</th>
                 @endforeach
             </tr>
             </thead>
@@ -310,11 +310,11 @@
                     <td class="num">{{ $c['feasible'] ? $rank : '—' }}</td>
                     <td class="site-cell">
                         <details>
-                            <summary><b>{{ $c['site_name'] }}</b>@if ($c['site_id'] === $r->chosen_site_id && $r->chosen_site_id !== $r->recommended_site_id) <span class="tag tag-modified">Retenu</span>@endif</summary>
+                            <summary><b>{{ $c['site_name'] }}</b>@if ($c['site_id'] === $r->chosen_site_id && $r->chosen_site_id !== $r->recommended_site_id) <span class="tag tag-modified">{{ __('Retenu') }}</span>@endif</summary>
                             <ul class="detail-list">
                                 @foreach ($criteria as $key => $label)
                                     @isset($c['reasons'][$key])
-                                        <li><b>{{ $label }}</b> : {{ $c['reasons'][$key] }}.</li>
+                                        <li><b>{{ __($label) }}</b> : {{ $c['reasons'][$key] }}.</li>
                                     @endisset
                                 @endforeach
                             </ul>
@@ -322,7 +322,7 @@
                         @if (! $c['feasible'])
                             <div class="small" style="color:var(--brick)">{{ implode(' ; ', $c['blocking']) }}</div>
                         @elseif (isset($c['metrics']['distance_km']))
-                            <div class="muted small">{{ $c['city'] ?? $c['site_type'] }}, {{ Fmt::n($c['metrics']['distance_km']) }} km</div>
+                            <div class="muted small">{{ __(':site_type, :distance_km km', ['site_type' => $c['city'] ?? $c['site_type'], 'distance_km' => Fmt::n($c['metrics']['distance_km'])]) }}</div>
                         @endif
                     </td>
                     <td class="num total">{{ $c['feasible'] ? Fmt::n($c['total']) : '—' }}</td>
@@ -342,70 +342,70 @@
 
 @if ($r->status === RecommendationStatus::Pending)
     <section class="panel">
-        <h2>Votre décision</h2>
-        <p class="muted small" style="margin:4px 0 16px">La recommandation reste une aide : vous gardez la main sur la destination finale.</p>
+        <h2>{{ __('Votre décision') }}</h2>
+        <p class="muted small" style="margin:4px 0 16px">{{ __('La recommandation reste une aide : vous gardez la main sur la destination finale.') }}</p>
         <form method="POST" action="{{ route('optimization.decide', $r) }}" id="decision-form">
             @csrf
             @php $defaultAction = old('action', $r->recommended_site_id ? 'accept' : 'modify'); @endphp
             <fieldset class="choices">
-                <legend class="sr-only">Action</legend>
+                <legend class="sr-only">{{ __('Action') }}</legend>
                 <label class="choice">
                     <input type="radio" name="action" value="accept" @checked($defaultAction === 'accept') @disabled(! $r->recommended_site_id)>
-                    <b>Valider</b>
-                    <small>Envoyer vers {{ $r->recommendedSite?->name ?? 'le site recommandé' }}</small>
+                    <b>{{ __('Valider') }}</b>
+                    <small>{{ __('Envoyer vers :recommand', ['recommand' => $r->recommendedSite?->name ?? 'le site recommandé']) }}</small>
                 </label>
                 <label class="choice">
                     <input type="radio" name="action" value="modify" @checked($defaultAction === 'modify')>
-                    <b>Choisir un autre site</b>
-                    <small>Remplacer la destination proposée</small>
+                    <b>{{ __('Choisir un autre site') }}</b>
+                    <small>{{ __('Remplacer la destination proposée') }}</small>
                 </label>
                 <label class="choice">
                     <input type="radio" name="action" value="reject" @checked($defaultAction === 'reject')>
-                    <b>Rejeter</b>
-                    <small>Ne pas déplacer ce lot</small>
+                    <b>{{ __('Rejeter') }}</b>
+                    <small>{{ __('Ne pas déplacer ce lot') }}</small>
                 </label>
             </fieldset>
 
             <div class="form-grid">
                 <div class="field" data-when="modify">
-                    <label for="chosen_site_id">Site retenu</label>
+                    <label for="chosen_site_id">{{ __('Site retenu') }}</label>
                     <select id="chosen_site_id" name="chosen_site_id">
-                        <option value="">Choisir un site</option>
+                        <option value="">{{ __('Choisir un site') }}</option>
                         @foreach ($candidates->where('site_id', '!=', $r->recommended_site_id) as $c)
                             <option value="{{ $c['site_id'] }}" @selected(old('chosen_site_id') == $c['site_id'])>
-                                {{ $c['site_name'] }} ({{ $c['feasible'] ? 'score '.Fmt::n($c['total']) : 'écarté : '.implode(', ', $c['blocking']) }})
+                                {{ $c['site_name'] }} ({{ $c['feasible'] ? __('score ').Fmt::n($c['total']) : __('écarté : ').implode(', ', $c['blocking']) }})
                             </option>
                         @endforeach
                     </select>
                 </div>
                 <div class="field wide">
-                    <label for="note">Justification</label>
-                    <textarea id="note" name="note" maxlength="1000" placeholder="Ex. : le magasin de Nabeul a une promotion prévue cette semaine.">{{ old('note') }}</textarea>
-                    <p class="hint">Obligatoire si vous choisissez un autre site ou rejetez la proposition. Elle est conservée avec la décision.</p>
+                    <label for="note">{{ __('Justification') }}</label>
+                    <textarea id="note" name="note" maxlength="1000" placeholder="{{ __('Ex. : le magasin de Nabeul a une promotion prévue cette semaine.') }}">{{ old('note') }}</textarea>
+                    <p class="hint">{{ __('Obligatoire si vous choisissez un autre site ou rejetez la proposition. Elle est conservée avec la décision.') }}</p>
                 </div>
                 <div class="field wide" data-when="accept modify">
                     <input type="hidden" name="create_movement" value="0">
-                    <label class="check"><input type="checkbox" name="create_movement" value="1" @checked(old('create_movement', '1') === '1')> Enregistrer le transfert de stock maintenant</label>
+                    <label class="check"><input type="checkbox" name="create_movement" value="1" @checked(old('create_movement', '1') === '1')> {{ __('Enregistrer le transfert de stock maintenant') }}</label>
                 </div>
             </div>
             <div class="form-foot">
-                <button class="btn btn-primary" type="submit">Enregistrer la décision</button>
+                <button class="btn btn-primary" type="submit">{{ __('Enregistrer la décision') }}</button>
             </div>
         </form>
     </section>
 @else
     <section class="panel">
-        <h2>Décision</h2>
+        <h2>{{ __('Décision') }}</h2>
         <dl class="facts" style="margin-top:12px">
-            <div><dt>Statut</dt><dd>{{ $r->status->label() }}</dd></div>
-            @if ($r->chosenSite)<div><dt>Destination retenue</dt><dd>{{ $r->chosenSite->name }}</dd></div>@endif
-            <div><dt>Par</dt><dd>{{ $r->decider?->name ?? '—' }}, le {{ $r->decided_at?->format('d/m/Y à H:i') }}</dd></div>
+            <div><dt>{{ __('Statut') }}</dt><dd>{{ $r->status->label() }}</dd></div>
+            @if ($r->chosenSite)<div><dt>{{ __('Destination retenue') }}</dt><dd>{{ $r->chosenSite->name }}</dd></div>@endif
+            <div><dt>{{ __('Par') }}</dt><dd>{{ __(':name, le :i', ['name' => $r->decider?->name ?? '—', 'i' => $r->decided_at?->format('d/m/Y à H:i')]) }}</dd></div>
             @if ($r->stockMovement)
-                <div><dt>Transfert</dt><dd><a href="{{ route('stock-movements.index', ['batch_id' => $r->batch_id]) }}">{{ $r->stockMovement->reference }}</a></dd></div>
+                <div><dt>{{ __('Transfert') }}</dt><dd><a href="{{ route('stock-movements.index', ['batch_id' => $r->batch_id]) }}">{{ $r->stockMovement->reference }}</a></dd></div>
             @endif
         </dl>
         @if ($r->decision_note)
-            <p style="margin-top:14px; max-width:70ch"><b>Justification :</b> {{ $r->decision_note }}</p>
+            <p style="margin-top:14px; max-width:70ch"><b>{{ __('Justification :') }}</b> {{ $r->decision_note }}</p>
         @endif
     </section>
 @endif

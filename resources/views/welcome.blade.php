@@ -1,16 +1,17 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ in_array(app()->getLocale(), config('app.rtl_locales', []), true) ? 'rtl' : 'ltr' }}">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>NutriTrace — Traçabilité alimentaire vérifiable</title>
+        <title>{{ __('NutriTrace — Traçabilité alimentaire vérifiable') }}</title>
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;0,9..144,900;1,9..144,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @include('partials.locale-head')
     </head>
     <body class="bg-cream text-ink font-inter antialiased">
 
@@ -77,26 +78,27 @@
                                         <path d="M12 2L14.09 8.26L21 9.27L16 14.14L17.18 21.02L12 17.77L6.82 21.02L8 14.14L3 9.27L9.91 8.26L12 2Z" fill="currentColor"/>
                                     </svg>
                                 </span>
-                                <span class="font-fraunces font-extrabold text-base sm:text-lg lg:text-xl text-ink tracking-tight whitespace-nowrap">NutriTrace</span>
+                                <span class="font-fraunces font-extrabold text-base sm:text-lg lg:text-xl text-ink tracking-tight whitespace-nowrap">{{ __('NutriTrace') }}</span>
                             </a>
 
                             {{-- LIENS CENTRÉS — text-sm, gap réduit --}}
                             <div class="hidden lg:flex items-center gap-8 text-sm text-ink/60">
-                                <a href="#catalogue" class="hover:text-ink font-medium transition-colors">Catalogue</a>
-                                <a href="#lots" class="hover:text-ink font-medium transition-colors">Lots</a>
-                                <a href="#tracabilite" class="hover:text-ink font-medium transition-colors">Traçabilité</a>
-                                <a href="#fonctionnement" class="hover:text-ink font-medium transition-colors">Fonctionnement</a>
+                                <a href="#catalogue" class="hover:text-ink font-medium transition-colors">{{ __('Catalogue') }}</a>
+                                <a href="#lots" class="hover:text-ink font-medium transition-colors">{{ __('Lots') }}</a>
+                                <a href="#tracabilite" class="hover:text-ink font-medium transition-colors">{{ __('Traçabilité') }}</a>
+                                <a href="#fonctionnement" class="hover:text-ink font-medium transition-colors">{{ __('Fonctionnement') }}</a>
                             </div>
 
                             {{-- ICÔNES À DROITE — wrappers w-8 h-8 (~32px), icônes ~18-20px --}}
-                            <div class="flex items-center gap-1.5 sm:gap-2 pr-0.5">
+                            <div class="flex items-center gap-1.5 sm:gap-2 pe-0.5">
+                                <x-locale-switcher />
                                 @auth
-                                    <a href="{{ route('dashboard') }}" class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full ring-1 ring-ink/10 transition-colors hover:ring-ink/25" title="Tableau de bord">
+                                    <a href="{{ route('dashboard') }}" class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full ring-1 ring-ink/10 transition-colors hover:ring-ink/25" title="{{ __('Tableau de bord') }}">
                                         <x-user-avatar :user="auth()->user()" size="sm" class="bg-ink/5 text-ink/70" />
                                     </a>
                                     <form method="POST" action="{{ route('logout') }}" class="inline">
                                         @csrf
-                                        <button type="submit" class="w-8 h-8 rounded-full bg-ink/5 hover:bg-ink/10 flex items-center justify-center text-ink/70 transition-colors shrink-0" title="Déconnexion">
+                                        <button type="submit" class="w-8 h-8 rounded-full bg-ink/5 hover:bg-ink/10 flex items-center justify-center text-ink/70 transition-colors shrink-0" title="{{ __('Déconnexion') }}">
                                             <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                                 <path d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9"/>
                                                 <path d="M16 17L21 12L16 7"/>
@@ -106,7 +108,7 @@
                                     </form>
                                 @else
                                     @if (Route::has('login'))
-                                        <a href="{{ route('login') }}" class="w-8 h-8 rounded-full bg-ink/5 hover:bg-ink/10 flex items-center justify-center text-ink/70 transition-colors shrink-0" title="Connexion">
+                                        <a href="{{ route('login') }}" class="w-8 h-8 rounded-full bg-ink/5 hover:bg-ink/10 flex items-center justify-center text-ink/70 transition-colors shrink-0" title="{{ __('Connexion') }}">
                                             <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                                 <path d="M20 21V19C20 16.7909 18.2091 15 16 15H8C5.79086 15 4 16.7909 4 19V21"/>
                                                 <circle cx="12" cy="7" r="4"/>
@@ -114,7 +116,7 @@
                                         </a>
                                     @endif
                                     @if (Route::has('register'))
-                                        <a href="{{ route('register') }}" class="w-8 h-8 rounded-full bg-ink/5 hover:bg-ink/10 flex items-center justify-center text-ink/70 transition-colors shrink-0" title="Inscription">
+                                        <a href="{{ route('register') }}" class="w-8 h-8 rounded-full bg-ink/5 hover:bg-ink/10 flex items-center justify-center text-ink/70 transition-colors shrink-0" title="{{ __('Inscription') }}">
                                             <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                                 <path d="M16 21V19C16 16.7909 14.2091 15 12 15H5C2.79086 15 1 16.7909 1 19V21"/>
                                                 <circle cx="8.5" cy="7" r="4"/>
@@ -125,7 +127,7 @@
                                 @endif
 
                                 {{-- Icône recherche --}}
-                                <button class="hidden sm:flex w-8 h-8 rounded-full bg-ink/5 hover:bg-ink/10 items-center justify-center text-ink/70 transition-colors shrink-0" title="Rechercher">
+                                <button class="hidden sm:flex w-8 h-8 rounded-full bg-ink/5 hover:bg-ink/10 items-center justify-center text-ink/70 transition-colors shrink-0" title="{{ __('Rechercher') }}">
                                     <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <circle cx="11" cy="11" r="8"/>
                                         <path d="M21 21L16.65 16.65"/>
@@ -157,15 +159,15 @@
                     <div class="md:pt-10 lg:pt-14 xl:pt-20">
                         <h1 class="font-fraunces leading-[1.02] tracking-tight">
                             <span class="block text-4xl sm:text-5xl md:text-[3.4rem] lg:text-6xl xl:text-7xl font-bold text-white">
-                                Connaissez votre nourriture.
+                                {{ __('Connaissez votre nourriture.') }}
                             </span>
                             <span class="block text-4xl sm:text-5xl md:text-[3.4rem] lg:text-6xl xl:text-7xl font-bold mt-3" style="color:#C17817">
-                                Faites confiance à son parcours.
+                                {{ __('Faites confiance à son parcours.') }}
                             </span>
                         </h1>
 
                         <p class="mt-7 sm:mt-8 lg:mt-10 text-base sm:text-lg leading-relaxed text-white/80 max-w-lg">
-                            Chaque produit raconte son histoire réelle — de la ferme à votre panier, avec les preuves à l'appui. Suivez, analysez, décidez en toute confiance.
+                            {{ __('Chaque produit raconte son histoire réelle — de la ferme à votre panier, avec les preuves à l\'appui. Suivez, analysez, décidez en toute confiance.') }}
                         </p>
 
                         <div class="mt-9 sm:mt-10 lg:mt-12">
@@ -174,7 +176,7 @@
                                     <path d="M5 12H19"/>
                                     <path d="M13 5L20 12L13 19"/>
                                 </svg>
-                                Commencer
+                                {{ __('Commencer') }}
                             </a>
                         </div>
                     </div>
@@ -239,7 +241,7 @@
                         <div class="relative w-full md:h-[500px] lg:h-[580px] xl:h-[640px] h-[360px]">
                             <img
                                 src="https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=1400&q=88"
-                                alt="Panier de légumes et fruits frais bio : tomates, laitue, poivrons, raisin, avocat, concombre"
+                                alt="{{ __('Panier de légumes et fruits frais bio : tomates, laitue, poivrons, raisin, avocat, concombre') }}"
                                 class="organic-cutout absolute inset-0 w-full h-full object-cover object-top md:object-center translate-y-10 sm:translate-y-12 lg:translate-y-16 drop-shadow-[0_35px_45px_rgba(0,0,0,0.28)]"
                             />
                         </div>
@@ -262,8 +264,8 @@
                                         @endfor
                                     </div>
                                     <div class="leading-tight">
-                                        <p class="text-[8.5px] font-black uppercase tracking-[0.14em] text-amber-warm">NutriTrace</p>
-                                        <p class="text-[10px] font-semibold text-ink leading-snug mt-1">Scanner pour<br>voir l'origine</p>
+                                        <p class="text-[8.5px] font-black uppercase tracking-[0.14em] text-amber-warm">{{ __('NutriTrace') }}</p>
+                                        <p class="text-[10px] font-semibold text-ink leading-snug mt-1">{{ __('Scanner pour') }}<br>{{ __('voir l\'origine') }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -283,19 +285,19 @@
             <div class="max-w-7xl mx-auto px-6 lg:px-8">
                 <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between mb-10">
                     <div>
-                        <p class="font-fraunces text-amber-warm font-semibold text-sm tracking-widest uppercase mb-3">Catalogue vivant</p>
-                        <h2 class="font-fraunces font-bold text-3xl lg:text-4xl leading-tight text-ink">Explorez par catégorie</h2>
+                        <p class="font-fraunces text-amber-warm font-semibold text-sm tracking-widest uppercase mb-3">{{ __('Catalogue vivant') }}</p>
+                        <h2 class="font-fraunces font-bold text-3xl lg:text-4xl leading-tight text-ink">{{ __('Explorez par catégorie') }}</h2>
                     </div>
                     <a href="{{ route('front.products.index') }}" class="inline-flex items-center gap-2 text-sm font-semibold text-forest hover:text-amber-warm transition-colors">
-                        Tout le catalogue
+                        {{ __('Tout le catalogue') }}
                         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12H19"/><path d="M13 5L20 12L13 19"/></svg>
                     </a>
                 </div>
 
                 @if ($categories->isEmpty())
                     <div class="rounded-3xl border border-dashed border-ink/15 bg-white px-6 py-14 text-center">
-                        <h3 class="font-fraunces text-xl font-bold text-ink">Aucune catégorie pour le moment</h3>
-                        <p class="mt-2 text-sm text-ink/55">Les catégories publiées apparaîtront ici automatiquement.</p>
+                        <h3 class="font-fraunces text-xl font-bold text-ink">{{ __('Aucune catégorie pour le moment') }}</h3>
+                        <p class="mt-2 text-sm text-ink/55">{{ __('Les catégories publiées apparaîtront ici automatiquement.') }}</p>
                     </div>
                 @else
                     <div class="flex gap-4 overflow-x-auto pb-3 snap-x snap-mandatory sidebar-scrollbar-hidden">
@@ -306,7 +308,7 @@
                                     {{ mb_strtoupper(mb_substr($category->name, 0, 1)) }}
                                 </span>
                                 <p class="mt-4 font-fraunces font-bold text-lg text-ink group-hover:text-forest transition-colors">{{ $category->name }}</p>
-                                <p class="mt-1 text-xs text-ink/50">{{ $category->products_count }} produit{{ $category->products_count > 1 ? 's' : '' }} vérifié{{ $category->products_count > 1 ? 's' : '' }}</p>
+                                <p class="mt-1 text-xs text-ink/50">{{ __(':products_count produit:s vérifié:s2', ['products_count' => $category->products_count, 's' => $category->products_count > 1 ? 's' : '', 's2' => $category->products_count > 1 ? 's' : '']) }}</p>
                             </a>
                         @endforeach
                     </div>
@@ -321,16 +323,16 @@
             <div class="max-w-7xl mx-auto px-6 lg:px-8" x-data>
                 <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between mb-10">
                     <div>
-                        <p class="font-fraunces text-amber-warm font-semibold text-sm tracking-widest uppercase mb-3">Produits vérifiés</p>
-                        <h2 class="font-fraunces font-bold text-3xl lg:text-4xl leading-tight text-ink">Derniers produits publiés</h2>
+                        <p class="font-fraunces text-amber-warm font-semibold text-sm tracking-widest uppercase mb-3">{{ __('Produits vérifiés') }}</p>
+                        <h2 class="font-fraunces font-bold text-3xl lg:text-4xl leading-tight text-ink">{{ __('Derniers produits publiés') }}</h2>
                     </div>
                     @if ($products->isNotEmpty())
                         <div class="hidden sm:flex items-center gap-2">
-                            <button type="button" @click="$refs.track.scrollBy({ left: -360, behavior: 'smooth' })" aria-label="Produits précédents"
+                            <button type="button" @click="$refs.track.scrollBy({ left: -360, behavior: 'smooth' })" aria-label="{{ __('Produits précédents') }}"
                                 class="w-11 h-11 rounded-full bg-cream border border-ink/10 flex items-center justify-center text-ink/70 hover:bg-forest hover:text-white transition-colors">
                                 <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><path d="M11 5L4 12L11 19"/></svg>
                             </button>
-                            <button type="button" @click="$refs.track.scrollBy({ left: 360, behavior: 'smooth' })" aria-label="Produits suivants"
+                            <button type="button" @click="$refs.track.scrollBy({ left: 360, behavior: 'smooth' })" aria-label="{{ __('Produits suivants') }}"
                                 class="w-11 h-11 rounded-full bg-cream border border-ink/10 flex items-center justify-center text-ink/70 hover:bg-forest hover:text-white transition-colors">
                                 <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12H19"/><path d="M13 5L20 12L13 19"/></svg>
                             </button>
@@ -340,8 +342,8 @@
 
                 @if ($products->isEmpty())
                     <div class="rounded-3xl border border-dashed border-ink/15 bg-cream px-6 py-14 text-center">
-                        <h3 class="font-fraunces text-xl font-bold text-ink">Aucun produit publié pour le moment</h3>
-                        <p class="mt-2 text-sm text-ink/55">Les produits vérifiés apparaîtront ici automatiquement.</p>
+                        <h3 class="font-fraunces text-xl font-bold text-ink">{{ __('Aucun produit publié pour le moment') }}</h3>
+                        <p class="mt-2 text-sm text-ink/55">{{ __('Les produits vérifiés apparaîtront ici automatiquement.') }}</p>
                     </div>
                 @else
                     <div x-ref="track" class="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scroll-smooth sidebar-scrollbar-hidden">
@@ -355,13 +357,13 @@
                                             <span class="absolute inset-0 flex items-center justify-center font-fraunces text-6xl font-semibold text-forest/15">{{ mb_strtoupper(mb_substr($product->name, 0, 1)) }}</span>
                                         @endif
                                         @if ($product->carbon_footprint !== null)
-                                            <span class="absolute top-3 right-3 rounded-full bg-forest/90 backdrop-blur text-white text-[11px] font-semibold px-2.5 py-1">CO₂ {{ number_format((float) $product->carbon_footprint, 2, ',', ' ') }} kg</span>
+                                            <span class="absolute top-3 right-3 rounded-full bg-forest/90 backdrop-blur text-white text-[11px] font-semibold px-2.5 py-1">{{ __('CO₂ :carbon_footprint kg', ['carbon_footprint' => number_format((float) $product->carbon_footprint, 2, ',', "\u{202F}")]) }}</span>
                                         @endif
                                     </div>
                                     <div class="p-5">
                                         <span class="inline-block rounded-full bg-forest/10 text-forest text-[11px] font-semibold px-2.5 py-1">{{ $product->categoryModel?->name ?? $product->category }}</span>
                                         <h3 class="mt-3 font-fraunces font-bold text-lg text-ink leading-snug line-clamp-2 group-hover:text-forest transition-colors">{{ $product->name }}</h3>
-                                        <p class="mt-2 text-sm text-ink/60 line-clamp-2 leading-6">{{ $product->description ?: 'Tracez ce produit de l\'origine à la distribution.' }}</p>
+                                        <p class="mt-2 text-sm text-ink/60 line-clamp-2 leading-6">{{ $product->description ?: __('Tracez ce produit de l\'origine à la distribution.') }}</p>
                                     </div>
                                 </a>
                             </article>
@@ -431,28 +433,28 @@
 
                     <div class="order-1 md:order-2">
                         <h2 class="font-fraunces font-bold text-4xl lg:text-5xl leading-tight text-ink mb-6">
-                            Chaque produit peut être vérifié à la source
+                            {{ __('Chaque produit peut être vérifié à la source') }}
                         </h2>
                         <p class="text-lg leading-relaxed text-ink/70 mb-10">
-                            De la déclaration du producteur jusqu'au scan en magasin, NutriTrace construit un dossier vérifiable pour chaque lot. Sans blockchain ni microservices lourds : sur une base Laravel solide, structurée et maintenable.
+                            {{ __('De la déclaration du producteur jusqu\'au scan en magasin, NutriTrace construit un dossier vérifiable pour chaque lot. Sans blockchain ni microservices lourds : sur une base Laravel solide, structurée et maintenable.') }}
                         </p>
 
                         <div class="grid grid-cols-2 gap-6">
                             <div class="border-l-2 border-amber-warm/60 pl-4 py-1">
                                 <p class="font-fraunces font-bold text-3xl text-ink">1 240</p>
-                                <p class="text-sm text-ink/60 mt-1">Produits tracés</p>
+                                <p class="text-sm text-ink/60 mt-1">{{ __('Produits tracés') }}</p>
                             </div>
                             <div class="border-l-2 border-amber-warm/60 pl-4 py-1">
                                 <p class="font-fraunces font-bold text-3xl text-ink">312</p>
-                                <p class="text-sm text-ink/60 mt-1">Certifications vérifiées</p>
+                                <p class="text-sm text-ink/60 mt-1">{{ __('Certifications vérifiées') }}</p>
                             </div>
                             <div class="border-l-2 border-amber-warm/60 pl-4 py-1">
                                 <p class="font-fraunces font-bold text-3xl text-ink">91<span class="text-amber-warm">%</span></p>
-                                <p class="text-sm text-ink/60 mt-1">Confiance moyenne</p>
+                                <p class="text-sm text-ink/60 mt-1">{{ __('Confiance moyenne') }}</p>
                             </div>
                             <div class="border-l-2 border-amber-warm/60 pl-4 py-1">
                                 <p class="font-fraunces font-bold text-3xl text-ink">340<span class="text-amber-warm"> t</span></p>
-                                <p class="text-sm text-ink/60 mt-1">CO<sub>2</sub> suivies</p>
+                                <p class="text-sm text-ink/60 mt-1">{{ __('CO') }}<sub>2</sub> {{ __('suivies') }}</p>
                             </div>
                         </div>
                     </div>
@@ -466,38 +468,38 @@
                 <div class="grid md:grid-cols-2 gap-12 lg:gap-16 items-center">
                     <div>
                         <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs tracking-wide text-white/70 mb-8">
-                            Cas d'usage — vérification carbone
+                            {{ __('Cas d\'usage — vérification carbone') }}
                         </div>
                         <h2 class="font-fraunces font-bold text-4xl lg:text-5xl leading-tight mb-6">
-                            Une allégation bio ne doit jamais rester invérifiable
+                            {{ __('Une allégation bio ne doit jamais rester invérifiable') }}
                         </h2>
                         <p class="text-lg leading-relaxed text-white/75 mb-10 max-w-lg">
-                            L'empreinte carbone déclarée est comparée aux données réelles de transport et de production à chaque étape. Tout écart significatif déclenche un signalement avant que le produit n'atteigne le consommateur.
+                            {{ __('L\'empreinte carbone déclarée est comparée aux données réelles de transport et de production à chaque étape. Tout écart significatif déclenche un signalement avant que le produit n\'atteigne le consommateur.') }}
                         </p>
 
                         <div class="grid grid-cols-3 gap-6">
                             <div>
                                 <p class="font-fraunces font-bold text-2xl lg:text-3xl text-white">94<span class="text-amber-warm">%</span></p>
-                                <p class="text-xs text-white/60 mt-1">Allégations conformes</p>
+                                <p class="text-xs text-white/60 mt-1">{{ __('Allégations conformes') }}</p>
                             </div>
                             <div>
-                                <p class="font-fraunces font-bold text-2xl lg:text-3xl text-white">0.35<span class="text-amber-warm text-lg"> kg</span></p>
-                                <p class="text-xs text-white/60 mt-1">CO<sub>2</sub> déclaré</p>
+                                <p class="font-fraunces font-bold text-2xl lg:text-3xl text-white">0.35<span class="text-amber-warm text-lg"> {{ __('kg') }}</span></p>
+                                <p class="text-xs text-white/60 mt-1">{{ __('CO') }}<sub>2</sub> {{ __('déclaré') }}</p>
                             </div>
                             <div>
-                                <p class="font-fraunces font-bold text-2xl lg:text-3xl text-white">0.40<span class="text-amber-warm text-lg"> kg</span></p>
-                                <p class="text-xs text-white/60 mt-1">Seuil d'écart toléré</p>
+                                <p class="font-fraunces font-bold text-2xl lg:text-3xl text-white">0.40<span class="text-amber-warm text-lg"> {{ __('kg') }}</span></p>
+                                <p class="text-xs text-white/60 mt-1">{{ __('Seuil d\'écart toléré') }}</p>
                             </div>
                         </div>
                     </div>
 
                     {{-- Carte simulateur blanche --}}
                     <div class="bg-cream rounded-3xl p-8 shadow-2xl shadow-black/30 border border-ink/5">
-                        <p class="text-[11px] font-bold tracking-widest uppercase text-ink/40 mb-2">Simulateur</p>
-                        <h3 class="font-fraunces font-bold text-xl text-ink mb-6">Écart carbone déclaré</h3>
+                        <p class="text-[11px] font-bold tracking-widest uppercase text-ink/40 mb-2">{{ __('Simulateur') }}</p>
+                        <h3 class="font-fraunces font-bold text-xl text-ink mb-6">{{ __('Écart carbone déclaré') }}</h3>
 
                         <div class="mb-6">
-                            <p class="text-xs text-ink/60 mb-3">Sélectionnez un écart par rapport à la valeur mesurée</p>
+                            <p class="text-xs text-ink/60 mb-3">{{ __('Sélectionnez un écart par rapport à la valeur mesurée') }}</p>
                             <div class="grid grid-cols-5 gap-2" id="sim-buttons">
                                 <button type="button" data-value="-10" class="sim-btn py-3 px-2 rounded-xl text-sm font-semibold border-2 border-ink/10 text-ink/70 hover:border-amber-warm hover:bg-amber-warm/5 transition-all duration-200">-10%</button>
                                 <button type="button" data-value="-5" class="sim-btn py-3 px-2 rounded-xl text-sm font-semibold border-2 border-ink/10 text-ink/70 hover:border-amber-warm hover:bg-amber-warm/5 transition-all duration-200">-5%</button>
@@ -508,18 +510,18 @@
                         </div>
 
                         <div class="mb-6">
-                            <p class="text-xs text-ink/60 mb-2">Valeur déclarée</p>
+                            <p class="text-xs text-ink/60 mb-2">{{ __('Valeur déclarée') }}</p>
                             <div class="flex items-baseline gap-2">
                                 <span id="sim-declared" class="font-fraunces font-bold text-4xl text-ink">0.350</span>
-                                <span class="text-ink/60">kg CO<sub>2</sub>e / kg</span>
+                                <span class="text-ink/60">{{ __('kg CO') }}<sub>2</sub>{{ __('e / kg') }}</span>
                             </div>
                             <div class="mt-3 h-2 rounded-full bg-ink/5 overflow-hidden">
                                 <div id="sim-bar" class="h-full rounded-full bg-emerald-500 transition-all duration-300 ease-out" style="width: 0%"></div>
                             </div>
                             <div class="flex justify-between mt-1.5 text-[10px] text-ink/40">
-                                <span>0 kg</span>
-                                <span>Seuil toléré : 0.400 kg</span>
-                                <span>0.5 kg</span>
+                                <span>{{ __('0 kg') }}</span>
+                                <span>{{ __('Seuil toléré : 0.400 kg') }}</span>
+                                <span>{{ __('0.5 kg') }}</span>
                             </div>
                         </div>
 
@@ -531,14 +533,14 @@
                                     </svg>
                                 </div>
                                 <div>
-                                    <p id="sim-status" class="font-bold text-ink text-base transition-all duration-300">Conforme</p>
-                                    <p id="sim-detail" class="text-xs text-ink/60 mt-0.5 transition-all duration-300">Écart dans la marge de tolérance</p>
+                                    <p id="sim-status" class="font-bold text-ink text-base transition-all duration-300">{{ __('Conforme') }}</p>
+                                    <p id="sim-detail" class="text-xs text-ink/60 mt-0.5 transition-all duration-300">{{ __('Écart dans la marge de tolérance') }}</p>
                                 </div>
                             </div>
                         </div>
 
                         <a href="#verification" class="mt-6 w-full inline-flex items-center justify-center px-6 py-3.5 bg-forest hover:bg-forest/90 text-white font-medium rounded-2xl transition-colors">
-                            Voir le fonctionnement
+                            {{ __('Voir le fonctionnement') }}
                         </a>
                     </div>
                 </div>
@@ -550,10 +552,10 @@
             <div class="max-w-7xl mx-auto px-6 lg:px-8">
                 <div class="text-center max-w-2xl mx-auto mb-16">
                     <h2 class="font-fraunces font-bold text-4xl lg:text-5xl leading-tight text-ink mb-5">
-                        Trois statuts possibles, une preuve à chaque fois
+                        {{ __('Trois statuts possibles, une preuve à chaque fois') }}
                     </h2>
                     <p class="text-lg text-ink/65 leading-relaxed">
-                        Le moteur ne se contente jamais d'afficher un badge. Il montre toujours la preuve documentaire, la donnée source et la règle qui a conduit au statut.
+                        {{ __('Le moteur ne se contente jamais d\'afficher un badge. Il montre toujours la preuve documentaire, la donnée source et la règle qui a conduit au statut.') }}
                     </p>
                 </div>
 
@@ -569,13 +571,13 @@
                         </div>
                         <div class="flex items-center gap-2 mb-4">
                             <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                            <h3 class="font-fraunces font-bold text-sm tracking-widest uppercase text-emerald-600">Vérifié</h3>
+                            <h3 class="font-fraunces font-bold text-sm tracking-widest uppercase text-emerald-600">{{ __('Vérifié') }}</h3>
                         </div>
                         <h4 class="font-fraunces font-bold text-2xl text-ink mb-4">
-                            Toutes les preuves concordent
+                            {{ __('Toutes les preuves concordent') }}
                         </h4>
                         <p class="text-sm leading-relaxed text-ink/65">
-                            Les documents de certification, l'origine déclarée, l'itinéraire de transport et l'empreinte carbone mesurée correspondent aux allégations du produit.
+                            {{ __('Les documents de certification, l\'origine déclarée, l\'itinéraire de transport et l\'empreinte carbone mesurée correspondent aux allégations du produit.') }}
                         </p>
                     </div>
 
@@ -590,13 +592,13 @@
                         </div>
                         <div class="flex items-center gap-2 mb-4">
                             <span class="w-2 h-2 rounded-full bg-red-500"></span>
-                            <h3 class="font-fraunces font-bold text-sm tracking-widest uppercase text-red-500">Signalé</h3>
+                            <h3 class="font-fraunces font-bold text-sm tracking-widest uppercase text-red-500">{{ __('Signalé') }}</h3>
                         </div>
                         <h4 class="font-fraunces font-bold text-2xl text-ink mb-4">
-                            Incohérence détectée
+                            {{ __('Incohérence détectée') }}
                         </h4>
                         <p class="text-sm leading-relaxed text-ink/65">
-                            Divergence entre l'allégation et les données réelles : itinéraire de transport incompatible avec un label "local", certificat expiré, ou empreinte carbone hors seuil.
+                            {{ __('Divergence entre l\'allégation et les données réelles : itinéraire de transport incompatible avec un label "local", certificat expiré, ou empreinte carbone hors seuil.') }}
                         </p>
                     </div>
 
@@ -610,13 +612,13 @@
                         </div>
                         <div class="flex items-center gap-2 mb-4">
                             <span class="w-2 h-2 rounded-full bg-sky-500"></span>
-                            <h3 class="font-fraunces font-bold text-sm tracking-widest uppercase text-sky-600">En attente de preuve</h3>
+                            <h3 class="font-fraunces font-bold text-sm tracking-widest uppercase text-sky-600">{{ __('En attente de preuve') }}</h3>
                         </div>
                         <h4 class="font-fraunces font-bold text-2xl text-ink mb-4">
-                            Document manquant
+                            {{ __('Document manquant') }}
                         </h4>
                         <p class="text-sm leading-relaxed text-ink/65">
-                            L'allégation est plausible au regard des données disponibles, mais le document justificatif (certificat, facture de transport) est en attente de téléversement ou de validation par un opérateur.
+                            {{ __('L\'allégation est plausible au regard des données disponibles, mais le document justificatif (certificat, facture de transport) est en attente de téléversement ou de validation par un opérateur.') }}
                         </p>
                     </div>
                 </div>
@@ -630,11 +632,11 @@
             <div class="max-w-7xl mx-auto px-6 lg:px-8">
                 <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between mb-10">
                     <div>
-                        <p class="font-fraunces text-amber-warm font-semibold text-sm tracking-widest uppercase mb-3">Chaîne d'approvisionnement</p>
-                        <h2 class="font-fraunces font-bold text-3xl lg:text-4xl leading-tight text-ink">Lots récemment mis en circulation</h2>
+                        <p class="font-fraunces text-amber-warm font-semibold text-sm tracking-widest uppercase mb-3">{{ __('Chaîne d\'approvisionnement') }}</p>
+                        <h2 class="font-fraunces font-bold text-3xl lg:text-4xl leading-tight text-ink">{{ __('Lots récemment mis en circulation') }}</h2>
                     </div>
                     <a href="#tracabilite" class="inline-flex items-center gap-2 text-sm font-semibold text-forest hover:text-amber-warm transition-colors">
-                        Suivre un lot
+                        {{ __('Suivre un lot') }}
                         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12H19"/><path d="M13 5L20 12L13 19"/></svg>
                     </a>
                 </div>
@@ -650,8 +652,8 @@
 
                 @if ($batches->isEmpty())
                     <div class="rounded-3xl border border-dashed border-ink/15 bg-cream px-6 py-14 text-center">
-                        <h3 class="font-fraunces text-xl font-bold text-ink">Aucun lot actif pour le moment</h3>
-                        <p class="mt-2 text-sm text-ink/55">Les lots actifs apparaîtront ici automatiquement.</p>
+                        <h3 class="font-fraunces text-xl font-bold text-ink">{{ __('Aucun lot actif pour le moment') }}</h3>
+                        <p class="mt-2 text-sm text-ink/55">{{ __('Les lots actifs apparaîtront ici automatiquement.') }}</p>
                     </div>
                 @else
                     <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -666,7 +668,7 @@
                                         @endif
                                     </div>
                                     <div class="min-w-0 flex-1">
-                                        <p class="font-fraunces font-bold text-ink truncate">{{ $batch->product?->name ?? 'Produit' }}</p>
+                                        <p class="font-fraunces font-bold text-ink truncate">{{ $batch->product?->name ?? __('Produit') }}</p>
                                         <p class="text-xs font-semibold text-ink/45 truncate">{{ $batch->lot_number }}</p>
                                     </div>
                                     <span class="shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold {{ $batchStatusStyles[$batch->status] ?? 'bg-ink/10 text-ink/70' }}">
@@ -675,16 +677,16 @@
                                 </div>
                                 <dl class="mt-5 grid grid-cols-2 gap-3 border-t border-ink/8 pt-5 text-sm">
                                     <div>
-                                        <dt class="text-[11px] uppercase tracking-wider text-ink/45">Production</dt>
+                                        <dt class="text-[11px] uppercase tracking-wider text-ink/45">{{ __('Production') }}</dt>
                                         <dd class="mt-0.5 font-semibold text-ink">{{ $batch->production_date?->format('d/m/Y') ?? '—' }}</dd>
                                     </div>
                                     <div>
-                                        <dt class="text-[11px] uppercase tracking-wider text-ink/45">Expiration</dt>
+                                        <dt class="text-[11px] uppercase tracking-wider text-ink/45">{{ __('Expiration') }}</dt>
                                         <dd class="mt-0.5 font-semibold text-ink">{{ $batch->expiration_date?->format('d/m/Y') ?? '—' }}</dd>
                                     </div>
                                 </dl>
                                 <a href="{{ route('front.traceability.show', $batch) }}" class="mt-5 inline-flex items-center justify-center gap-2 rounded-2xl bg-forest px-4 py-2.5 text-sm font-semibold text-white hover:bg-forest-dark transition-colors">
-                                    Suivre ce lot
+                                    {{ __('Suivre ce lot') }}
                                     <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12H19"/><path d="M13 5L20 12L13 19"/></svg>
                                 </a>
                             </div>
@@ -702,13 +704,13 @@
                 <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
                     <div>
                         <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs tracking-wide text-white/70 mb-6">
-                            Traçabilité publique — accès libre
+                            {{ __('Traçabilité publique — accès libre') }}
                         </div>
                         <h2 class="font-fraunces font-bold text-4xl lg:text-5xl leading-tight mb-6">
-                            Suivez un produit en un clic
+                            {{ __('Suivez un produit en un clic') }}
                         </h2>
                         <p class="text-lg leading-relaxed text-white/75 mb-8 max-w-lg">
-                            Saisissez le numéro de lot figurant sur l'étiquette pour visualiser le parcours réel du produit, de la production à la distribution.
+                            {{ __('Saisissez le numéro de lot figurant sur l\'étiquette pour visualiser le parcours réel du produit, de la production à la distribution.') }}
                         </p>
 
                         <form method="GET" action="{{ route('front.traceability.index') }}" class="flex flex-col sm:flex-row gap-3 max-w-lg">
@@ -720,7 +722,7 @@
                                 class="w-full flex-1 rounded-2xl border border-white/15 bg-white/10 px-4 py-3.5 text-sm font-medium text-white placeholder-white/45 focus:border-amber-warm focus:outline-none focus:ring-2 focus:ring-amber-warm/40"
                             >
                             <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-2xl bg-amber-warm px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-amber-warm/25 transition-colors hover:bg-amber-warm/90">
-                                Suivre
+                                {{ __('Suivre') }}
                                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12H19"/><path d="M13 5L20 12L13 19"/></svg>
                             </button>
                         </form>
@@ -745,12 +747,12 @@
                             <div class="rounded-3xl bg-cream p-6 lg:p-8 shadow-2xl shadow-black/30">
                                 <div class="flex flex-wrap items-center justify-between gap-3">
                                     <div>
-                                        <p class="text-[11px] font-bold uppercase tracking-widest text-amber-warm">Exemple — dernier lot suivi</p>
-                                        <p class="mt-1 font-fraunces font-bold text-lg text-ink">{{ $featuredTimeline->product?->name ?? 'Produit' }}</p>
+                                        <p class="text-[11px] font-bold uppercase tracking-widest text-amber-warm">{{ __('Exemple — dernier lot suivi') }}</p>
+                                        <p class="mt-1 font-fraunces font-bold text-lg text-ink">{{ $featuredTimeline->product?->name ?? __('Produit') }}</p>
                                         <p class="text-xs font-semibold text-ink/50">{{ $featuredTimeline->lot_number }}</p>
                                     </div>
                                     <a href="{{ route('front.traceability.show', $featuredTimeline) }}" class="rounded-2xl bg-forest px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-forest-dark">
-                                        Ouvrir
+                                        {{ __('Ouvrir') }}
                                     </a>
                                 </div>
                                 <div class="mt-6">
@@ -759,7 +761,7 @@
                             </div>
                         @else
                             <div class="rounded-3xl bg-cream p-6 lg:p-8 shadow-2xl shadow-black/30">
-                                <p class="text-[11px] font-bold uppercase tracking-widest text-amber-warm">Comment ça marche</p>
+                                <p class="text-[11px] font-bold uppercase tracking-widest text-amber-warm">{{ __('Comment ça marche') }}</p>
                                 <ol class="mt-5 space-y-4">
                                     @foreach ([
                                         ['1', 'Chaque lot reçoit un numéro unique', 'Le producteur déclare le lot et chaque étape ajoute un événement daté.'],
@@ -786,9 +788,9 @@
         <section id="verification" class="bg-cream pb-20 lg:pb-28">
             <div class="max-w-7xl mx-auto px-6 lg:px-8">
                 <div class="mb-14">
-                    <p class="font-fraunces text-amber-warm font-semibold text-sm tracking-widest uppercase mb-4">Moteur de vérification explicable</p>
+                    <p class="font-fraunces text-amber-warm font-semibold text-sm tracking-widest uppercase mb-4">{{ __('Moteur de vérification explicable') }}</p>
                     <h2 class="font-fraunces font-bold text-3xl lg:text-4xl leading-tight text-ink max-w-3xl">
-                        Un moteur à règles pondérées, explicable à chaque étape — pas un modèle black-box.
+                        {{ __('Un moteur à règles pondérées, explicable à chaque étape — pas un modèle black-box.') }}
                     </h2>
                 </div>
 
@@ -801,20 +803,20 @@
                                 <path d="M10 17L3 17L3 10"/>
                                 <path d="M21 7L13 15L8 10L3 15"/>
                             </svg>
-                            Système de règles pondérées
+                            {{ __('Système de règles pondérées') }}
                         </div>
                         <h3 class="font-fraunces font-bold text-2xl lg:text-3xl leading-tight mb-5">
-                            Certifications, transport et empreinte combinés en un statut de vérification
+                            {{ __('Certifications, transport et empreinte combinés en un statut de vérification') }}
                         </h3>
                         <p class="leading-relaxed text-white/70 mb-8">
-                            Chaque facteur est pondéré et visible : validité du certificat bio (30%), cohérence de l'origine géographique (25%), concordance des événements de transport (25%), empreinte carbone dans les seuils (20%). Un opérateur peut comprendre en quelques secondes pourquoi un produit est vérifié, signalé ou en attente — et ajuster les pondérations si nécessaire.
+                            {{ __('Chaque facteur est pondéré et visible : validité du certificat bio (30%), cohérence de l\'origine géographique (25%), concordance des événements de transport (25%), empreinte carbone dans les seuils (20%). Un opérateur peut comprendre en quelques secondes pourquoi un produit est vérifié, signalé ou en attente — et ajuster les pondérations si nécessaire.') }}
                         </p>
 
                         <div class="space-y-3.5">
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center gap-3">
                                     <div class="w-2 h-2 rounded-full bg-emerald-400"></div>
-                                    <span class="text-sm text-white/80">Certification AB valide</span>
+                                    <span class="text-sm text-white/80">{{ __('Certification AB valide') }}</span>
                                 </div>
                                 <div class="flex items-center gap-3">
                                     <div class="w-40 h-1.5 rounded-full bg-white/10 overflow-hidden">
@@ -826,7 +828,7 @@
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center gap-3">
                                     <div class="w-2 h-2 rounded-full bg-emerald-400"></div>
-                                    <span class="text-sm text-white/80">Origine < 150 km</span>
+                                    <span class="text-sm text-white/80">{{ __('Origine < 150 km') }}</span>
                                 </div>
                                 <div class="flex items-center gap-3">
                                     <div class="w-40 h-1.5 rounded-full bg-white/10 overflow-hidden">
@@ -838,7 +840,7 @@
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center gap-3">
                                     <div class="w-2 h-2 rounded-full bg-amber-warm"></div>
-                                    <span class="text-sm text-white/80">Trajet transport — 1 événement manquant</span>
+                                    <span class="text-sm text-white/80">{{ __('Trajet transport — 1 événement manquant') }}</span>
                                 </div>
                                 <div class="flex items-center gap-3">
                                     <div class="w-40 h-1.5 rounded-full bg-white/10 overflow-hidden">
@@ -850,7 +852,7 @@
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center gap-3">
                                     <div class="w-2 h-2 rounded-full bg-emerald-400"></div>
-                                    <span class="text-sm text-white/80">CO₂ : 0.340 kg / seuil 0.400 kg</span>
+                                    <span class="text-sm text-white/80">{{ __('CO₂ : 0.340 kg / seuil 0.400 kg') }}</span>
                                 </div>
                                 <div class="flex items-center gap-3">
                                     <div class="w-40 h-1.5 rounded-full bg-white/10 overflow-hidden">
@@ -862,11 +864,11 @@
 
                             <div class="mt-6 pt-6 border-t border-white/10 flex items-center justify-between">
                                 <div>
-                                    <p class="text-xs text-white/50 mb-1">Score final</p>
+                                    <p class="text-xs text-white/50 mb-1">{{ __('Score final') }}</p>
                                     <p class="font-fraunces font-bold text-4xl">91<span class="text-amber-warm text-2xl">%</span></p>
                                 </div>
                                 <div class="px-5 py-2.5 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 font-bold text-sm">
-                                    VÉRIFIÉ
+                                    {{ __('VÉRIFIÉ') }}
                                 </div>
                             </div>
                         </div>
@@ -883,9 +885,9 @@
                                     <path d="M3 3H21V21H3V3Z"/>
                                 </svg>
                             </div>
-                            <h4 class="font-fraunces font-bold text-xl text-ink mb-3">OCR d'étiquette</h4>
+                            <h4 class="font-fraunces font-bold text-xl text-ink mb-3">{{ __('OCR d\'étiquette') }}</h4>
                             <p class="text-sm leading-relaxed text-ink/65">
-                                Extrait automatiquement les certifications, l'origine déclarée et le numéro de lot depuis la photo de l'étiquette produit, puis compare les champs extraits aux données enregistrées dans le dossier de traçabilité.
+                                {{ __('Extrait automatiquement les certifications, l\'origine déclarée et le numéro de lot depuis la photo de l\'étiquette produit, puis compare les champs extraits aux données enregistrées dans le dossier de traçabilité.') }}
                             </p>
                         </div>
 
@@ -898,9 +900,9 @@
                                     <path d="M9 17H15"/>
                                 </svg>
                             </div>
-                            <h4 class="font-fraunces font-bold text-xl text-ink mb-3">Vérification documentaire</h4>
+                            <h4 class="font-fraunces font-bold text-xl text-ink mb-3">{{ __('Vérification documentaire') }}</h4>
                             <p class="text-sm leading-relaxed text-ink/65">
-                                Croise les certificats fournis par le producteur avec les référentiels officiels, vérifie les dates de validité, les numéros d'agrément et s'assure que le périmètre du certificat couvre bien le lot concerné.
+                                {{ __('Croise les certificats fournis par le producteur avec les référentiels officiels, vérifie les dates de validité, les numéros d\'agrément et s\'assure que le périmètre du certificat couvre bien le lot concerné.') }}
                             </p>
                         </div>
                     </div>
@@ -912,13 +914,13 @@
         <section id="demo" class="bg-forest-dark py-20 lg:py-24 text-white">
             <div class="max-w-4xl mx-auto px-6 lg:px-8 text-center">
                 <h2 class="font-fraunces font-bold text-4xl lg:text-5xl leading-tight mb-6">
-                    Un moteur de vérification qu'on peut toujours justifier
+                    {{ __('Un moteur de vérification qu\'on peut toujours justifier') }}
                 </h2>
                 <p class="text-lg leading-relaxed text-white/75 max-w-2xl mx-auto mb-10">
-                    Plutôt qu'une liste de fonctionnalités impressionnantes mais difficiles à démontrer, NutriTrace mise sur un cœur fonctionnel complet — traçabilité, certifications et vérification expliquée, réellement livrable en 7 semaines.
+                    {{ __('Plutôt qu\'une liste de fonctionnalités impressionnantes mais difficiles à démontrer, NutriTrace mise sur un cœur fonctionnel complet — traçabilité, certifications et vérification expliquée, réellement livrable en 7 semaines.') }}
                 </p>
                 <a href="#" class="inline-flex items-center gap-2 px-8 py-4 bg-amber-warm hover:bg-amber-warm/90 text-white font-semibold rounded-2xl transition-colors text-base">
-                    Demander une démo
+                    {{ __('Demander une démo') }}
                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M5 12H19"/>
                         <path d="M12 5L19 12L12 19"/>
@@ -931,10 +933,10 @@
         <footer class="bg-cream border-t border-ink/5 py-8">
             <div class="max-w-7xl mx-auto px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <p class="text-sm text-ink/45">
-                    NutriTrace — cahier des charges, projet Applications Web Avancées 2026/2027
+                    {{ __('NutriTrace — cahier des charges, projet Applications Web Avancées 2026/2027') }}
                 </p>
                 <p class="text-sm text-ink/45">
-                    Maquette de landing page
+                    {{ __('Maquette de landing page') }}
                 </p>
             </div>
         </footer>

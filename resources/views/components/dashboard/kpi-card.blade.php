@@ -11,9 +11,9 @@
             @elseif($icon === 'alert')<svg class="h-7 w-7" viewBox="0 0 32 32" fill="none"><path d="m16 4 13 23H3L16 4Z" fill="currentColor"/><path d="M16 12v7m0 4h.01" stroke="#F5E7E2" stroke-width="2" stroke-linecap="round"/></svg>
             @else<svg class="h-7 w-7" viewBox="0 0 32 32" fill="none"><path d="M16 27C7 25 6 17 9 10c3 2 5 4 6 7 1-7 5-11 10-13 1 10-1 19-9 23Z" fill="currentColor"/><path d="M16 27c0-6 1-11 7-17" stroke="#EEF3EC" stroke-width="1.5" stroke-linecap="round"/></svg>@endif
         </span>
-        <span class="text-xs font-medium text-ink/35 dark:text-white/35">Live</span>
+        <span class="text-xs font-medium text-ink/35 dark:text-white/35">{{ __('Live') }}</span>
     </div>
     <p class="mt-5 text-xs font-bold uppercase tracking-wider text-ink/45 dark:text-white/45">{{ $label }}</p>
-    <p class="mt-1 font-fraunces text-3xl font-bold text-ink dark:text-white">{{ number_format($value) }}</p>
+    <p class="mt-1 font-fraunces text-3xl font-bold text-ink dark:text-white">{{ is_int($value) || is_float($value) ? number_format($value) : $value }}</p>
     <p class="mt-1 text-xs text-ink/55 dark:text-white/55">{{ $detail }}</p>
 </div>

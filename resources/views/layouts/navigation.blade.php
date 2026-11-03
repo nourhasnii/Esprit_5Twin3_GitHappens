@@ -9,7 +9,7 @@
                                 <path d="M12 2L14.09 8.26L21 9.27L16 14.14L17.18 21.02L12 17.77L6.82 21.02L8 14.14L3 9.27L9.91 8.26L12 2Z" fill="currentColor"/>
                             </svg>
                         </span>
-                        <span class="font-fraunces font-extrabold text-lg text-ink tracking-tight hidden sm:block">NutriTrace</span>
+                        <span class="font-fraunces font-extrabold text-lg text-ink tracking-tight hidden sm:block">{{ __('NutriTrace') }}</span>
                     </a>
                 </div>
 
@@ -40,6 +40,7 @@
             </div>
 
             <div class="hidden sm:flex sm:items-center sm:ms-6">
+                <div class="me-2"><x-locale-switcher /></div>
                 @auth
                     <div class="me-2">
                         <x-notification-bell />

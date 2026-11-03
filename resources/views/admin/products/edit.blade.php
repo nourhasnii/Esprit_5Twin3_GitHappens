@@ -1,8 +1,8 @@
 <x-dashboard-layout>
     <x-slot name="header">
         <div>
-            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-amber-warm">Production workspace</p>
-            <h2 class="mt-1 font-fraunces text-3xl font-bold text-ink">Modifier le produit</h2>
+            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-amber-warm">{{ __('Production workspace') }}</p>
+            <h2 class="mt-1 font-fraunces text-3xl font-bold text-ink">{{ __('Modifier le produit') }}</h2>
         </div>
     </x-slot>
 

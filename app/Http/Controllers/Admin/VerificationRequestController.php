@@ -43,7 +43,7 @@ class VerificationRequestController extends Controller
         try {
             $messageId = $activation->issue($verificationRequest->user, $mail);
         } catch (RuntimeException) {
-            return back()->with('error', 'The account was approved, but the activation email could not be delivered. Check Brevo configuration and logs.');
+            return back()->with('error', __('The account was approved, but the activation email could not be delivered. Check Brevo configuration and logs.'));
         }
         return back()->with('success', 'Account approved. Activation email accepted by Brevo (' . $messageId . ').');
     }
@@ -60,9 +60,9 @@ class VerificationRequestController extends Controller
         try {
             $mail->sendInformationRequestEmail($verificationRequest->user, $reason);
         } catch (RuntimeException) {
-            return back()->with('error', 'The request was saved, but the information email could not be delivered. Check Brevo configuration and logs.');
+            return back()->with('error', __('The request was saved, but the information email could not be delivered. Check Brevo configuration and logs.'));
         }
-        return back()->with('success', 'The applicant has been asked for more information.');
+        return back()->with('success', __('The applicant has been asked for more information.'));
     }
 
     public function reject(VerificationDecisionRequest $request, VerificationRequest $verificationRequest, AuditLogService $audit, BrevoMailService $mail): RedirectResponse
@@ -77,9 +77,9 @@ class VerificationRequestController extends Controller
         try {
             $mail->sendRejectionEmail($verificationRequest->user, $reason);
         } catch (RuntimeException) {
-            return back()->with('error', 'The rejection was saved, but the notification email could not be delivered. Check Brevo configuration and logs.');
+            return back()->with('error', __('The rejection was saved, but the notification email could not be delivered. Check Brevo configuration and logs.'));
         }
-        return back()->with('success', 'The account was rejected and the applicant was notified.');
+        return back()->with('success', __('The account was rejected and the applicant was notified.'));
     }
 
     private function ensurePending(VerificationRequest $request): void

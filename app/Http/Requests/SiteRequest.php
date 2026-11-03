@@ -38,6 +38,6 @@ class SiteRequest extends FormRequest
 
     public function attributes(): array
     {
-        return ['name' => 'nom', 'city' => 'ville', 'address' => 'adresse', 'capacity' => 'capacité'];
+        return ['name' => __('nom'), 'city' => __('ville'), 'address' => __('adresse'), 'capacity' => __('capacité')];
     }
 }

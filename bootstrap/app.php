@@ -11,6 +11,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Langue de l'interface (fr, en, ar) mémorisée en session
+        $middleware->web(append: [\App\Http\Middleware\SetLocale::class]);
+
         $middleware->alias([
             'active.account' => \App\Http\Middleware\EnsureActiveAccount::class,
             'professional' => \App\Http\Middleware\EnsureProfessionalRole::class,

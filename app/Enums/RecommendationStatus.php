@@ -13,11 +13,11 @@ enum RecommendationStatus: string
     public function label(): string
     {
         return match ($this) {
-            self::Pending => 'En attente',
-            self::Accepted => 'Validée',
-            self::Modified => 'Modifiée',
-            self::Rejected => 'Rejetée',
-            self::Rescued => 'Plan anti-gaspillage',
+            self::Pending => __('En attente'),
+            self::Accepted => __('Validée'),
+            self::Modified => __('Modifiée'),
+            self::Rejected => __('Rejetée'),
+            self::Rescued => __('Plan anti-gaspillage'),
         };
     }
 }

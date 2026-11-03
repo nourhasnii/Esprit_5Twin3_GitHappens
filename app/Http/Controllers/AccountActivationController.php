@@ -19,6 +19,6 @@ class AccountActivationController extends Controller
     {
         $service->activate($request->string('token')->toString(), $request->string('password')->toString(), $mail);
 
-        return redirect()->route('login')->with('success', 'Your account is active. You can now sign in.');
+        return redirect()->route('login')->with('success', __('Your account is active. You can now sign in.'));
     }
 }

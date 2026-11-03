@@ -11,17 +11,17 @@
     <x-slot name="header">
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
             <div>
-                <p class="text-xs font-bold uppercase tracking-[0.18em] text-amber-warm">Product workspace</p>
+                <p class="text-xs font-bold uppercase tracking-[0.18em] text-amber-warm">{{ __('Product workspace') }}</p>
                 <h1 class="mt-1 font-fraunces font-bold text-3xl text-ink leading-tight dark:text-white">
                     {{ __('Produits') }}
                 </h1>
-                <p class="text-sm text-ink/55 dark:text-white/55 mt-2">Gérez votre catalogue de produits et leur traçabilité.</p>
+                <p class="text-sm text-ink/55 dark:text-white/55 mt-2">{{ __('Gérez votre catalogue de produits et leur traçabilité.') }}</p>
             </div>
             <a href="{{ route('admin.products.create') }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-amber-warm hover:bg-amber-light text-white font-semibold rounded-lg transition-all duration-150 shadow-sm shadow-amber-warm/20 hover:shadow-amber-warm/30">
                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <path d="M12 5V19M5 12H19"/>
                 </svg>
-                Ajouter un produit
+                {{ __('Ajouter un produit') }}
             </a>
         </div>
     </x-slot>
@@ -39,12 +39,12 @@
                 </div>
             @endif
 
-            <section class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label="Statistiques produits">
+            <section class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label="{{ __('Statistiques produits') }}">
                 @foreach([
-                    ['label' => 'Total produits', 'value' => number_format($productStats['total'], 0, ',', ' '), 'icon' => '□', 'tone' => 'bg-forest/10 text-forest'],
-                    ['label' => 'Certifiés', 'value' => number_format($productStats['certified'], 0, ',', ' '), 'icon' => '✓', 'tone' => 'bg-emerald-100 text-emerald-700'],
-                    ['label' => 'Empreinte moyenne (kg CO₂)', 'value' => $productStats['carbon'] !== null ? number_format((float) $productStats['carbon'], 1, ',', ' ') : '—', 'icon' => '◌', 'tone' => 'bg-amber-100 text-amber-800'],
-                    ['label' => 'Écarts signalés', 'value' => number_format($productStats['flagged'], 0, ',', ' '), 'icon' => '!', 'tone' => 'bg-red-100 text-red-700'],
+                    ['label' => 'Total produits', 'value' => number_format($productStats['total'], 0, ',', "\u{202F}"), 'icon' => '□', 'tone' => 'bg-forest/10 text-forest'],
+                    ['label' => 'Certifiés', 'value' => number_format($productStats['certified'], 0, ',', "\u{202F}"), 'icon' => '✓', 'tone' => 'bg-emerald-100 text-emerald-700'],
+                    ['label' => 'Empreinte moyenne (kg CO₂)', 'value' => $productStats['carbon'] !== null ? number_format((float) $productStats['carbon'], 1, ',', "\u{202F}") : '—', 'icon' => '◌', 'tone' => 'bg-amber-100 text-amber-800'],
+                    ['label' => 'Écarts signalés', 'value' => number_format($productStats['flagged'], 0, ',', "\u{202F}"), 'icon' => '!', 'tone' => 'bg-red-100 text-red-700'],
                 ] as $stat)
                     <article class="dashboard-stat-card rounded-2xl border p-5 shadow-sm">
                         <span class="flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold {{ $stat['tone'] }}">{{ $stat['icon'] }}</span>
@@ -59,11 +59,11 @@
                     <table class="min-w-full divide-y divide-ink/5">
                         <thead class="bg-cream/50">
                             <tr>
-                                <th class="px-6 py-4 text-left text-[11px] font-bold tracking-wider text-ink/50 uppercase">Produit</th>
-                                <th class="px-6 py-4 text-left text-[11px] font-bold tracking-wider text-ink/50 uppercase hidden md:table-cell">Code-barres</th>
-                                <th class="px-6 py-4 text-left text-[11px] font-bold tracking-wider text-ink/50 uppercase">Empreinte CO₂</th>
-                                <th class="px-6 py-4 text-left text-[11px] font-bold tracking-wider text-ink/50 uppercase hidden sm:table-cell">Certifications</th>
-                                <th class="px-6 py-4 text-right text-[11px] font-bold tracking-wider text-ink/50 uppercase">Actions</th>
+                                <th class="px-6 py-4 text-left text-[11px] font-bold tracking-wider text-ink/50 uppercase">{{ __('Produit') }}</th>
+                                <th class="px-6 py-4 text-left text-[11px] font-bold tracking-wider text-ink/50 uppercase hidden md:table-cell">{{ __('Code-barres') }}</th>
+                                <th class="px-6 py-4 text-left text-[11px] font-bold tracking-wider text-ink/50 uppercase">{{ __('Empreinte CO₂') }}</th>
+                                <th class="px-6 py-4 text-left text-[11px] font-bold tracking-wider text-ink/50 uppercase hidden sm:table-cell">{{ __('Certifications') }}</th>
+                                <th class="px-6 py-4 text-right text-[11px] font-bold tracking-wider text-ink/50 uppercase">{{ __('Actions') }}</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-ink/5 bg-white">
@@ -85,7 +85,7 @@
                                             <div class="min-w-0">
                                                 <p class="font-semibold text-sm text-ink truncate max-w-[200px]">{{ $product->name }}</p>
                                                 <p class="text-xs text-ink/40 mt-0.5">
-                                                    Par {{ $product->user->name ?? 'Inconnu' }}
+                                                    {{ __('Par :inconnu', ['inconnu' => $product->user->name ?? 'Inconnu']) }}
                                                 </p>
                                             </div>
                                         </div>
@@ -113,10 +113,10 @@
                                                 </div>
                                                 @php($carbon = (float) $product->carbon_footprint)
                                                 @php($carbonTone = $carbon <= 2 ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-400/15 dark:text-emerald-300' : ($carbon <= 5 ? 'bg-amber-100 text-amber-800 dark:bg-amber-400/15 dark:text-amber-300' : 'bg-red-100 text-red-800 dark:bg-red-400/15 dark:text-red-300'))
-                                                <span class="inline-flex rounded-full px-2.5 py-1 text-xs font-semibold {{ $carbonTone }}">{{ $product->carbon_footprint }} kg CO₂</span>
+                                                <span class="inline-flex rounded-full px-2.5 py-1 text-xs font-semibold {{ $carbonTone }}">{{ __(':carbon_footprint kg CO₂', ['carbon_footprint' => $product->carbon_footprint]) }}</span>
                                             </div>
                                         @else
-                                            <span class="text-ink/30 text-xs">Non renseignée</span>
+                                            <span class="text-ink/30 text-xs">{{ __('Non renseignée') }}</span>
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap hidden sm:table-cell">
@@ -126,7 +126,7 @@
                                                     <svg class="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
                                                         <path d="M12 2L14.09 8.26L21 9.27L16 14.14L17.18 21.02L12 17.77L6.82 21.02L8 14.14L3 9.27L9.91 8.26L12 2Z"/>
                                                     </svg>
-                                                    Bio
+                                                    {{ __('Bio') }}
                                                 </span>
                                             @endif
                                             @if($product->is_local)
@@ -135,7 +135,7 @@
                                                         <path d="M12 2L12 22M2 12L22 12"/>
                                                         <circle cx="12" cy="12" r="10"/>
                                                     </svg>
-                                                    Local
+                                                    {{ __('Local') }}
                                                 </span>
                                             @endif
                                             @if($product->is_fair_trade)
@@ -143,23 +143,23 @@
                                                     <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                                         <path d="M20 7L9 18L4 13"/>
                                                     </svg>
-                                                    Équitable
+                                                    {{ __('Équitable') }}
                                                 </span>
                                             @endif
                                             @if(!$product->is_organic && !$product->is_local && !$product->is_fair_trade)
-                                                <span class="inline-flex rounded-full bg-ink/5 px-2.5 py-1 text-[11px] font-medium text-ink/45 dark:bg-white/10 dark:text-white/45">Aucune</span>
+                                                <span class="inline-flex rounded-full bg-ink/5 px-2.5 py-1 text-[11px] font-medium text-ink/45 dark:bg-white/10 dark:text-white/45">{{ __('Aucune') }}</span>
                                             @endif
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <div class="inline-flex items-center gap-1">
-                                            <a href="{{ route('admin.products.show', $product) }}" class="h-9 w-9 inline-flex items-center justify-center rounded-full text-ink/50 hover:text-forest hover:bg-forest/10 transition-colors dark:text-white/55" title="Voir" aria-label="Voir le produit">
+                                            <a href="{{ route('admin.products.show', $product) }}" class="h-9 w-9 inline-flex items-center justify-center rounded-full text-ink/50 hover:text-forest hover:bg-forest/10 transition-colors dark:text-white/55" title="{{ __('Voir') }}" aria-label="{{ __('Voir le produit') }}">
                                                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                                                     <path d="M1 12S6 4 12 4S23 12 23 12S18 20 12 20S1 12 1 12Z"/>
                                                     <circle cx="12" cy="12" r="3"/>
                                                 </svg>
                                             </a>
-                                            <a href="{{ route('admin.products.edit', $product) }}" class="h-9 w-9 inline-flex items-center justify-center rounded-full text-ink/50 hover:text-amber-warm hover:bg-amber-warm/10 transition-colors dark:text-white/55" title="Modifier" aria-label="Modifier le produit">
+                                            <a href="{{ route('admin.products.edit', $product) }}" class="h-9 w-9 inline-flex items-center justify-center rounded-full text-ink/50 hover:text-amber-warm hover:bg-amber-warm/10 transition-colors dark:text-white/55" title="{{ __('Modifier') }}" aria-label="{{ __('Modifier le produit') }}">
                                                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                                                     <path d="M12 20H21"/>
                                                     <path d="M16.5 3.5C16.8978 3.10217 17.4374 2.87868 18 2.87868C18.5626 2.87868 19.1022 3.10217 19.5 3.5C19.8978 3.89783 20.1213 4.43743 20.1213 5C20.1213 5.56257 19.8978 6.10217 19.5 6.5L7 19L3 20L4 16L16.5 3.5Z"/>
@@ -168,7 +168,7 @@
                                             <form action="{{ route('admin.products.destroy', $product) }}" method="POST" class="inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="h-9 w-9 inline-flex items-center justify-center rounded-full text-ink/50 hover:text-red-600 hover:bg-red-500/10 transition-colors dark:text-white/55" title="Supprimer" aria-label="Supprimer le produit">
+                                                <button type="submit" class="h-9 w-9 inline-flex items-center justify-center rounded-full text-ink/50 hover:text-red-600 hover:bg-red-500/10 transition-colors dark:text-white/55" title="{{ __('Supprimer') }}" aria-label="{{ __('Supprimer le produit') }}">
                                                     <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                                                         <path d="M3 6H21"/>
                                                         <path d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6"/>
@@ -189,13 +189,13 @@
                                                     <path d="M9 9H15M9 13H15M9 17H12"/>
                                                 </svg>
                                             </div>
-                                            <p class="font-semibold text-ink/70 mb-1">Aucun produit trouvé</p>
-                                            <p class="text-sm text-ink/40 mb-5">Commencez par ajouter votre premier produit au catalogue.</p>
+                                            <p class="font-semibold text-ink/70 mb-1">{{ __('Aucun produit trouvé') }}</p>
+                                            <p class="text-sm text-ink/40 mb-5">{{ __('Commencez par ajouter votre premier produit au catalogue.') }}</p>
                                             <a href="{{ route('admin.products.create') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-amber-warm hover:bg-amber-light text-white text-sm font-semibold rounded-lg transition-colors">
                                                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                                     <path d="M12 5V19M5 12H19"/>
                                                 </svg>
-                                                Ajouter un produit
+                                                {{ __('Ajouter un produit') }}
                                             </a>
                                         </div>
                                     </td>

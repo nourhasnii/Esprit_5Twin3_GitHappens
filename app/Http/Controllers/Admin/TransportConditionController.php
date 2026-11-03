@@ -81,7 +81,7 @@ class TransportConditionController extends Controller
             $alertService->syncAlert($condition);
         });
 
-        return redirect()->route('admin.transport-conditions.index')->with('success', 'Transport condition created successfully.');
+        return redirect()->route('admin.transport-conditions.index')->with('success', __('Transport condition created successfully.'));
     }
 
     public function show(TransportCondition $transportCondition): View
@@ -106,13 +106,13 @@ class TransportConditionController extends Controller
             $alertService->syncAlert($transportCondition->fresh());
         });
 
-        return redirect()->route('admin.transport-conditions.index')->with('success', 'Transport condition updated successfully.');
+        return redirect()->route('admin.transport-conditions.index')->with('success', __('Transport condition updated successfully.'));
     }
 
     public function destroy(TransportCondition $transportCondition): RedirectResponse
     {
         $transportCondition->delete();
 
-        return redirect()->route('admin.transport-conditions.index')->with('success', 'Transport condition deleted successfully.');
+        return redirect()->route('admin.transport-conditions.index')->with('success', __('Transport condition deleted successfully.'));
     }
 }

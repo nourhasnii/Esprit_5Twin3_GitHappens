@@ -7,11 +7,11 @@
     $expiry = BatchAttributes::expiryDate($batch);
 @endphp
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ in_array(app()->getLocale(), config('app.rtl_locales', []), true) ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bon de don {{ $number }}</title>
+    <title>{{ __('Bon de don :number', ['number' => $number]) }}</title>
     <style>
         :root { --ink: #12302b; --soft: #4d625d; --rule: #cfd9d5; --leaf: #3d7a1a; --leaf-wash: #e6f1dc; }
         * { box-sizing: border-box; }
@@ -45,30 +45,31 @@
             .sheet { margin: 0; border: 0; padding: 0; max-width: none; }
         }
     </style>
-</head>
+    @include('partials.locale-head')
+    </head>
 <body>
     <div class="toolbar">
-        <a href="{{ route('optimization.show', $r) }}">← Retour à la recommandation</a>
-        <button type="button" onclick="window.print()">Imprimer le bon</button>
+        <a href="{{ route('optimization.show', $r) }}">{{ __('← Retour à la recommandation') }}</a>
+        <button type="button" onclick="window.print()">{{ __('Imprimer le bon') }}</button>
     </div>
 
     <main class="sheet">
         <div class="head">
             <div>
-                <p class="brand">NutriTrace <small>Plan anti-gaspillage n° {{ $r->id }}</small></p>
-                <h1>Bon de don alimentaire</h1>
+                <p class="brand">{{ __('NutriTrace') }} <small>{{ __('Plan anti-gaspillage n° :id', ['id' => $r->id]) }}</small></p>
+                <h1>{{ __('Bon de don alimentaire') }}</h1>
             </div>
-            <p class="ref">N° <b>{{ $number }}</b><br>Émis le {{ $r->rescue_applied_at->format('d/m/Y à H:i') }}</p>
+            <p class="ref">N° <b>{{ $number }}</b><br>{{ __('Émis le :i', ['i' => $r->rescue_applied_at->format('d/m/Y à H:i')]) }}</p>
         </div>
 
         <div class="parties">
             <div class="party">
-                <span>Donateur</span>
+                <span>{{ __('Donateur') }}</span>
                 <b>{{ $r->sourceSite?->name }}</b><br>
                 {{ $r->sourceSite?->address }}@if ($r->sourceSite?->address && $r->sourceSite?->city), @endif{{ $r->sourceSite?->city }}
             </div>
             <div class="party">
-                <span>Bénéficiaire</span>
+                <span>{{ __('Bénéficiaire') }}</span>
                 <b>{{ $association?->name ?? $donation['site_name'] }}</b><br>
                 {{ $association?->address }}@if ($association?->address && $association?->city), @endif{{ $association?->city ?? $donation['city'] }}
             </div>
@@ -77,11 +78,11 @@
         <table>
             <thead>
                 <tr>
-                    <th>Produit</th>
-                    <th>Lot</th>
-                    <th>DLC</th>
-                    <th class="num">Quantité</th>
-                    <th class="num">Poids estimé</th>
+                    <th>{{ __('Produit') }}</th>
+                    <th>{{ __('Lot') }}</th>
+                    <th>{{ __('DLC') }}</th>
+                    <th class="num">{{ __('Quantité') }}</th>
+                    <th class="num">{{ __('Poids estimé') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -90,29 +91,28 @@
                     <td>{{ BatchAttributes::code($batch) }}</td>
                     <td>{{ $expiry?->format('d/m/Y') ?? '—' }}</td>
                     <td class="num"><b>{{ Fmt::q($donation['quantity']) }} u.</b></td>
-                    <td class="num">{{ Fmt::n($donation['quantity'] * ($plan['unit_kg'] ?? 1), 1) }} kg</td>
+                    <td class="num">{{ __(':unit_kg kg', ['unit_kg' => Fmt::n($donation['quantity'] * ($plan['unit_kg'] ?? 1), 1)]) }}</td>
                 </tr>
             </tbody>
         </table>
 
         <p class="impact">
-            Ce don représente environ <b>{{ Fmt::q($donation['meals']) }} repas</b> et évite le gaspillage de
-            <b>{{ Fmt::n($donation['quantity'] * ($plan['unit_kg'] ?? 1), 1) }} kg</b> de nourriture.
-            Trajet : {{ Fmt::n($donation['distance_km'], 1) }} km, livraison {{ Fmt::n($donation['arrives_days_before_expiry'], 1) }} jour(s) avant la DLC.
+            {{ __('Ce don représente environ') }} <b>{{ __(':meals repas', ['meals' => Fmt::q($donation['meals'])]) }}</b> {{ __('et évite le gaspillage de') }}
+            <b>{{ __(':unit_kg kg', ['unit_kg' => Fmt::n($donation['quantity'] * ($plan['unit_kg'] ?? 1), 1)]) }}</b> {{ __('de nourriture. Trajet : :distance_km km, livraison :arrives_days_before_expiry jour(s) avant la DLC.', ['distance_km' => Fmt::n($donation['distance_km'], 1), 'arrives_days_before_expiry' => Fmt::n($donation['arrives_days_before_expiry'], 1)]) }}
         </p>
 
         <div class="conditions">
-            <b>Conditions</b>
+            <b>{{ __('Conditions') }}</b>
             <ul>
-                <li>Les produits sont remis gratuitement, dans leur emballage d’origine et avant leur date limite de consommation.</li>
-                <li>La chaîne du froid doit être respectée jusqu’à la distribution ; les produits ne peuvent pas être revendus.</li>
-                <li>Le bénéficiaire vérifie l’état des produits à la réception et refuse tout produit abîmé.</li>
+                <li>{{ __('Les produits sont remis gratuitement, dans leur emballage d’origine et avant leur date limite de consommation.') }}</li>
+                <li>{{ __('La chaîne du froid doit être respectée jusqu’à la distribution ; les produits ne peuvent pas être revendus.') }}</li>
+                <li>{{ __('Le bénéficiaire vérifie l’état des produits à la réception et refuse tout produit abîmé.') }}</li>
             </ul>
         </div>
 
         <div class="signatures">
-            <div>Pour le donateur<br><span class="conditions">Nom, date et signature</span></div>
-            <div>Pour le bénéficiaire<br><span class="conditions">Nom, date, signature et cachet</span></div>
+            <div>{{ __('Pour le donateur') }}<br><span class="conditions">{{ __('Nom, date et signature') }}</span></div>
+            <div>{{ __('Pour le bénéficiaire') }}<br><span class="conditions">{{ __('Nom, date, signature et cachet') }}</span></div>
         </div>
     </main>
 </body>

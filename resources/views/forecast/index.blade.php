@@ -3,14 +3,14 @@
 @use('App\Services\Forecast\DemandForecaster')
 @use('Carbon\CarbonImmutable')
 
-@section('eyebrow', 'Forecast workspace')
-@section('title', 'Prévisions de la demande')
-@section('description', 'Prévisions basées sur les ventes historiques et le calendrier tunisien; elles alimentent l’optimisation sans afficher de données simulées comme des ventes réelles.')
+@section('eyebrow', __('Forecast workspace'))
+@section('title', __('Prévisions de la demande'))
+@section('description', __('Prévisions basées sur les ventes historiques et le calendrier tunisien; elles alimentent l’optimisation sans afficher de données simulées comme des ventes réelles.'))
 
 @section('content')
 <form class="filters" method="GET" action="{{ route('forecast.index') }}">
     <div class="field">
-        <label for="f-site">Site</label>
+        <label for="f-site">{{ __('Site') }}</label>
         <select id="f-site" name="site_id">
             @foreach ($sites as $s)
                 <option value="{{ $s->id }}" @selected($site?->id === $s->id)>{{ $s->name }}</option>
@@ -18,7 +18,7 @@
         </select>
     </div>
     <div class="field">
-        <label for="f-product">Produit</label>
+        <label for="f-product">{{ __('Produit') }}</label>
         <select id="f-product" name="product_id">
             @foreach ($products as $p)
                 <option value="{{ $p->id }}" @selected($product?->id === $p->id)>{{ $p->name }}</option>
@@ -26,34 +26,34 @@
         </select>
     </div>
     <div class="field">
-        <label for="f-from">À partir du</label>
+        <label for="f-from">{{ __('À partir du') }}</label>
         <input type="date" id="f-from" name="from" value="{{ $from->toDateString() }}">
     </div>
     <div class="field">
-        <label for="f-days">Horizon</label>
+        <label for="f-days">{{ __('Horizon') }}</label>
         <select id="f-days" name="days">
             @foreach ([7, 14, 30] as $d)
-                <option value="{{ $d }}" @selected($days === $d)>{{ $d }} jours</option>
+                <option value="{{ $d }}" @selected($days === $d)>{{ __(':d jours', ['d' => $d]) }}</option>
             @endforeach
         </select>
     </div>
-    <button class="btn btn-primary" type="submit">Prévoir</button>
+    <button class="btn btn-primary" type="submit">{{ __('Prévoir') }}</button>
 </form>
 
 @if ($shortcuts)
     <p class="shortcuts">
-        <span class="muted small">Simuler une période :</span>
-        <a @class(['chip', 'is-on' => ! $isSimulation]) href="{{ route('forecast.index', ['site_id' => $site?->id, 'product_id' => $product?->id, 'days' => $days]) }}">Aujourd’hui</a>
+        <span class="muted small">{{ __('Simuler une période :') }}</span>
+        <a @class(['chip', 'is-on' => ! $isSimulation]) href="{{ route('forecast.index', ['site_id' => $site?->id, 'product_id' => $product?->id, 'days' => $days]) }}">{{ __('Aujourd’hui') }}</a>
         @foreach ($shortcuts as $sc)
-            <a @class(['chip', 'is-on' => $from->toDateString() === $sc['from']]) href="{{ route('forecast.index', ['site_id' => $site?->id, 'product_id' => $product?->id, 'days' => $days, 'from' => $sc['from']]) }}">{{ $sc['label'] }} <span class="muted">· {{ $sc['date']->format('d/m/Y') }}</span></a>
+            <a @class(['chip', 'is-on' => $from->toDateString() === $sc['from']]) href="{{ route('forecast.index', ['site_id' => $site?->id, 'product_id' => $product?->id, 'days' => $days, 'from' => $sc['from']]) }}">{{ __($sc['label']) }} <span class="muted">· {{ $sc['date']->format('d/m/Y') }}</span></a>
         @endforeach
     </p>
 @endif
 
 @if (! $forecast || ! $forecast['has_history'])
     <section class="panel">
-        <p><b>Pas encore de ventes enregistrées</b> pour {{ $product?->name ?? 'ce produit' }} à {{ $site?->name ?? 'ce site' }} sur les {{ config('stock.forecast.history_days') }} derniers jours : la prévision vaut 0.</p>
-        <p class="muted small">Les dons, la casse et les destructions ne comptent pas comme des ventes. Choisissez un magasin qui vend ce produit.</p>
+        <p><b>{{ __('Pas encore de ventes enregistrées') }}</b> {{ __('pour :produit à :site sur les :history_days derniers jours : la prévision vaut 0.', ['produit' => $product?->name ?? 'ce produit', 'site' => $site?->name ?? 'ce site', 'history_days' => config('stock.forecast.history_days')]) }}</p>
+        <p class="muted small">{{ __('Les dons, la casse et les destructions ne comptent pas comme des ventes. Choisissez un magasin qui vend ce produit.') }}</p>
     </section>
 @else
     @php
@@ -107,19 +107,19 @@
                 <h2>{{ $product->name }} · {{ $site->name }}</h2>
                 <p class="muted small">
                     @if ($isSimulation)
-                        Simulation à partir du {{ $from->format('d/m/Y') }} : prévision de {{ Fmt::n($f['total'], 0) }} u. sur {{ $days }} jours, soit {{ Fmt::n($f['average'], 1) }} u./jour en moyenne.
+                        {{ __('Simulation à partir du :y : prévision de :total u. sur :days jours, soit :average u./jour en moyenne.', ['y' => $from->format('d/m/Y'), 'total' => Fmt::n($f['total'], 0), 'days' => $days, 'average' => Fmt::n($f['average'], 1)]) }}
                     @else
-                        Prévision de {{ Fmt::n($f['total'], 0) }} u. sur les {{ $days }} prochains jours, soit {{ Fmt::n($f['average'], 1) }} u./jour en moyenne (moyenne simple des ventes passées : {{ Fmt::n($f['simple_average'], 1) }}).
+                        {{ __('Prévision de :total u. sur les :days prochains jours, soit :average u./jour en moyenne (moyenne simple des ventes passées : :simple_average).', ['total' => Fmt::n($f['total'], 0), 'days' => $days, 'average' => Fmt::n($f['average'], 1), 'simple_average' => Fmt::n($f['simple_average'], 1)]) }}
                     @endif
                 </p>
             </div>
             @if ($stockout)
-                <span class="tag tag-low">Rupture prévue le {{ CarbonImmutable::parse($stockout['date'])->locale('fr')->isoFormat('dddd DD/MM') }}</span>
+                <span class="tag tag-low">{{ __('Rupture prévue le :mm', ['mm' => CarbonImmutable::parse($stockout['date'])->locale(app()->getLocale())->isoFormat('dddd DD/MM')]) }}</span>
             @endif
         </div>
 
         <div class="chart-wrap">
-            <svg viewBox="0 0 {{ $W }} {{ $H }}" class="chart" role="img" aria-label="Ventes des 21 derniers jours et prévision">
+            <svg viewBox="0 0 {{ $W }} {{ $H }}" class="chart" role="img" aria-label="{{ __('Ventes des 21 derniers jours et prévision') }}">
                 @foreach ($bands as $b)
                     <rect x="{{ $L + $b['from'] * $slot }}" y="{{ $T }}" width="{{ ($b['to'] - $b['from'] + 1) * $slot }}" height="{{ $H - $T - $B }}" fill="var(--amber-wash)"/>
                     <text x="{{ $L + $b['from'] * $slot + 4 }}" y="{{ $T - 8 }}" class="c-event">{{ \Illuminate\Support\Str::limit($b['key'], max(8, (int) (($b['to'] - $b['from'] + 1) * $slot / 6.5))) }}</text>
@@ -163,19 +163,19 @@
             </svg>
         </div>
         <div class="map-legend">
-            <span><i class="sw sw-bar"></i>Ventes réelles (21 derniers jours)</span>
-            <span><i class="sw sw-line"></i>Prévision</span>
-            <span><i class="sw sw-band"></i>Fourchette probable (80 %)</span>
-            <span><i class="sw sw-event"></i>Période spéciale du calendrier</span>
-            @if ($f['outliers'])<span><b style="color:var(--brick)">▲</b> Vente exceptionnelle corrigée</span>@endif
+            <span><i class="sw sw-bar"></i>{{ __('Ventes réelles (21 derniers jours)') }}</span>
+            <span><i class="sw sw-line"></i>{{ __('Prévision') }}</span>
+            <span><i class="sw sw-band"></i>{{ __('Fourchette probable (80 %)') }}</span>
+            <span><i class="sw sw-event"></i>{{ __('Période spéciale du calendrier') }}</span>
+            @if ($f['outliers'])<span><b style="color:var(--brick)">▲</b> {{ __('Vente exceptionnelle corrigée') }}</span>@endif
         </div>
     </section>
 
     <section class="panel">
         <div class="panel-head">
             <div>
-                <h2>Comment l’IA a calculé cette prévision</h2>
-                <p class="muted small">Chaque étape est expliquée : la prévision n’est pas une boîte noire.</p>
+                <h2>{{ __('Comment l’IA a calculé cette prévision') }}</h2>
+                <p class="muted small">{{ __('Chaque étape est expliquée : la prévision n’est pas une boîte noire.') }}</p>
             </div>
         </div>
 
@@ -183,27 +183,27 @@
             <li>
                 <span class="step-n">1</span>
                 <div>
-                    <p class="step-t">Historique analysé</p>
-                    <p>{{ $f['history_days'] }} jour(s) de ventes sur les {{ config('stock.forecast.history_days') }} derniers jours.
-                        @if ($f['missing_days'] > 0) {{ $f['missing_days'] }} jour(s) sans aucune saisie dans le magasin sont ignorés (magasin fermé ou saisie oubliée), au lieu de compter pour zéro. @endif
-                        Les dons, la casse et les destructions ne sont pas comptés comme des ventes.</p>
+                    <p class="step-t">{{ __('Historique analysé') }}</p>
+                    <p>{{ __(':history_days jour(s) de ventes sur les :history_days2 derniers jours.', ['history_days' => $f['history_days'], 'history_days2' => config('stock.forecast.history_days')]) }}
+                        @if ($f['missing_days'] > 0) {{ __(':missing_days jour(s) sans aucune saisie dans le magasin sont ignorés (magasin fermé ou saisie oubliée), au lieu de compter pour zéro.', ['missing_days' => $f['missing_days']]) }} @endif
+                        {{ __('Les dons, la casse et les destructions ne sont pas comptés comme des ventes.') }}</p>
                 </div>
             </li>
             <li>
                 <span class="step-n">2</span>
                 <div>
-                    <p class="step-t">Ventes exceptionnelles</p>
+                    <p class="step-t">{{ __('Ventes exceptionnelles') }}</p>
                     @forelse ($f['outliers'] as $o)
-                        <p>Le {{ CarbonImmutable::parse($o['date'])->format('d/m') }}, {{ Fmt::q($o['original']) }} u. vendues au lieu d’environ {{ Fmt::n($f['simple_average'], 0) }} habituellement : valeur ramenée à {{ Fmt::n($o['capped'], 0) }} u. pour ne pas fausser la prévision (erreur de saisie ou commande isolée ?).</p>
+                        <p>{{ __('Le :m, :original u. vendues au lieu d’environ :simple_average habituellement : valeur ramenée à :capped u. pour ne pas fausser la prévision (erreur de saisie ou commande isolée ?).', ['m' => CarbonImmutable::parse($o['date'])->format('d/m'), 'original' => Fmt::q($o['original']), 'simple_average' => Fmt::n($f['simple_average'], 0), 'capped' => Fmt::n($o['capped'], 0)]) }}</p>
                     @empty
-                        <p>Aucune vente anormale détectée.</p>
+                        <p>{{ __('Aucune vente anormale détectée.') }}</p>
                     @endforelse
                 </div>
             </li>
             <li>
                 <span class="step-n">3</span>
                 <div>
-                    <p class="step-t">Rythme de la semaine</p>
+                    <p class="step-t">{{ __('Rythme de la semaine') }}</p>
                     @if (($acc['weekly'] ?? true) && collect($f['weekday_factors'])->contains(fn ($v) => abs($v - 1) > 0.03))
                         <div class="week">
                             @foreach ($f['weekday_factors'] as $wd => $factor)
@@ -214,56 +214,56 @@
                                 </div>
                             @endforeach
                         </div>
-                        <p class="muted small">Appris sur l’historique, sans règle fixée à l’avance.</p>
+                        <p class="muted small">{{ __('Appris sur l’historique, sans règle fixée à l’avance.') }}</p>
                     @else
-                        <p>Aucun rythme hebdomadaire fiable dans ces ventes : l’auto-calibrage a désactivé cet effet, qui n’aurait ajouté que du bruit.</p>
+                        <p>{{ __('Aucun rythme hebdomadaire fiable dans ces ventes : l’auto-calibrage a désactivé cet effet, qui n’aurait ajouté que du bruit.') }}</p>
                     @endif
                 </div>
             </li>
             <li>
                 <span class="step-n">4</span>
                 <div>
-                    <p class="step-t">Niveau et tendance</p>
-                    <p>Niveau actuel d’environ <b>{{ Fmt::n($f['level'], 1) }} u./jour</b>, tendance de <b>{{ $f['trend'] >= 0 ? '+' : '−' }}{{ Fmt::n(abs($f['trend']), 2) }} u./jour</b>, amortie avec le temps pour ne pas s’emballer (lissage exponentiel de Holt).</p>
+                    <p class="step-t">{{ __('Niveau et tendance') }}</p>
+                    <p>{{ __('Niveau actuel d’environ') }} <b>{{ __(':level u./jour', ['level' => Fmt::n($f['level'], 1)]) }}</b>{{ __(', tendance de') }} <b>{{ __(':trend:trend2 u./jour', ['trend' => $f['trend'] >= 0 ? '+' : '−', 'trend2' => Fmt::n(abs($f['trend']), 2)]) }}</b>{{ __(', amortie avec le temps pour ne pas s’emballer (lissage exponentiel de Holt).') }}</p>
                 </div>
             </li>
             <li>
                 <span class="step-n">5</span>
                 <div>
-                    <p class="step-t">Calendrier tunisien</p>
+                    <p class="step-t">{{ __('Calendrier tunisien') }}</p>
                     @if ($eventsAhead->isEmpty())
-                        <p>Aucune période spéciale sur les {{ $days }} jours prévus.@if ($f['category']) Produit reconnu comme « {{ $f['category'] }} ». @endif</p>
+                        <p>{{ __('Aucune période spéciale sur les :days jours prévus.', ['days' => $days]) }}@if ($f['category']) {{ __('Produit reconnu comme « :category ».', ['category' => $f['category']]) }} @endif</p>
                     @else
-                        <p>Périodes appliquées pour ce produit {{ $f['category'] ? '(famille « '.$f['category'].' »)' : '' }}{{ $f['coastal'] ? ' dans une ville balnéaire' : '' }} :</p>
+                        <p>{{ __('Périodes appliquées pour ce produit :category:balnaire :', ['category' => $f['category'] ? '(famille « '.$f['category'].' »)' : '', 'balnaire' => $f['coastal'] ? ' dans une ville balnéaire' : '']) }}</p>
                         <ul class="events">
                             @foreach ($eventsAhead as $label)
                                 @php($m = $multipliers[$label]['multipliers'] ?? [])
                                 @php($coef = (float) ($f['category'] && isset($m[$f['category']]) ? $m[$f['category']] : ($m['*'] ?? 1)))
-                                <li><b>{{ $label }}</b> : ventes × {{ Fmt::n($coef, 2) }} ({{ $coef >= 1 ? '+' : '−' }}{{ Fmt::n(abs($coef - 1) * 100) }} %)</li>
+                                <li><b>{{ $label }}</b> {{ __(': ventes × :coef (:coef2:coef3 %)', ['coef' => Fmt::n($coef, 2), 'coef2' => $coef >= 1 ? '+' : '−', 'coef3' => Fmt::n(abs($coef - 1) * 100)]) }}</li>
                             @endforeach
                         </ul>
                     @endif
-                    <p class="muted small">Hypothèses métier modifiables dans <code>config/stock.php</code>. Les dates des fêtes religieuses sont estimées (calendrier lunaire).</p>
+                    <p class="muted small">{{ __('Hypothèses métier modifiables dans') }} <code>config/stock.php</code>{{ __('. Les dates des fêtes religieuses sont estimées (calendrier lunaire).') }}</p>
                 </div>
             </li>
             <li>
                 <span class="step-n">6</span>
                 <div>
-                    <p class="step-t">Précision mesurée</p>
+                    <p class="step-t">{{ __('Précision mesurée') }}</p>
                     @if ($acc)
                         @php($ratio = $acc['error'] > 0 ? $acc['baseline_error'] / $acc['error'] : null)
-                        <p>L’IA a rejoué les {{ $acc['test_days'] }} derniers jours comme si elle ne les connaissait pas. Elle se trompe en moyenne de <b>{{ Fmt::n($acc['error'], 1) }} %</b>, contre <b>{{ Fmt::n($acc['baseline_error'], 1) }} %</b> pour une moyenne simple.
+                        <p>{{ __('L’IA a rejoué les :test_days derniers jours comme si elle ne les connaissait pas. Elle se trompe en moyenne de', ['test_days' => $acc['test_days']]) }} <b>{{ Fmt::n($acc['error'], 1) }} %</b>{{ __(', contre') }} <b>{{ Fmt::n($acc['baseline_error'], 1) }} %</b> {{ __('pour une moyenne simple.') }}
                             @if ($ratio && $ratio >= 1.15)
-                                Elle est donc <b>{{ Fmt::n($ratio, 1) }} fois plus précise</b>.
+                                {{ __('Elle est donc') }} <b>{{ __(':ratio fois plus précise', ['ratio' => Fmt::n($ratio, 1)]) }}</b>.
                             @elseif ($ratio && $ratio >= 0.85)
-                                Les deux méthodes sont comparables sur ces ventes, qui ne suivent pas de rythme marqué.
+                                {{ __('Les deux méthodes sont comparables sur ces ventes, qui ne suivent pas de rythme marqué.') }}
                             @else
-                                Sur ces ventes très irrégulières, la moyenne simple fait un peu mieux : la prévision reste prudente.
+                                {{ __('Sur ces ventes très irrégulières, la moyenne simple fait un peu mieux : la prévision reste prudente.') }}
                             @endif
                         </p>
-                        <p class="muted small">Auto-calibrage : {{ $acc['tried'] }} réglages essayés ; retenu : lissage {{ Fmt::n($acc['alpha'], 2) }}, tendance {{ $acc['beta'] > 0 ? 'activée' : 'désactivée' }}, rythme de la semaine {{ $acc['weekly'] ? 'activé' : 'désactivé' }}.</p>
+                        <p class="muted small">{{ __('Auto-calibrage : :tried réglages essayés ; retenu : lissage :alpha, tendance :dsactive, rythme de la semaine :dsactiv.', ['tried' => $acc['tried'], 'alpha' => Fmt::n($acc['alpha'], 2), 'dsactive' => $acc['beta'] > 0 ? 'activée' : 'désactivée', 'dsactiv' => $acc['weekly'] ? 'activé' : 'désactivé']) }}</p>
                     @else
-                        <p>Moins de 3 semaines d’historique : la précision sera mesurée quand il y aura assez de ventes.</p>
+                        <p>{{ __('Moins de 3 semaines d’historique : la précision sera mesurée quand il y aura assez de ventes.') }}</p>
                     @endif
                 </div>
             </li>
@@ -271,12 +271,12 @@
                 <li @class(['is-alert' => (bool) $stockout])>
                     <span class="step-n">7</span>
                     <div>
-                        <p class="step-t">Stock et rupture</p>
+                        <p class="step-t">{{ __('Stock et rupture') }}</p>
                         @if ($stockout)
-                            <p>Stock disponible : <b>{{ Fmt::q($available) }} u.</b> Au rythme prévu, <b>rupture le {{ CarbonImmutable::parse($stockout['date'])->locale('fr')->isoFormat('dddd D MMMM') }}</b>{{ $stockout['days'] === 0 ? ', dès aujourd’hui' : ', dans '.$stockout['days'].' jour(s)' }}.
-                                <a href="{{ route('stock-movements.create', ['type' => 'transfer']) }}">Réapprovisionner</a></p>
+                            <p>{{ __('Stock disponible :') }} <b>{{ Fmt::q($available) }} u.</b> {{ __('Au rythme prévu,') }} <b>{{ __('rupture le :mmmm', ['mmmm' => CarbonImmutable::parse($stockout['date'])->locale(app()->getLocale())->isoFormat('dddd D MMMM')]) }}</b>{{ $stockout['days'] === 0 ? __(', dès aujourd’hui') : __(', dans :days jour(s)', ['days' => $stockout['days']]) }}.
+                                <a href="{{ route('stock-movements.create', ['type' => 'transfer']) }}">{{ __('Réapprovisionner') }}</a></p>
                         @else
-                            <p>Stock disponible : <b>{{ Fmt::q($available) }} u.</b> Pas de rupture prévue dans les 30 prochains jours.</p>
+                            <p>{{ __('Stock disponible :') }} <b>{{ Fmt::q($available) }} u.</b> {{ __('Pas de rupture prévue dans les 30 prochains jours.') }}</p>
                         @endif
                     </div>
                 </li>
@@ -285,11 +285,11 @@
     </section>
 
     <section class="panel">
-        <div class="panel-head"><div><h2>Détail jour par jour</h2></div></div>
+        <div class="panel-head"><div><h2>{{ __('Détail jour par jour') }}</h2></div></div>
         <div class="table-wrap">
             <table>
                 <thead>
-                    <tr><th>Date</th><th>Période spéciale</th><th class="num">Prévision</th><th class="num">Fourchette probable</th></tr>
+                    <tr><th>{{ __('Date') }}</th><th>{{ __('Période spéciale') }}</th><th class="num">{{ __('Prévision') }}</th><th class="num">{{ __('Fourchette probable') }}</th></tr>
                 </thead>
                 <tbody>
                     @foreach ($f['days'] as $d)

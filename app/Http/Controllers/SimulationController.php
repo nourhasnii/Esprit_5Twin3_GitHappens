@@ -53,7 +53,7 @@ class SimulationController extends Controller
         ]);
 
         return redirect()->route('simulations.show', $simulation)
-            ->with('success', 'Simulation terminée : comparez les deux stratégies ci-dessous. Les stocks réels n’ont pas été modifiés.');
+            ->with('success', __('Simulation terminée : comparez les deux stratégies ci-dessous. Les stocks réels n’ont pas été modifiés.'));
     }
 
     public function show(StockSimulation $simulation): View
@@ -65,7 +65,7 @@ class SimulationController extends Controller
     {
         $simulation->delete();
 
-        return redirect()->route('simulations.index')->with('success', 'Simulation supprimée.');
+        return redirect()->route('simulations.index')->with('success', __('Simulation supprimée.'));
     }
 
     /**

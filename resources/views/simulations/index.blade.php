@@ -1,9 +1,9 @@
 @extends('layouts.stock')
 @use('App\Support\Fmt')
 
-@section('eyebrow', 'Digital twin')
-@section('title', 'Jumeau numérique « Et si ? »')
-@section('description', 'Copie de vos stocks réels d’aujourd’hui, rejouée sur les jours à venir avec un incident : comparez ce qui se passe sans IA et avec les décisions de l’IA. Les stocks réels ne sont jamais modifiés.')
+@section('eyebrow', __('Digital twin'))
+@section('title', __('Jumeau numérique « Et si ? »'))
+@section('description', __('Copie de vos stocks réels d’aujourd’hui, rejouée sur les jours à venir avec un incident : comparez ce qui se passe sans IA et avec les décisions de l’IA. Les stocks réels ne sont jamais modifiés.'))
 
 @section('content')
 <form method="POST" action="{{ route('simulations.store') }}" id="sim-form">
@@ -12,20 +12,20 @@
     <section class="panel">
         <div class="panel-head">
             <div>
-                <h2>1. Choisissez un scénario</h2>
-                <p class="muted small">Chaque scénario remplit les réglages ci-dessous ; vous pouvez ensuite les modifier.</p>
+                <h2>{{ __('1. Choisissez un scénario') }}</h2>
+                <p class="muted small">{{ __('Chaque scénario remplit les réglages ci-dessous ; vous pouvez ensuite les modifier.') }}</p>
             </div>
         </div>
 
-        <div class="presets" role="radiogroup" aria-label="Scénario">
+        <div class="presets" role="radiogroup" aria-label="{{ __('Scénario') }}">
             @foreach ($presets as $key => $preset)
                 <label class="preset">
                     <input type="radio" name="preset" value="{{ $key }}" data-values='@json($preset['values'])'
                         @checked(old('preset', 'normal') === $key)>
                     <span class="preset-card">
                         <span class="preset-icon" aria-hidden="true">{{ $preset['icon'] }}</span>
-                        <b>{{ $preset['label'] }}</b>
-                        <span class="muted small">{{ $preset['text'] }}</span>
+                        <b>{{ __($preset['label']) }}</b>
+                        <span class="muted small">{{ __($preset['text']) }}</span>
                     </span>
                 </label>
             @endforeach
@@ -35,21 +35,21 @@
     <section class="panel">
         <div class="panel-head">
             <div>
-                <h2>2. Réglez les événements</h2>
-                <p class="muted small">Les jours sont comptés à partir d’aujourd’hui (jour 1). Laissez vide ce qui ne doit pas arriver.</p>
+                <h2>{{ __('2. Réglez les événements') }}</h2>
+                <p class="muted small">{{ __('Les jours sont comptés à partir d’aujourd’hui (jour 1). Laissez vide ce qui ne doit pas arriver.') }}</p>
             </div>
         </div>
 
         <div class="form-grid">
             <div class="field">
-                <label for="name">Nom de la simulation <span class="muted">(facultatif)</span></label>
-                <input id="name" name="name" value="{{ old('name') }}" maxlength="120" placeholder="Ex. : Ramadan 2027 à Sousse">
+                <label for="name">{{ __('Nom de la simulation') }} <span class="muted">{{ __('(facultatif)') }}</span></label>
+                <input id="name" name="name" value="{{ old('name') }}" maxlength="120" placeholder="{{ __('Ex. : Ramadan 2027 à Sousse') }}">
             </div>
             <div class="field">
-                <label for="horizon">Durée simulée</label>
+                <label for="horizon">{{ __('Durée simulée') }}</label>
                 <select id="horizon" name="horizon">
                     @foreach ([7, 14, 21, 30] as $h)
-                        <option value="{{ $h }}" @selected((int) old('horizon', 14) === $h)>{{ $h }} jours</option>
+                        <option value="{{ $h }}" @selected((int) old('horizon', 14) === $h)>{{ __(':h jours', ['h' => $h]) }}</option>
                     @endforeach
                 </select>
             </div>
@@ -57,16 +57,16 @@
 
         <div class="events">
             <fieldset class="event">
-                <legend>📈 Variation de la demande</legend>
+                <legend>{{ __('📈 Variation de la demande') }}</legend>
                 <div class="field">
-                    <label for="demand_change">Variation (%)</label>
+                    <label for="demand_change">{{ __('Variation (%)') }}</label>
                     <input type="number" id="demand_change" name="demand_change" value="{{ old('demand_change') }}" min="-90" max="200" step="5" placeholder="0">
-                    <span class="hint">+35 = 35 % de ventes en plus ; -30 = 30 % en moins.</span>
+                    <span class="hint">{{ __('+35 = 35 % de ventes en plus ; -30 = 30 % en moins.') }}</span>
                 </div>
                 <div class="field">
-                    <label for="demand_product_id">Produit concerné</label>
+                    <label for="demand_product_id">{{ __('Produit concerné') }}</label>
                     <select id="demand_product_id" name="demand_product_id">
-                        <option value="">Tous les produits</option>
+                        <option value="">{{ __('Tous les produits') }}</option>
                         @foreach ($products as $p)
                             <option value="{{ $p->id }}" @selected((int) old('demand_product_id') === $p->id)>{{ $p->name }}</option>
                         @endforeach
@@ -74,35 +74,35 @@
                 </div>
                 <div class="field-pair">
                     <div class="field">
-                        <label for="demand_from">Du jour</label>
+                        <label for="demand_from">{{ __('Du jour') }}</label>
                         <input type="number" id="demand_from" name="demand_from" value="{{ old('demand_from') }}" min="1" max="30" placeholder="1">
                     </div>
                     <div class="field">
-                        <label for="demand_to">Au jour</label>
-                        <input type="number" id="demand_to" name="demand_to" value="{{ old('demand_to') }}" min="1" max="30" placeholder="fin">
+                        <label for="demand_to">{{ __('Au jour') }}</label>
+                        <input type="number" id="demand_to" name="demand_to" value="{{ old('demand_to') }}" min="1" max="30" placeholder="{{ __('fin') }}">
                     </div>
                 </div>
             </fieldset>
 
             <fieldset class="event">
-                <legend>🚚 Retard des camions</legend>
+                <legend>{{ __('🚚 Retard des camions') }}</legend>
                 <div class="field">
-                    <label for="transport_delay">Retard (jours)</label>
+                    <label for="transport_delay">{{ __('Retard (jours)') }}</label>
                     <input type="number" id="transport_delay" name="transport_delay" value="{{ old('transport_delay') }}" min="0" max="7" placeholder="0">
-                    <span class="hint">Une livraison met normalement 1 jour.</span>
+                    <span class="hint">{{ __('Une livraison met normalement 1 jour.') }}</span>
                 </div>
                 <div class="field">
-                    <label for="transport_from">À partir du jour</label>
+                    <label for="transport_from">{{ __('À partir du jour') }}</label>
                     <input type="number" id="transport_from" name="transport_from" value="{{ old('transport_from') }}" min="1" max="30" placeholder="1">
                 </div>
             </fieldset>
 
             <fieldset class="event">
-                <legend>🏪 Site fermé</legend>
+                <legend>{{ __('🏪 Site fermé') }}</legend>
                 <div class="field">
-                    <label for="closed_site_id">Site</label>
+                    <label for="closed_site_id">{{ __('Site') }}</label>
                     <select id="closed_site_id" name="closed_site_id">
-                        <option value="">Aucun</option>
+                        <option value="">{{ __('Aucun') }}</option>
                         @foreach ($sites as $s)
                             <option value="{{ $s->id }}" @selected((int) old('closed_site_id') === $s->id)>{{ $s->name }}</option>
                         @endforeach
@@ -110,22 +110,22 @@
                 </div>
                 <div class="field-pair">
                     <div class="field">
-                        <label for="closed_from">Du jour</label>
+                        <label for="closed_from">{{ __('Du jour') }}</label>
                         <input type="number" id="closed_from" name="closed_from" value="{{ old('closed_from') }}" min="1" max="30" placeholder="2">
                     </div>
                     <div class="field">
-                        <label for="closed_days">Pendant (jours)</label>
+                        <label for="closed_days">{{ __('Pendant (jours)') }}</label>
                         <input type="number" id="closed_days" name="closed_days" value="{{ old('closed_days') }}" min="1" max="30" placeholder="3">
                     </div>
                 </div>
             </fieldset>
 
             <fieldset class="event">
-                <legend>🌡️ Rupture de la chaîne du froid</legend>
+                <legend>{{ __('🌡️ Rupture de la chaîne du froid') }}</legend>
                 <div class="field">
-                    <label for="cold_site_id">Site touché</label>
+                    <label for="cold_site_id">{{ __('Site touché') }}</label>
                     <select id="cold_site_id" name="cold_site_id">
-                        <option value="">Aucun</option>
+                        <option value="">{{ __('Aucun') }}</option>
                         @foreach ($sites as $s)
                             <option value="{{ $s->id }}" @selected((int) old('cold_site_id') === $s->id)>{{ $s->name }}</option>
                         @endforeach
@@ -133,11 +133,11 @@
                 </div>
                 <div class="field-pair">
                     <div class="field">
-                        <label for="cold_day">Jour</label>
+                        <label for="cold_day">{{ __('Jour') }}</label>
                         <input type="number" id="cold_day" name="cold_day" value="{{ old('cold_day') }}" min="1" max="30" placeholder="2">
                     </div>
                     <div class="field">
-                        <label for="cold_lost_days">DLC perdue (jours)</label>
+                        <label for="cold_lost_days">{{ __('DLC perdue (jours)') }}</label>
                         <input type="number" id="cold_lost_days" name="cold_lost_days" value="{{ old('cold_lost_days') }}" min="1" max="14" placeholder="3">
                     </div>
                 </div>
@@ -145,8 +145,8 @@
         </div>
 
         <div class="form-foot">
-            <button class="btn btn-primary" type="submit">▶ Lancer la simulation</button>
-            <span class="hint align-self-center">Deux stratégies sont rejouées avec la même demande et les mêmes incidents.</span>
+            <button class="btn btn-primary" type="submit">{{ __('▶ Lancer la simulation') }}</button>
+            <span class="hint align-self-center">{{ __('Deux stratégies sont rejouées avec la même demande et les mêmes incidents.') }}</span>
         </div>
     </section>
 </form>
@@ -154,24 +154,24 @@
 <section class="panel">
     <div class="panel-head">
         <div>
-            <h2>Simulations précédentes</h2>
-            <p class="muted small">Chaque résultat est enregistré : vous pouvez le rouvrir pour la soutenance.</p>
+            <h2>{{ __('Simulations précédentes') }}</h2>
+            <p class="muted small">{{ __('Chaque résultat est enregistré : vous pouvez le rouvrir pour la soutenance.') }}</p>
         </div>
     </div>
 
     @if ($history->isEmpty())
-        <p class="muted">Aucune simulation pour l’instant : lancez la première ci-dessus.</p>
+        <p class="muted">{{ __('Aucune simulation pour l’instant : lancez la première ci-dessus.') }}</p>
     @else
         <div class="table-wrap">
             <table>
                 <thead>
                     <tr>
-                        <th>Simulation</th>
-                        <th>Date</th>
-                        <th class="num">Jeté sans IA</th>
-                        <th class="num">Jeté avec IA</th>
-                        <th class="num">Ventes perdues (sans → avec)</th>
-                        <th class="num">Dons</th>
+                        <th>{{ __('Simulation') }}</th>
+                        <th>{{ __('Date') }}</th>
+                        <th class="num">{{ __('Jeté sans IA') }}</th>
+                        <th class="num">{{ __('Jeté avec IA') }}</th>
+                        <th class="num">{{ __('Ventes perdues (sans → avec)') }}</th>
+                        <th class="num">{{ __('Dons') }}</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -180,7 +180,7 @@
                         <tr>
                             <td>
                                 <a class="code" href="{{ route('simulations.show', $sim) }}">{{ $sim->name }}</a>
-                                <div class="muted small">{{ $sim->presetLabel() }} · {{ $sim->horizon_days }} jours</div>
+                                <div class="muted small">{{ __(':presetlabel · :horizon_days jours', ['presetlabel' => $sim->presetLabel(), 'horizon_days' => $sim->horizon_days]) }}</div>
                             </td>
                             <td class="muted">{{ $sim->created_at->format('d/m/Y H:i') }}<div class="small">{{ $sim->user?->name }}</div></td>
                             <td class="num">{{ Fmt::n($sim->baseline_wasted) }}</td>
@@ -193,10 +193,10 @@
                             <td class="num">{{ Fmt::n($sim->baseline_unmet) }} → {{ Fmt::n($sim->ai_unmet) }}</td>
                             <td class="num">{{ Fmt::n($sim->ai_donated) }}</td>
                             <td class="row-actions">
-                                <a href="{{ route('simulations.show', $sim) }}">Voir</a>
+                                <a href="{{ route('simulations.show', $sim) }}">{{ __('Voir') }}</a>
                                 <form method="POST" action="{{ route('simulations.destroy', $sim) }}" onsubmit="return confirm('Supprimer cette simulation ?')">
                                     @csrf @method('DELETE')
-                                    <button class="linklike" type="submit">Supprimer</button>
+                                    <button class="linklike" type="submit">{{ __('Supprimer') }}</button>
                                 </form>
                             </td>
                         </tr>

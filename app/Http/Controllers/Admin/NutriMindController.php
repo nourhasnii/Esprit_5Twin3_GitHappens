@@ -192,7 +192,7 @@ class NutriMindController extends Controller
             'note' => $data['note'] ?? null,
         ]);
 
-        return back()->with('success', 'Action corrective journalisée dans le journal d’audit.');
+        return back()->with('success', __('Action corrective journalisée dans le journal d’audit.'));
     }
 
     /**

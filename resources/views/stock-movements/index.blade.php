@@ -3,11 +3,11 @@
 @use('App\Support\BatchAttributes')
 @use('App\Enums\StockMovementType')
 
-@section('eyebrow', 'Inventory workspace')
-@section('title', 'Mouvements de stock')
-@section('description', 'Chaque entrée, sortie, transfert ou ajustement, dans l’ordre où il a eu lieu. Les stocks sont recalculables à partir de cet historique.')
+@section('eyebrow', __('Inventory workspace'))
+@section('title', __('Mouvements de stock'))
+@section('description', __('Chaque entrée, sortie, transfert ou ajustement, dans l’ordre où il a eu lieu. Les stocks sont recalculables à partir de cet historique.'))
 @section('page-action')
-    <a class="btn btn-primary" href="{{ route('stock-movements.create') }}">Enregistrer un mouvement</a>
+    <a class="btn btn-primary" href="{{ route('stock-movements.create') }}">{{ __('Enregistrer un mouvement') }}</a>
 @endsection
 
 @section('content')
@@ -16,73 +16,73 @@
         @php $t = $totals->get($type->value); @endphp
         <div class="figure">
             <strong>{{ Fmt::q($t->quantity ?? 0) }}</strong>
-            <span>{{ mb_strtolower($type->label()) }}s, {{ $t->movements ?? 0 }} mouvement(s)</span>
+            <span>{{ __(':labels, :movements mouvement(s)', ['label' => mb_strtolower($type->label()), 'movements' => $t->movements ?? 0]) }}</span>
         </div>
     @endforeach
 </div>
 
 <form class="filters" method="GET" action="{{ route('stock-movements.index') }}">
     <div class="field">
-        <label for="f-type">Type</label>
+        <label for="f-type">{{ __('Type') }}</label>
         <select id="f-type" name="type">
-            <option value="">Tous</option>
+            <option value="">{{ __('Tous') }}</option>
             @foreach (StockMovementType::cases() as $type)
                 <option value="{{ $type->value }}" @selected(($filters['type'] ?? null) === $type->value)>{{ $type->label() }}</option>
             @endforeach
         </select>
     </div>
     <div class="field">
-        <label for="f-site">Site</label>
+        <label for="f-site">{{ __('Site') }}</label>
         <select id="f-site" name="site_id">
-            <option value="">Tous les sites</option>
+            <option value="">{{ __('Tous les sites') }}</option>
             @foreach ($sites as $s)
                 <option value="{{ $s->id }}" @selected(($filters['site_id'] ?? null) == $s->id)>{{ $s->name }}</option>
             @endforeach
         </select>
     </div>
     <div class="field">
-        <label for="f-product">Produit</label>
+        <label for="f-product">{{ __('Produit') }}</label>
         <select id="f-product" name="product_id">
-            <option value="">Tous les produits</option>
+            <option value="">{{ __('Tous les produits') }}</option>
             @foreach ($products as $p)
                 <option value="{{ $p->id }}" @selected(($filters['product_id'] ?? null) == $p->id)>{{ $p->name }}</option>
             @endforeach
         </select>
     </div>
     <div class="field">
-        <label for="f-from">Du</label>
+        <label for="f-from">{{ __('Du') }}</label>
         <input type="date" id="f-from" name="from" value="{{ $filters['from'] ?? '' }}">
     </div>
     <div class="field">
-        <label for="f-to">Au</label>
+        <label for="f-to">{{ __('Au') }}</label>
         <input type="date" id="f-to" name="to" value="{{ $filters['to'] ?? '' }}">
     </div>
-    <button class="btn btn-ghost" type="submit">Filtrer</button>
+    <button class="btn btn-ghost" type="submit">{{ __('Filtrer') }}</button>
     @if (array_filter($filters))
-        <a class="btn btn-ghost" href="{{ route('stock-movements.index') }}">Effacer</a>
+        <a class="btn btn-ghost" href="{{ route('stock-movements.index') }}">{{ __('Effacer') }}</a>
     @endif
 </form>
 
 <section class="panel">
     @if ($movements->isEmpty())
         <div class="empty">
-            <p>Aucun mouvement ne correspond à ces critères.</p>
-            <a class="btn btn-primary" href="{{ route('stock-movements.create') }}">Enregistrer un mouvement</a>
+            <p>{{ __('Aucun mouvement ne correspond à ces critères.') }}</p>
+            <a class="btn btn-primary" href="{{ route('stock-movements.create') }}">{{ __('Enregistrer un mouvement') }}</a>
         </div>
     @else
         <div class="table-wrap">
             <table>
                 <thead>
                 <tr>
-                    <th>Date</th>
-                    <th>Référence</th>
-                    <th>Type</th>
-                    <th>Produit et lot</th>
-                    <th>Origine</th>
-                    <th>Destination</th>
-                    <th class="num">Quantité</th>
-                    <th>Motif</th>
-                    <th>Par</th>
+                    <th>{{ __('Date') }}</th>
+                    <th>{{ __('Référence') }}</th>
+                    <th>{{ __('Type') }}</th>
+                    <th>{{ __('Produit et lot') }}</th>
+                    <th>{{ __('Origine') }}</th>
+                    <th>{{ __('Destination') }}</th>
+                    <th class="num">{{ __('Quantité') }}</th>
+                    <th>{{ __('Motif') }}</th>
+                    <th>{{ __('Par') }}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -93,13 +93,13 @@
                         <td><span class="tag tag-{{ $m->type->value }}">{{ $m->type->label() }}</span></td>
                         <td>
                             {{ $m->product?->name }}
-                            <div class="muted small">{{ $m->batch ? 'Lot '.BatchAttributes::code($m->batch) : 'Sans lot' }}</div>
+                            <div class="muted small">{{ $m->batch ? __('Lot ').BatchAttributes::code($m->batch) : __('Sans lot') }}</div>
                         </td>
                         <td>{{ $m->sourceSite?->name ?? '—' }}</td>
                         <td>{{ $m->destinationSite?->name ?? '—' }}</td>
                         <td class="num">{{ Fmt::q($m->quantity) }}</td>
                         <td>{{ $m->reason ?? '—' }}</td>
-                        <td class="small">{{ $m->user?->name ?? 'Système' }}</td>
+                        <td class="small">{{ $m->user?->name ?? __('Système') }}</td>
                     </tr>
                 @endforeach
                 </tbody>
