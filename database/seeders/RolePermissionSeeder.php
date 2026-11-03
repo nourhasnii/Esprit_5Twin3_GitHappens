@@ -41,8 +41,8 @@ class RolePermissionSeeder extends Seeder
         // Aucune permission : redirigé hors du dashboard professionnel.
         'consommateur' => [],
         // Accès limité à leurs propres produits et lots.
-        'producteur' => ['manage_products'],
-        'transformateur' => ['manage_products'],
+        'producteur' => ['manage_products', 'manage_stocks'],
+        'transformateur' => ['manage_products', 'manage_stocks'],
         // Périmètre élargi : tous les produits, stocks et rappels.
         'distributeur' => ['manage_products', 'manage_all_products', 'manage_stocks', 'launch_recall'],
         // Administration complète.

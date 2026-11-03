@@ -38,11 +38,16 @@ class TransportConditionFactory extends Factory
 
     public function outOfRange(): static
     {
-        return $this->state(fn (array $attributes) => [
-            'temperature' => fake()->randomElement([
-                fake()->randomFloat(2, -2, 1.99),
-                fake()->randomFloat(2, 5.01, 12),
-            ]),
-        ]);
+        return $this->state(function (array $attributes): array {
+            $safeMin = (float) config('coldchain.temperature.safe_min');
+            $safeMax = (float) config('coldchain.temperature.safe_max');
+
+            return [
+                'temperature' => fake()->randomElement([
+                    fake()->randomFloat(2, $safeMin - 2, $safeMin - 0.01),
+                    fake()->randomFloat(2, $safeMax, 12),
+                ]),
+            ];
+        });
     }
 }

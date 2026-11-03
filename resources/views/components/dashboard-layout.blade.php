@@ -349,7 +349,7 @@
                             </ul>
                         </div>
 
-                        @if(auth()->user()->can('manage_stocks'))
+                        @can('manage_stocks')
                         <div>
                             <ul class="space-y-1">
                                 <li>
@@ -382,9 +382,21 @@
                                         <span>Optimization</span>
                                     </a>
                                 </li>
+                                <li>
+                                    <a href="{{ route('simulations.index') }}" class="{{ request()->routeIs('simulations.*') ? 'bg-[#E3A23C] text-[#16281E] font-semibold' : 'text-white/70 hover:bg-white/5' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors" @click="sidebarOpen = false">
+                                        <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="8"/><path d="M12 4v16M4 12h16"/><path d="M12 4c2.5 2.2 3.5 5 3.5 8s-1 5.8-3.5 8M12 4c-2.5 2.2-3.5 5-3.5 8s1 5.8 3.5 8"/></svg>
+                                        <span>Digital twin</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('shelf-life.index') }}" class="{{ request()->routeIs('shelf-life.*') ? 'bg-[#E3A23C] text-[#16281E] font-semibold' : 'text-white/70 hover:bg-white/5' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors" @click="sidebarOpen = false">
+                                        <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M10 13.5V4.5a2 2 0 1 1 4 0v9a4 4 0 1 1-4 0Z"/><path d="M12 9v6"/><path d="M18 5h3M18 9h3"/></svg>
+                                        <span>Dynamic shelf life</span>
+                                    </a>
+                                </li>
                             </ul>
                         </div>
-                        @endif
+                        @endcan
 
                         @if(auth()->user()->can('manage_users'))
                             <div>

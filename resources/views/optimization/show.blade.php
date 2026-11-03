@@ -17,7 +17,8 @@
     $explanation = $r->explanation ?? [];
     $best = $r->recommendedCandidate();
     // J− recalculé à la date du jour (la recommandation garde celui du moment du calcul)
-    $daysNow = BatchAttributes::daysToExpiry($r->batch);
+    // DLC réelle (températures du transport) : c'est elle que le moteur utilise
+    $daysNow = BatchAttributes::daysToEffectiveExpiry($r->batch);
     $daysLabel = match (true) {
         $daysNow === null => null,
         $daysNow < 0 => 'dépassée',
@@ -25,7 +26,9 @@
         default => 'J−'.$daysNow,
     };
     $candidates = collect($r->candidates);
-    $expiry = BatchAttributes::expiryDate($r->batch);
+    $expiry = BatchAttributes::effectiveExpiryDate($r->batch);
+    $printedExpiry = BatchAttributes::expiryDate($r->batch);
+    $realDlc = $expiry && $printedExpiry && $expiry->lt($printedExpiry);
     $tone = $r->score >= 70 ? 'var(--pine)' : ($r->score >= 40 ? '#c48a1a' : 'var(--brick)');
     $rank = 0;
 @endphp
@@ -45,7 +48,7 @@
         <dl class="facts">
             <div><dt>Produit</dt><dd>{{ $r->product?->name }}</dd></div>
             <div><dt>Quantité</dt><dd>{{ Fmt::q($r->quantity) }} u.</dd></div>
-            <div><dt>DLC</dt><dd>{{ $expiry ? $expiry->format('d/m/Y') : 'Non renseignée' }}@if ($daysLabel) <span class="muted">({{ $daysLabel }})</span>@endif</dd></div>
+            <div><dt>{{ $realDlc ? 'DLC réelle 🌡️' : 'DLC' }}</dt><dd>{{ $expiry ? $expiry->format('d/m/Y') : 'Non renseignée' }}@if ($daysLabel) <span class="muted">({{ $daysLabel }})</span>@endif @if ($realDlc)<a class="muted small" href="{{ route('shelf-life.show', $r->batch_id) }}">imprimée <s>{{ $printedExpiry->format('d/m') }}</s></a>@endif</dd></div>
             <div><dt>Trajet</dt><dd>{{ $r->distance_km !== null ? Fmt::n($r->distance_km).' km' : '—' }}</dd></div>
             <div><dt>Émissions</dt><dd>{{ $r->co2_kg !== null ? Fmt::n($r->co2_kg, 1).' kg CO₂e' : '—' }}</dd></div>
         </dl>

@@ -8,6 +8,7 @@ use App\Http\Requests\Admin\UpdateAlertRequest;
 use App\Models\Alert;
 use App\Models\Batch;
 use App\Models\TransportCondition;
+use App\Services\ColdChainAlertService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -17,6 +18,7 @@ class AlertController extends Controller
     public function index(Request $request): View
     {
         $query = Alert::with(['batch', 'transportCondition']);
+
         $alerts = $query
             ->when($request->filled('severity'), fn ($query) => $query->where('severity', $request->string('severity')))
             ->when($request->filled('status'), fn ($query) => $query->where('status', $request->string('status')))
@@ -29,7 +31,9 @@ class AlertController extends Controller
             'alerts' => $alerts,
             'batches' => Batch::orderBy('lot_number')->get(['id', 'lot_number']),
             'openCount' => Alert::open()->count(),
-            'criticalCount' => Alert::where('severity', 'critical')->whereNotIn('status', ['resolved', 'ignored'])->count(),
+            'criticalCount' => Alert::where('severity', 'critical')
+                ->whereNotIn('status', ['resolved', 'ignored'])
+                ->count(),
             'averageRiskScore' => Alert::whereNotNull('risk_score')->avg('risk_score'),
             'lastAlerts' => Alert::with('batch')->latest()->limit(5)->get(),
         ]);
@@ -39,7 +43,9 @@ class AlertController extends Controller
     {
         return view('admin.alerts.create', [
             'batches' => Batch::orderBy('lot_number')->get(['id', 'lot_number']),
-            'conditions' => TransportCondition::with('batch')->latest('recorded_at')->get(),
+            'conditions' => TransportCondition::with('batch')
+                ->latest('recorded_at')
+                ->get(),
         ]);
     }
 
@@ -51,14 +57,24 @@ class AlertController extends Controller
 
         Alert::create($data);
 
-        return redirect()->route('admin.alerts.index')->with('success', 'Alert created successfully.');
+        return redirect()
+            ->route('admin.alerts.index')
+            ->with('success', 'Alert created successfully.');
     }
 
-    public function show(Alert $alert): View
+    public function show(Alert $alert, ColdChainAlertService $alertService): View
     {
-        $alert->load(['batch.product', 'transportCondition', 'creator', 'resolver']);
+        $alert->load([
+            'batch.product',
+            'transportCondition',
+            'creator',
+            'resolver',
+        ]);
 
-        return view('admin.alerts.show', compact('alert'));
+        return view('admin.alerts.show', [
+            'alert' => $alert,
+            'explanation' => $alertService->explainAlert($alert),
+        ]);
     }
 
     public function edit(Alert $alert): View
@@ -66,46 +82,64 @@ class AlertController extends Controller
         return view('admin.alerts.edit', [
             'alert' => $alert,
             'batches' => Batch::orderBy('lot_number')->get(['id', 'lot_number']),
-            'conditions' => TransportCondition::with('batch')->latest('recorded_at')->get(),
+            'conditions' => TransportCondition::with('batch')
+                ->latest('recorded_at')
+                ->get(),
         ]);
     }
 
     public function update(UpdateAlertRequest $request, Alert $alert): RedirectResponse
     {
         $data = $this->syncBatchFromCondition($request->validated());
-        if ($data['status'] !== 'resolved') {
+
+        if (($data['status'] ?? null) !== 'resolved') {
             $data['resolved_at'] = null;
             $data['resolved_by'] = null;
         }
+
         $alert->update($data);
 
-        return redirect()->route('admin.alerts.index')->with('success', 'Alert updated successfully.');
+        return redirect()
+            ->route('admin.alerts.index')
+            ->with('success', 'Alert updated successfully.');
     }
 
     public function destroy(Alert $alert): RedirectResponse
     {
         $alert->delete();
 
-        return redirect()->route('admin.alerts.index')->with('success', 'Alert deleted successfully.');
+        return redirect()
+            ->route('admin.alerts.index')
+            ->with('success', 'Alert deleted successfully.');
     }
 
     public function resolve(Request $request, Alert $alert): RedirectResponse
     {
-        $alert->update(['status' => 'resolved', 'resolved_at' => now(), 'resolved_by' => $request->user()->id]);
+        $alert->update([
+            'status' => 'resolved',
+            'resolved_at' => now(),
+            'resolved_by' => $request->user()->id,
+        ]);
 
         return back()->with('success', 'Alert resolved successfully.');
     }
 
     public function ignore(Alert $alert): RedirectResponse
     {
-        $alert->update(['status' => 'ignored', 'resolved_at' => null, 'resolved_by' => null]);
+        $alert->update([
+            'status' => 'ignored',
+            'resolved_at' => null,
+            'resolved_by' => null,
+        ]);
 
         return back()->with('success', 'Alert ignored successfully.');
     }
 
     public function acknowledge(Alert $alert): RedirectResponse
     {
-        $alert->update(['status' => 'acknowledged']);
+        $alert->update([
+            'status' => 'acknowledged',
+        ]);
 
         return back()->with('success', 'Alert acknowledged successfully.');
     }
@@ -113,7 +147,10 @@ class AlertController extends Controller
     private function syncBatchFromCondition(array $data): array
     {
         if (! empty($data['transport_condition_id'])) {
-            $condition = TransportCondition::findOrFail($data['transport_condition_id']);
+            $condition = TransportCondition::findOrFail(
+                $data['transport_condition_id']
+            );
+
             $data['batch_id'] = $condition->batch_id;
         }
 

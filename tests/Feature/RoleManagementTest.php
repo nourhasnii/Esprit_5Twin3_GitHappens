@@ -170,11 +170,13 @@ it('reserves the recall status to users allowed to launch recalls', function () 
     expect($batch->fresh()->status)->toBe('recalled');
 });
 
-it('restricts stock management to roles holding the manage_stocks permission', function () {
+it('allows producer, transformateur, and distributor stock access via manage_stocks', function () {
     $producer = professionalUser();
+    $transformateur = transformateurUser();
     $distributor = distributorUser();
 
-    $this->actingAs($producer)->get(route('stocks.index'))->assertForbidden();
+    $this->actingAs($producer)->get(route('stocks.index'))->assertOk();
+    $this->actingAs($transformateur)->get(route('stocks.index'))->assertOk();
     $this->actingAs($distributor)->get(route('stocks.index'))->assertOk();
 });
 
@@ -216,8 +218,8 @@ it('treats the transformateur role like a producer (own scope only)', function (
 
     $this->actingAs($transformateur)->get(route('admin.products.show', $otherProduct))->assertForbidden();
 
-    // Pas de permission de gestion des stocks ni de rappel global.
-    $this->actingAs($transformateur)->get(route('stocks.index'))->assertForbidden();
+    // Pas de permission de rappel global.
+    $this->actingAs($transformateur)->get(route('stocks.index'))->assertOk();
 });
 
 it('scopes the dashboard data to the producer own products and batches', function () {
