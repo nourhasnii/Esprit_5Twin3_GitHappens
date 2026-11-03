@@ -150,6 +150,24 @@ Raccourci utile : le lien « Optimiser » d'une ligne de stock ouvre `optimizati
 
 ---
 
+## 4 bis. Rôles, permissions et tests
+
+**Accès (Spatie)** : toutes les routes du module ont le middleware `can:manage_stocks`.
+
+| Rôle | Accès au module |
+|---|---|
+| admin, producteur, transformateur, distributeur | ✅ |
+| consommateur, compte sans rôle | ❌ 403 (liens masqués dans le menu et le tableau de bord) |
+
+- La permission est créée par la migration `2026_10_30_100000_add_manage_stocks_permission` (base existante : `php artisan migrate`) et par `StockPermissionSeeder` (appelé par `DatabaseSeeder`).
+- Les alertes de rupture (`NotifyLowStock`) partent seulement aux comptes **actifs** qui ont `manage_stocks` (`App\Support\StockAccess::managers()`).
+
+**Tests Pest** (`tests/Feature/Stocks`, 59 tests) : `php artisan test tests/Feature/Stocks`
+
+- `StockAccessTest` : accès par rôle, 403 pour le consommateur, menu masqué.
+- `StockServiceTest` : calcul du stock (entrée, sortie, transfert, ajustement), refus (stock insuffisant, même site, lot rappelé), alerte au franchissement du seuil, destinataires de l'alerte, Form Request.
+- `OptimizationEngineTest` : score + explication stockés en base, contraintes (capacité, origine, associations), site le plus proche, lot rappelé/périmé refusé, validation avec transfert automatique, modification, double décision refusée.
+
 ## 5. Écrans (Blade)
 
 1. **Vue globale des stocks** (`stocks.index`) : une carte par site avec jauge d'occupation segmentée, puis le tableau des lignes (disponible, seuil, DLC, état : OK / Stock bas / Rupture / DLC proche / Bloqué). Compteurs en haut : lignes sous le seuil, lots proches de la DLC.
@@ -314,6 +332,38 @@ Sur cet historique, l'IA retrouve seule le rythme de la semaine (samedi +21 %, l
 Les dates des fêtes religieuses suivent le calendrier lunaire : elles sont estimées dans `config/stock.php` (`forecast.events`) et doivent être confirmées chaque année. Les multiplicateurs sont des hypothèses métier modifiables.
 
 ---
+
+## 7 quater. Jumeau numérique « Et si ? » (IA de simulation)
+
+Menu **Digital twin** (`/simulations`). Le jumeau numérique copie l'**état réel** des stocks d'aujourd'hui (lignes, lots, DLC, sites GPS), applique un scénario, puis rejoue 7 à 30 jours **deux fois** avec la même demande et les mêmes incidents :
+
+| | Sans IA (pratique habituelle) | Avec IA |
+|---|---|---|
+| Vente | lot le plus proche de sa DLC d'abord (FEFO) | idem |
+| Réassort | quand le magasin passe sous son seuil, jusqu'à 2 × seuil, depuis l'entrepôt le mieux fourni, premier lot venu | quand le stock ne tiendra pas jusqu'au lendemain de la prochaine livraison (prévision + délai camion), lot qui périme le plus tôt |
+| Lot à risque | rien : jeté à la DLC | transfert anticipé vers le magasin le plus proche qui vendra avant la DLC, puis promotion calculée (élasticité-prix), puis don la veille de la DLC |
+
+- **Scénarios** : pic de demande (Ramadan +35 %), panne de camion (retard), site fermé, rupture de la chaîne du froid (lots qui perdent des jours de DLC), ou personnalisé.
+- **Demande** : prévision du module (`DemandForecaster`, calendrier tunisien), jour par jour.
+- **Résultats** : ventes, ventes perdues, taux de service, unités et kg jetés, dons et repas, km, CO₂ du transport et du gaspillage, graphiques cumulés, carte animée jour par jour, journal des décisions.
+- **Contrôle** : pour chaque stratégie, stock de départ = vendu + jeté + donné + restant. Les stocks réels ne sont **jamais** modifiés.
+- Code : `app/Services/Simulation/DigitalTwinSimulator.php`, `SimulationController`, `SimulationRequest`, table `stock_simulations` (historique), `StockSimulationFactory`.
+
+## 7 quinquies. DLC dynamique (microbiologie prévisionnelle)
+
+Menu **Dynamic shelf life** (`/dlc-dynamique`). La DLC imprimée suppose une chaîne du froid parfaite. L'IA lit les **températures du transport** de chaque lot (table `transport_conditions` du module Chaîne du froid) et prédit sa **vraie date limite**.
+
+- **Modèle de la racine carrée de Ratkowsky** (référence en microbiologie prévisionnelle) : vitesse de croissance des bactéries ∝ (T − Tmin)². Vitesse relative au froid prévu : `((T − Tmin) / (Tréf − Tmin))²`. Exemple, produits laitiers (Tréf 4 °C, Tmin −2 °C) : 1 h à 10 °C = 4 h de vie, donc 3 h perdues.
+- **Heures perdues** = Σ (vitesse − 1) × durée, pour chaque relevé plus chaud que la référence. **DLC réelle** = DLC imprimée − heures perdues. L'arrondi est prudent (6 h perdues ou plus retirent un jour), et la DLC n'est jamais prolongée.
+- **Fourchette** (au plus tôt / au plus tard) : le calcul est refait avec les bornes publiées de Tmin (± 1,5 °C).
+- **Profils** par famille, reconnue d'après le nom ou la catégorie du produit : produits laitiers, viandes et poissons, fruits et légumes, produits stables (épicerie), général. Réglages : `config/stock.php` → `shelf_life`.
+- **Risque** : chaîne du froid respectée / durée de vie réduite / contrôle qualité requis (≥ 2 h au-dessus de la T° critique, ou DLC réelle dépassée) / DLC imprimée dépassée / pas de relevé.
+- **Utilisée partout dans le module** (`BatchAttributes::effectiveExpiryDate`) : état des stocks (FEFO, « DLC proche »), Optimization Engine (avec une phrase d'explication), plan anti-gaspillage et jumeau numérique. La page Stocks barre la DLC imprimée et affiche la DLC réelle 🌡️.
+- **Validation humaine** : un responsable valide la DLC réelle ou garde la DLC imprimée (justification obligatoire, ex. contrôle qualité conforme). Les décisions sont stockées dans `shelf_life_assessments`.
+- Démo : `ShelfLifeDemoSeeder` (appelé par `StockModuleDemoSeeder`). LOT-2026-001 subit une panne du groupe froid près d'Enfidha : 61 h perdues, DLC du 13/11 au 10/11. LOT-2026-002 a une chaîne du froid respectée : DLC inchangée.
+- Code : `app/Services/ShelfLife/ShelfLifePredictor.php`, `ShelfLifeController`, `ShelfLifeDecisionRequest`, `ShelfLifeAssessment` + factory, vues `shelf-life/*`.
+
+**Tests** : `DigitalTwinSimulatorTest` (11) et `ShelfLifeTest` (12).
 
 ## 8. Scénario de démonstration (soutenance, ~5 min)
 

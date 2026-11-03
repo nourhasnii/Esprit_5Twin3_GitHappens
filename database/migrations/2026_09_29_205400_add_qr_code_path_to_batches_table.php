@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         if (Schema::hasColumn('batches', 'qr_code_path')) {
@@ -22,6 +19,10 @@ return new class extends Migration
 
     public function down(): void
     {
+        if (! Schema::hasColumn('batches', 'qr_code_path')) {
+            return;
+        }
+
         Schema::table('batches', function (Blueprint $table) {
             $table->dropColumn('qr_code_path');
         });
