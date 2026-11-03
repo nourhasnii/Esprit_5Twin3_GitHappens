@@ -52,6 +52,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('certifications', CertificationController::class);
 
         Route::resource('events', TraceabilityEventController::class);
+        Route::get('transport-conditions/batch/{batch}', [TransportConditionController::class, 'batch'])->name('transport-conditions.batch');
+        Route::post('transport-conditions/batch/{batch}/simulate', [TransportConditionController::class, 'simulateBatch'])->name('transport-conditions.batch.simulate');
         Route::resource('transport-conditions', TransportConditionController::class);
         Route::patch('alerts/{alert}/resolve', [AlertController::class, 'resolve'])->name('alerts.resolve');
         Route::patch('alerts/{alert}/ignore', [AlertController::class, 'ignore'])->name('alerts.ignore');

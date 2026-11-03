@@ -8,6 +8,7 @@ use App\Http\Requests\Admin\UpdateAlertRequest;
 use App\Models\Alert;
 use App\Models\Batch;
 use App\Models\TransportCondition;
+use App\Services\ColdChainAlertService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -54,11 +55,14 @@ class AlertController extends Controller
         return redirect()->route('admin.alerts.index')->with('success', 'Alert created successfully.');
     }
 
-    public function show(Alert $alert): View
+    public function show(Alert $alert, ColdChainAlertService $alertService): View
     {
         $alert->load(['batch.product', 'transportCondition', 'creator', 'resolver']);
 
-        return view('admin.alerts.show', compact('alert'));
+        return view('admin.alerts.show', [
+            'alert' => $alert,
+            'explanation' => $alertService->explainAlert($alert),
+        ]);
     }
 
     public function edit(Alert $alert): View

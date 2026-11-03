@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Alert;
 use App\Models\TransportCondition;
+use App\Services\ColdChainAlertService;
 use Illuminate\Database\Seeder;
 
 class AlertSeeder extends Seeder
@@ -26,17 +27,7 @@ class AlertSeeder extends Seeder
         });
 
         foreach ($outOfRange as $condition) {
-            $temperature = (float) $condition->temperature;
-            Alert::factory()->create([
-                'batch_id' => $condition->batch_id,
-                'transport_condition_id' => $condition->id,
-                'type' => 'temperature',
-                'severity' => abs($temperature - 3.5) >= 5 ? 'critical' : 'warning',
-                'title' => 'Cold-chain temperature excursion',
-                'message' => sprintf('Recorded temperature %.2f°C is outside the 2°C to 5°C range.', $temperature),
-                'status' => 'open',
-                'risk_score' => min(100, 50 + abs($temperature - 3.5) * 10),
-            ]);
+            app(ColdChainAlertService::class)->syncAlert($condition);
         }
 
         Alert::factory()->info()->create([

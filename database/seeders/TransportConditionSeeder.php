@@ -25,15 +25,26 @@ class TransportConditionSeeder extends Seeder
 
         TransportCondition::query()->delete();
 
-        for ($index = 0; $index < 22; $index++) {
-            $batch = $batches->random();
-            $condition = TransportCondition::factory()
-                ->for($batch)
-                ->state([
+        foreach ($batches->take(3) as $batchIndex => $batch) {
+            for ($measurement = 0; $measurement < 6; $measurement++) {
+                $temperature = match ($measurement) {
+                    1 => 7.0 + $batchIndex,
+                    4 => 9.0 + $batchIndex,
+                    default => fake()->randomFloat(2, 2.1, 5.2),
+                };
+                TransportCondition::factory()->for($batch)->state([
+                    'temperature' => $temperature,
+                    'duration_minutes' => $measurement === 4 ? 45 : fake()->numberBetween(10, 90),
                     'traceability_event_id' => $eventsByBatch->get($batch->id)?->random()?->id,
-                ])
-                ->when($index % 5 === 0, fn ($factory) => $factory->outOfRange())
-                ->create();
+                ])->create();
+            }
+        }
+
+        for ($index = 18; $index < 22; $index++) {
+            $batch = $batches->random();
+            TransportCondition::factory()->for($batch)->state([
+                'traceability_event_id' => $eventsByBatch->get($batch->id)?->random()?->id,
+            ])->when($index % 2 === 0, fn ($factory) => $factory->outOfRange())->create();
         }
 
         $this->command->info('TransportConditionSeeder: 22 transport conditions created.');

@@ -14,6 +14,17 @@ class AlertFactory extends Factory
 {
     protected $model = Alert::class;
 
+    public function configure(): static
+    {
+        return $this->afterMaking(function (Alert $alert): void {
+            if ($alert->transport_condition_id) {
+                $alert->batch_id = TransportCondition::query()
+                    ->whereKey($alert->transport_condition_id)
+                    ->value('batch_id');
+            }
+        });
+    }
+
     public function definition(): array
     {
         $condition = TransportCondition::inRandomOrder()->first();
