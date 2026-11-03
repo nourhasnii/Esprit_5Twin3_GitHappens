@@ -39,6 +39,36 @@
             </div>
 
             <section class="rounded-2xl border border-ink/8 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#17241d]">
+                <div><h3 class="font-fraunces text-xl font-bold text-ink dark:text-white">Analyse IA</h3><p class="mt-1 text-sm text-ink/55 dark:text-white/60">Les analyses IA complètent le score métier sans le remplacer.</p></div>
+                <div class="mt-5 grid gap-4 lg:grid-cols-3">
+                    <div class="rounded-xl border border-ink/8 bg-cream/40 p-5 dark:border-white/10 dark:bg-white/5">
+                        <p class="text-xs font-bold uppercase tracking-wider text-ink/45 dark:text-white/45">Score rule-based</p>
+                        <p class="mt-3 text-3xl font-bold text-ink dark:text-white">{{ number_format($simulation['risk_score'] ?? $analysis['risk_score'], 2) }}<span class="text-base font-normal text-ink/50 dark:text-white/50"> / 100</span></p>
+                        <p class="mt-2 text-sm text-ink/60 dark:text-white/60">{{ ucfirst($simulation['severity'] ?? $analysis['risk_level']) }}</p>
+                    </div>
+                    <div class="rounded-xl border border-ink/8 bg-cream/40 p-5 dark:border-white/10 dark:bg-white/5">
+                        <div class="flex items-center justify-between gap-3"><p class="text-xs font-bold uppercase tracking-wider text-ink/45 dark:text-white/45">Probabilité ML</p>@if($ml['available'])<span class="text-sm font-bold text-forest dark:text-emerald-300">{{ number_format($ml['probability'] * 100, 2) }}%</span>@endif</div>
+                        @if($ml['available'])
+                            <div class="mt-4 h-3 overflow-hidden rounded-full bg-ink/10 dark:bg-white/10"><div class="h-full rounded-full bg-amber-warm" style="width: {{ min(100, max(0, $ml['probability'] * 100)) }}%"></div></div>
+                            <p class="mt-3 text-xs text-ink/55 dark:text-white/60">Modèle {{ $ml['model'] }} entraîné sur des données synthétiques.</p>
+                        @else
+                            <p class="mt-4 text-sm text-ink/55 dark:text-white/60">Analyse IA indisponible</p>
+                        @endif
+                    </div>
+                    <div class="rounded-xl border border-ink/8 bg-cream/40 p-5 dark:border-white/10 dark:bg-white/5">
+                        <p class="text-xs font-bold uppercase tracking-wider text-ink/45 dark:text-white/45">Analyse LLM</p>
+                        @if($llm['available'])
+                            <p class="mt-3 text-sm leading-6 text-ink/75 dark:text-white/75">{{ $llm['summary'] }}</p>
+                            <p class="mt-3 text-sm text-ink/70 dark:text-white/70"><span class="font-semibold">Cause probable :</span> {{ $llm['probable_cause'] }}</p>
+                            @if($llm['recommended_actions'])<ul class="mt-3 list-disc space-y-1 pl-5 text-sm text-ink/70 dark:text-white/70">@foreach($llm['recommended_actions'] as $action)<li>{{ $action }}</li>@endforeach</ul>@endif
+                        @else
+                            <p class="mt-4 text-sm text-ink/55 dark:text-white/60">Analyse IA indisponible</p>
+                        @endif
+                    </div>
+                </div>
+            </section>
+
+            <section class="rounded-2xl border border-ink/8 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#17241d]">
                 <div><h3 class="font-fraunces text-xl font-bold text-ink dark:text-white">Simulator</h3><p class="mt-1 text-sm text-ink/55 dark:text-white/60">Test a temperature excursion without saving a condition or alert.</p></div>
                 <form method="POST" action="{{ route('admin.transport-conditions.batch.simulate', $batch) }}" class="mt-5 grid gap-4 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
                     @csrf
