@@ -38,6 +38,38 @@ class TransportConditionController extends Controller
         ]);
     }
 
+    public function batch(Batch $batch): View
+    {
+        $analysis = app(ColdChainAlertService::class)->analyzeBatch($batch);
+
+        return $this->batchView($batch, $analysis);
+    }
+
+    public function simulateBatch(Request $request, Batch $batch, ColdChainAlertService $alertService): View
+    {
+        $validated = $request->validate([
+            'temperature' => ['required', 'numeric', 'between:-50,60'],
+            'duration_minutes' => ['required', 'integer', 'min:0'],
+        ]);
+
+        return $this->batchView(
+            $batch,
+            $alertService->analyzeBatch($batch),
+            $alertService->simulate((float) $validated['temperature'], (int) $validated['duration_minutes']),
+            $validated
+        );
+    }
+
+    private function batchView(Batch $batch, array $analysis, ?array $simulation = null, array $simulationInput = []): View
+    {
+        return view('admin.transport-conditions.batch', [
+            'batch' => $batch->load('product'),
+            'analysis' => $analysis,
+            'simulation' => $simulation,
+            'simulationInput' => $simulationInput,
+        ]);
+    }
+
     public function store(StoreTransportConditionRequest $request, ColdChainAlertService $alertService): RedirectResponse
     {
         DB::transaction(function () use ($request, $alertService): void {

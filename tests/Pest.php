@@ -1,5 +1,6 @@
 <?php
 
+use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -76,7 +77,7 @@ function testRole(string $name, array $permissions = []): \Spatie\Permission\Mod
  */
 function professionalUser(array $attributes = []): \App\Models\User
 {
-    $role = testRole('producteur', ['manage_products']);
+    $role = testRole('producteur', RolePermissionSeeder::ROLE_PERMISSIONS['producteur']);
 
     $user = \App\Models\User::factory()->create($attributes);
     $user->assignRole($role);
@@ -89,7 +90,7 @@ function professionalUser(array $attributes = []): \App\Models\User
  */
 function transformateurUser(array $attributes = []): \App\Models\User
 {
-    $role = testRole('transformateur', ['manage_products']);
+    $role = testRole('transformateur', RolePermissionSeeder::ROLE_PERMISSIONS['transformateur']);
 
     $user = \App\Models\User::factory()->create($attributes);
     $user->assignRole($role);
@@ -102,7 +103,7 @@ function transformateurUser(array $attributes = []): \App\Models\User
  */
 function distributorUser(array $attributes = []): \App\Models\User
 {
-    $role = testRole('distributeur', ['manage_products', 'manage_all_products', 'manage_stocks', 'launch_recall']);
+    $role = testRole('distributeur', RolePermissionSeeder::ROLE_PERMISSIONS['distributeur']);
 
     $user = \App\Models\User::factory()->create($attributes);
     $user->assignRole($role);
@@ -115,7 +116,7 @@ function distributorUser(array $attributes = []): \App\Models\User
  */
 function consumerUser(array $attributes = []): \App\Models\User
 {
-    $role = testRole('consommateur');
+    $role = testRole('consommateur', RolePermissionSeeder::ROLE_PERMISSIONS['consommateur']);
 
     $user = \App\Models\User::factory()->create($attributes);
     $user->assignRole($role);
@@ -128,14 +129,7 @@ function consumerUser(array $attributes = []): \App\Models\User
  */
 function adminUser(array $attributes = []): \App\Models\User
 {
-    $role = testRole('admin', [
-        'manage_products',
-        'manage_all_products',
-        'manage_stocks',
-        'launch_recall',
-        'manage_users',
-        'review_verifications',
-    ]);
+    $role = testRole('admin', RolePermissionSeeder::ROLE_PERMISSIONS['admin']);
 
     $user = \App\Models\User::factory()->create($attributes);
     $user->assignRole($role);

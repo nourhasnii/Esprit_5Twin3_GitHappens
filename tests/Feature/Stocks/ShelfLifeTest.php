@@ -171,8 +171,10 @@ it('enregistre la décision du responsable et exige une justification pour garde
 });
 
 it('réserve la DLC dynamique aux gestionnaires de stock', function () {
-    $this->actingAs(stockUser('consommateur'))->get(route('shelf-life.index'))->assertForbidden();
-    $this->actingAs(stockUser('consommateur'))->post(route('shelf-life.decide', $this->batch), ['decision' => 'accepted'])->assertForbidden();
+    $this->actingAs(stockUser('consommateur'))->get(route('shelf-life.index'))
+        ->assertRedirect(route('front.products.index'));
+    $this->actingAs(stockUser('consommateur'))->post(route('shelf-life.decide', $this->batch), ['decision' => 'accepted'])
+        ->assertRedirect(route('front.products.index'));
 });
 
 it('ajoute les relevés de démonstration une seule fois', function () {

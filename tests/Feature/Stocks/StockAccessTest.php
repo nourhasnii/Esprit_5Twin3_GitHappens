@@ -24,8 +24,9 @@ it('ouvre les pages du module aux rôles professionnels', function (string $role
     }
 })->with(['admin', 'producteur', 'transformateur', 'distributeur']);
 
-it('refuse le module au consommateur (403)', function (string $route) {
-    $this->actingAs(stockUser('consommateur'))->get(route($route))->assertForbidden();
+it('redirige le consommateur hors du module professionnel', function (string $route) {
+    $this->actingAs(stockUser('consommateur'))->get(route($route))
+        ->assertRedirect(route('front.products.index'));
 })->with($pages);
 
 it('empêche un consommateur d’enregistrer un mouvement de stock', function () {
@@ -37,7 +38,7 @@ it('empêche un consommateur d’enregistrer un mouvement de stock', function ()
             'type' => 'in', 'product_id' => $product->id,
             'destination_site_id' => $site->id, 'quantity' => 50,
         ])
-        ->assertForbidden();
+        ->assertRedirect(route('front.products.index'));
 
     expect(\App\Models\StockMovement::count())->toBe(0);
 });
@@ -53,4 +54,8 @@ it('affiche les liens du module dans le menu seulement pour les rôles autorisé
 
 it('refuse un utilisateur sans aucun rôle', function () {
     $this->actingAs(User::factory()->create())->get(route('stocks.index'))->assertForbidden();
+});
+
+it('refuse un rôle sans la permission de gérer les stocks', function () {
+    $this->actingAs(stockUser('stock_readonly'))->get(route('stocks.index'))->assertForbidden();
 });

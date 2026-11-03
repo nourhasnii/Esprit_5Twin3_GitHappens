@@ -14,8 +14,14 @@ use App\Http\Controllers\StockController;
 use App\Http\Controllers\StockMovementController;
 use Illuminate\Support\Facades\Route;
 
-// can:manage_stocks → admin, producteur, transformateur, distributeur
-Route::middleware(['auth', 'verified', 'active.account', 'can:manage_stocks'])->group(function () {
+// Accès réservé aux rôles professionnels autorisés à gérer les stocks.
+Route::middleware([
+    'auth',
+    'verified',
+    'active.account',
+    'professional',
+    'can:manage_stocks',
+])->group(function () {
     Route::resource('sites', SiteController::class)->except('show');
 
     Route::resource('stocks', StockController::class);

@@ -11,7 +11,6 @@ class Alert extends Model
     use HasFactory;
 
     public const TYPES = ['temperature', 'humidity', 'duration', 'other'];
-
     /** Sources détectées automatiquement par le NutriAlert Hub. */
     public const RISK_TYPES = ['certification', 'ocr', 'recall', 'quality', 'coverage'];
 

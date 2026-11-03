@@ -152,7 +152,8 @@ it('valide le formulaire de simulation', function () {
 it('supprime une simulation et protège l’écran du consommateur', function () {
     $simulation = StockSimulation::factory()->create();
 
-    $this->actingAs(stockUser('consommateur'))->get(route('simulations.show', $simulation))->assertForbidden();
+    $this->actingAs(stockUser('consommateur'))->get(route('simulations.show', $simulation))
+        ->assertRedirect(route('front.products.index'));
 
     $this->actingAs(stockUser('admin'))->delete(route('simulations.destroy', $simulation))
         ->assertRedirect(route('simulations.index'));

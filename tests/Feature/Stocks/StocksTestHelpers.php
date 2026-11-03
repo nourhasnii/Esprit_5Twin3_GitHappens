@@ -3,15 +3,13 @@
 use App\Models\Batch;
 use App\Models\Product;
 use App\Models\User;
-use App\Support\StockAccess;
+use Database\Seeders\RolePermissionSeeder;
 use Spatie\Permission\Models\Role;
-use Spatie\Permission\PermissionRegistrar;
 
-/** Crée un utilisateur avec un rôle (la permission manage_stocks est installée d'abord). */
+/** Crée un utilisateur avec les permissions attribuées au rôle en production. */
 function stockUser(string $role = 'distributeur'): User
 {
-    StockAccess::install();
-    app(PermissionRegistrar::class)->forgetCachedPermissions();
+    app(RolePermissionSeeder::class)->run();
 
     Role::firstOrCreate(['name' => $role, 'guard_name' => 'web']);
     $user = User::factory()->create();

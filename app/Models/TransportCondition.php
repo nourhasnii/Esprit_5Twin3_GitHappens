@@ -10,8 +10,8 @@ class TransportCondition extends Model
 {
     use HasFactory;
 
-    public const TEMPERATURE_MIN = 2.0;
-    public const TEMPERATURE_MAX = 5.0;
+    public const TEMPERATURE_MIN = 0.0;
+    public const TEMPERATURE_MAX = 6.0;
 
     protected $fillable = [
         'batch_id',
@@ -59,7 +59,20 @@ class TransportCondition extends Model
     {
         return $query->where(function (Builder $query) {
             $query->where('temperature', '<', self::TEMPERATURE_MIN)
-                ->orWhere('temperature', '>', self::TEMPERATURE_MAX);
+                ->orWhere('temperature', '>=', self::TEMPERATURE_MAX);
         });
+    }
+
+    public function outOfRangeTemperature(): bool
+    {
+        return (float) $this->temperature < self::TEMPERATURE_MIN
+            || (float) $this->temperature >= self::TEMPERATURE_MAX;
+    }
+
+    public function temperatureDeviation(): float
+    {
+        $temperature = (float) $this->temperature;
+
+        return max(0, self::TEMPERATURE_MIN - $temperature, $temperature - self::TEMPERATURE_MAX);
     }
 }
