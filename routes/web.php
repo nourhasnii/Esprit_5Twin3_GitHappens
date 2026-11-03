@@ -36,7 +36,6 @@ Route::get('/account/activate/{token}', [AccountActivationController::class, 'sh
 Route::post('/account/activate', [AccountActivationController::class, 'store'])->name('account.activation.store');
 
 Route::middleware('auth')->group(function () {
-    // NutriAlert Hub — centre de notifications (cloche + page dédiée).
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::get('/notifications/recent', [NotificationController::class, 'recent'])->name('notifications.recent');
     Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount'])->name('notifications.unread-count');
@@ -52,7 +51,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/account/verification', [AccountVerificationController::class, 'edit'])->name('account.verification.edit');
     Route::post('/account/verification', [AccountVerificationController::class, 'update'])->name('account.verification.update');
 
-    // Two-factor authentication management (profile / security page)
     Route::post('/user/two-factor-authentication', [TwoFactorAuthenticationController::class, 'store'])
         ->name('two-factor.enable');
     Route::post('/user/confirmed-two-factor-authentication', [TwoFactorAuthenticationController::class, 'confirm'])
@@ -62,43 +60,45 @@ Route::middleware('auth')->group(function () {
     Route::post('/user/two-factor-recovery-codes', [TwoFactorAuthenticationController::class, 'regenerateRecoveryCodes'])
         ->name('two-factor.recovery-codes');
 
-    // Back Office (Admin)
-    // `professional` bloque le consommateur ; `can:manage_products` exige une
-    // permission de gestion (producteur/distributeur/admin). Le contrôle
-    // d'appartenance (producteur = ses données) est fait dans les Policies.
-    Route::prefix('admin')->name('admin.')->middleware(['active.account', 'professional', 'can:manage_products'])->group(function () {
-        Route::resource('products', ProductController::class);
-        Route::resource('categories', CategoryController::class)->except(['show']);
-        Route::get('batches/{batch}/qr', [BatchController::class, 'downloadQr'])->name('batches.qr');
-        Route::post('batches/{batch}/regenerate-qr', [BatchController::class, 'regenerateQr'])->name('batches.regenerate-qr');
-        Route::resource('batches', BatchController::class);
-        Route::get('batches/{batch}/traceability', [TraceabilityEventController::class, 'timeline'])->name('batches.traceability');
+    Route::prefix('admin')
+        ->name('admin.')
+        ->middleware(['active.account', 'professional', 'can:manage_products'])
+        ->group(function () {
+            Route::resource('products', ProductController::class);
+            Route::resource('categories', CategoryController::class)->except(['show']);
+            Route::get('batches/{batch}/qr', [BatchController::class, 'downloadQr'])->name('batches.qr');
+            Route::post('batches/{batch}/regenerate-qr', [BatchController::class, 'regenerateQr'])->name('batches.regenerate-qr');
+            Route::resource('batches', BatchController::class);
+            Route::get('batches/{batch}/traceability', [TraceabilityEventController::class, 'timeline'])->name('batches.traceability');
 
-        Route::get('certifications/intelligence', [CertificationController::class, 'intelligence'])->name('certifications.intelligence');
-        Route::match(['get', 'post'], 'certifications/intelligence/analyze', [CertificationController::class, 'analyze'])->name('certifications.intelligence.analyze.store');
-        Route::resource('certifications', CertificationController::class);
+            Route::get('certifications/intelligence', [CertificationController::class, 'intelligence'])->name('certifications.intelligence');
+            Route::match(['get', 'post'], 'certifications/intelligence/analyze', [CertificationController::class, 'analyze'])->name('certifications.intelligence.analyze.store');
+            Route::resource('certifications', CertificationController::class);
 
-        Route::resource('events', TraceabilityEventController::class);
-        Route::resource('transport-conditions', TransportConditionController::class);
-        Route::patch('alerts/{alert}/resolve', [AlertController::class, 'resolve'])->name('alerts.resolve');
-        Route::patch('alerts/{alert}/ignore', [AlertController::class, 'ignore'])->name('alerts.ignore');
-        Route::patch('alerts/{alert}/acknowledge', [AlertController::class, 'acknowledge'])->name('alerts.acknowledge');
-        Route::resource('alerts', AlertController::class);
-        Route::resource('quality-checks', QualityCheckController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
-        Route::resource('ocr-checks', OcrCheckController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
+            Route::resource('events', TraceabilityEventController::class);
+            Route::get('transport-conditions/batch/{batch}', [TransportConditionController::class, 'batch'])
+                ->name('transport-conditions.batch');
+            Route::post('transport-conditions/batch/{batch}/simulate', [TransportConditionController::class, 'simulateBatch'])
+                ->name('transport-conditions.batch.simulate');
+            Route::resource('transport-conditions', TransportConditionController::class);
+            Route::patch('alerts/{alert}/resolve', [AlertController::class, 'resolve'])->name('alerts.resolve');
+            Route::patch('alerts/{alert}/ignore', [AlertController::class, 'ignore'])->name('alerts.ignore');
+            Route::patch('alerts/{alert}/acknowledge', [AlertController::class, 'acknowledge'])->name('alerts.acknowledge');
+            Route::resource('alerts', AlertController::class);
+            Route::resource('quality-checks', QualityCheckController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
+            Route::resource('ocr-checks', OcrCheckController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
 
-        // NutriMind — moteur de décision explicable (risque, impact, simulation, recommandations).
-        Route::get('nutrimind', [NutriMindController::class, 'index'])->name('nutrimind.index');
-        Route::get('nutrimind/{type}/{id}', [NutriMindController::class, 'show'])
-            ->whereIn('type', ['product', 'batch', 'supplier'])
-            ->name('nutrimind.show');
-        Route::post('nutrimind/{type}/{id}/assess', [NutriMindController::class, 'assess'])
-            ->whereIn('type', ['product', 'batch', 'supplier'])
-            ->name('nutrimind.assess');
-        Route::post('nutrimind/{type}/{id}/actions', [NutriMindController::class, 'recordAction'])
-            ->whereIn('type', ['product', 'batch', 'supplier'])
-            ->name('nutrimind.actions.store');
-    });
+            Route::get('nutrimind', [NutriMindController::class, 'index'])->name('nutrimind.index');
+            Route::get('nutrimind/{type}/{id}', [NutriMindController::class, 'show'])
+                ->whereIn('type', ['product', 'batch', 'supplier'])
+                ->name('nutrimind.show');
+            Route::post('nutrimind/{type}/{id}/assess', [NutriMindController::class, 'assess'])
+                ->whereIn('type', ['product', 'batch', 'supplier'])
+                ->name('nutrimind.assess');
+            Route::post('nutrimind/{type}/{id}/actions', [NutriMindController::class, 'recordAction'])
+                ->whereIn('type', ['product', 'batch', 'supplier'])
+                ->name('nutrimind.actions.store');
+        });
 
     Route::prefix('admin')->name('admin.')->middleware('can:manage_users')->group(function () {
         Route::get('users', [UserController::class, 'index'])->name('users.index');
@@ -114,11 +114,8 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-// Front Office (public)
 Route::get('/products', [FrontProductController::class, 'index'])->name('front.products.index');
 Route::get('/products/{product}', [FrontProductController::class, 'show'])->name('front.products.show');
-
-// Public traceability (no auth required)
 Route::get('/traceability', [FrontTraceabilityController::class, 'index'])->name('front.traceability.index');
 Route::get('/lots/{batch:lot_number}', [FrontTraceabilityController::class, 'show'])->name('front.traceability.show');
 
