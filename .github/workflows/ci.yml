@@ -82,7 +82,7 @@ jobs:
             -e APP_KEY="base64:$(openssl rand -base64 32)" \
             -e ADMIN_PASSWORD=ci-smoke-test-123 \
             -e APP_URL=http://localhost:10000 \
-            -e MAIL_MAILER=log -e SESSION_DRIVER=database -e CACHE_STORE=database \
+            -e MAIL_MAILER=log -e NUTRIALERT_MAIL=false -e SESSION_DRIVER=database -e CACHE_STORE=database \
             nutritrace:${{ github.sha }}
 
       - name: Smoke test (health, home, login, language switch)

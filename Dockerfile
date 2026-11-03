@@ -4,9 +4,10 @@
 FROM composer:2 AS vendor
 WORKDIR /app
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --no-interaction --prefer-dist --no-scripts --no-autoloader --ignore-platform-reqs
+# Faker (paquet de dev) est nécessaire aux données de démonstration chargées au démarrage
+RUN composer install --no-interaction --prefer-dist --no-scripts --no-autoloader --ignore-platform-reqs
 COPY . .
-RUN composer dump-autoload --no-dev --optimize --classmap-authoritative
+RUN composer dump-autoload --optimize --classmap-authoritative
 
 # 2) Assets front (Tailwind + Vite)
 FROM node:20-alpine AS assets
