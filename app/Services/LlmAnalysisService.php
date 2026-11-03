@@ -19,14 +19,18 @@ class LlmAnalysisService
         ];
 
         if (! config('ai.llm.enabled') || ! config('ai.llm.api_key')) {
-            Log::warning('LLM cold-chain analysis unavailable: API key is missing or the service is disabled.', [
+            Log::info('LLM cold-chain analysis unavailable: API key is missing or the service is disabled.', [
                 'provider' => config('ai.llm.provider'),
             ]);
 
             return $unavailable;
         }
 
-        $cacheKey = 'cold-chain-llm:'.hash('sha256', json_encode($context, JSON_THROW_ON_ERROR));
+        $cacheKey = 'cold-chain-llm:'.hash('sha256', json_encode([
+            'provider' => config('ai.llm.provider'),
+            'model' => config('ai.llm.model'),
+            'context' => $context,
+        ], JSON_THROW_ON_ERROR));
 
         try {
             return Cache::remember($cacheKey, now()->addMinutes(10), function () use ($context, $unavailable): array {
@@ -45,7 +49,7 @@ class LlmAnalysisService
         } catch (Throwable $exception) {
             Log::warning('LLM cold-chain analysis unavailable.', [
                 'provider' => config('ai.llm.provider'),
-                'error' => $exception->getMessage(),
+                'exception' => $exception::class,
             ]);
 
             return $unavailable;
@@ -78,8 +82,14 @@ class LlmAnalysisService
         }
 
         $response = Http::timeout((int) config('ai.llm.timeout', 15))
-            ->post('https://generativelanguage.googleapis.com/v1beta/models/'.config('ai.llm.model').':generateContent?key='.urlencode((string) config('ai.llm.api_key')), [
+            ->withHeaders([
+                'x-goog-api-key' => config('ai.llm.api_key'),
+            ])
+            ->post('https://generativelanguage.googleapis.com/v1beta/models/'.config('ai.llm.model').':generateContent', [
                 'contents' => [['parts' => [['text' => $prompt]]]],
+                'generationConfig' => [
+                    'responseMimeType' => 'application/json',
+                ],
             ]);
         $response->throw();
 

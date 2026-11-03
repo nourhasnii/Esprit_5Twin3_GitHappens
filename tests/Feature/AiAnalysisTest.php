@@ -51,6 +51,15 @@ it('returns a parsed Gemini analysis and caches identical contexts', function ()
         ->and($first['recommended_actions'])->toHaveCount(2)
         ->and($second)->toEqual($first);
     Http::assertSentCount(1);
+    Http::assertSent(function ($request): bool {
+        return $request->hasHeader('x-goog-api-key', 'test-key')
+            && ! str_contains($request->url(), 'key=')
+            && $request->data()['generationConfig']['responseMimeType'] === 'application/json';
+    });
+
+    config()->set('ai.llm.model', 'another-gemini-test');
+    $service->analyze(aiContext());
+    Http::assertSentCount(2);
 });
 
 it('falls back when the LLM response is invalid or unavailable', function () {
