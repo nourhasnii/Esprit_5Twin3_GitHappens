@@ -22,3 +22,5 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+ml/model.joblib
+ml/__pycache__/
