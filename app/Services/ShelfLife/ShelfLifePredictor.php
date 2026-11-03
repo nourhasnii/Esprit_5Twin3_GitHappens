@@ -144,7 +144,7 @@ class ShelfLifePredictor
             'lot' => BatchAttributes::code($batch),
             'product' => $batch->product?->name,
             'profile' => $profileKey,
-            'profile_label' => $profile['label'],
+            'profile_label' => __($profile['label']),
             'model' => [
                 'name' => 'Ratkowsky (racine carrée)',
                 'reference_temp' => $profile['reference_temp'],
@@ -167,7 +167,7 @@ class ShelfLifePredictor
             'critical_minutes' => $criticalMinutes,
             'exposures' => $exposures,
             'risk' => $risk,
-            'risk_label' => self::RISK_LABELS[$risk],
+            'risk_label' => __(self::RISK_LABELS[$risk]),
             'explanation' => $this->explain($profile, $exposures, $lostHours, $printed, $predicted, $criticalMinutes, count($exposures)),
             'action' => $this->action($risk, $predicted, $today),
             'assessment' => $assessment ? [

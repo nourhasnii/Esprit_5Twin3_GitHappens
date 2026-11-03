@@ -1,17 +1,17 @@
 @use('App\Enums\SiteType')
 <div class="form-grid">
     <div class="field">
-        <label for="code">Code</label>
-        <input type="text" id="code" name="code" value="{{ old('code', $site->code) }}" maxlength="30" required placeholder="ENT-SFX">
+        <label for="code">{{ __('Code') }}</label>
+        <input type="text" id="code" name="code" value="{{ old('code', $site->code) }}" maxlength="30" required placeholder="{{ __('ENT-SFX') }}">
         @error('code')<p class="error">{{ $message }}</p>@enderror
     </div>
     <div class="field">
-        <label for="name">Nom</label>
-        <input type="text" id="name" name="name" value="{{ old('name', $site->name) }}" required placeholder="Entrepôt frigorifique Sfax">
+        <label for="name">{{ __('Nom') }}</label>
+        <input type="text" id="name" name="name" value="{{ old('name', $site->name) }}" required placeholder="{{ __('Entrepôt frigorifique Sfax') }}">
         @error('name')<p class="error">{{ $message }}</p>@enderror
     </div>
     <div class="field">
-        <label for="type">Type</label>
+        <label for="type">{{ __('Type') }}</label>
         <select id="type" name="type" required>
             @foreach (SiteType::cases() as $type)
                 <option value="{{ $type->value }}" @selected(old('type', $site->type?->value) === $type->value)>{{ $type->label() }}</option>
@@ -20,45 +20,45 @@
         @error('type')<p class="error">{{ $message }}</p>@enderror
     </div>
     <div class="field">
-        <label for="capacity">Capacité</label>
+        <label for="capacity">{{ __('Capacité') }}</label>
         <input type="number" id="capacity" name="capacity" value="{{ old('capacity', $site->capacity) }}" min="1" step="any" required>
-        <p class="hint">Dans la même unité que les quantités de stock (unités, colis ou kg).</p>
+        <p class="hint">{{ __('Dans la même unité que les quantités de stock (unités, colis ou kg).') }}</p>
         @error('capacity')<p class="error">{{ $message }}</p>@enderror
     </div>
     <div class="field">
-        <label for="city">Ville</label>
+        <label for="city">{{ __('Ville') }}</label>
         <input type="text" id="city" name="city" value="{{ old('city', $site->city) }}">
         @error('city')<p class="error">{{ $message }}</p>@enderror
     </div>
     <div class="field">
-        <label for="address">Adresse</label>
+        <label for="address">{{ __('Adresse') }}</label>
         <input type="text" id="address" name="address" value="{{ old('address', $site->address) }}">
         @error('address')<p class="error">{{ $message }}</p>@enderror
     </div>
     <div class="field">
-        <label for="latitude">Latitude</label>
+        <label for="latitude">{{ __('Latitude') }}</label>
         <input type="number" id="latitude" name="latitude" value="{{ old('latitude', $site->latitude) }}" step="any" min="-90" max="90" placeholder="34.7406">
         @error('latitude')<p class="error">{{ $message }}</p>@enderror
     </div>
     <div class="field">
-        <label for="longitude">Longitude</label>
+        <label for="longitude">{{ __('Longitude') }}</label>
         <input type="number" id="longitude" name="longitude" value="{{ old('longitude', $site->longitude) }}" step="any" min="-180" max="180" placeholder="10.7603">
-        <p class="hint">Sans coordonnées, le site est exclu des recommandations.</p>
+        <p class="hint">{{ __('Sans coordonnées, le site est exclu des recommandations.') }}</p>
         @error('longitude')<p class="error">{{ $message }}</p>@enderror
     </div>
     <div class="field wide">
-        <label for="geo-query">Position sur la carte</label>
+        <label for="geo-query">{{ __('Position sur la carte') }}</label>
         <div class="map-tools">
-            <input type="search" id="geo-query" placeholder="Rechercher une adresse ou une ville, ex. : Zone industrielle Poudrière, Sfax" autocomplete="off">
-            <button type="button" class="btn btn-ghost" id="geo-search">Rechercher</button>
-            <button type="button" class="btn btn-ghost" id="geo-locate">Ma position</button>
+            <input type="search" id="geo-query" placeholder="{{ __('Rechercher une adresse ou une ville, ex. : Zone industrielle Poudrière, Sfax') }}" autocomplete="off">
+            <button type="button" class="btn btn-ghost" id="geo-search">{{ __('Rechercher') }}</button>
+            <button type="button" class="btn btn-ghost" id="geo-locate">{{ __('Ma position') }}</button>
         </div>
-        <div id="site-map" class="map is-small" aria-label="Carte de sélection de la position"></div>
-        <p class="map-status" id="geo-status" role="status">Cliquez sur la carte ou déplacez le repère pour renseigner la latitude et la longitude.</p>
+        <div id="site-map" class="map is-small" aria-label="{{ __('Carte de sélection de la position') }}"></div>
+        <p class="map-status" id="geo-status" role="status">{{ __('Cliquez sur la carte ou déplacez le repère pour renseigner la latitude et la longitude.') }}</p>
     </div>
     <div class="field wide">
         <input type="hidden" name="is_active" value="0">
-        <label class="check"><input type="checkbox" name="is_active" value="1" @checked(old('is_active', $site->is_active))> Site actif (reçoit du stock et apparaît dans l’optimisation)</label>
+        <label class="check"><input type="checkbox" name="is_active" value="1" @checked(old('is_active', $site->is_active))> {{ __('Site actif (reçoit du stock et apparaît dans l’optimisation)') }}</label>
         @error('is_active')<p class="error">{{ $message }}</p>@enderror
     </div>
 </div>

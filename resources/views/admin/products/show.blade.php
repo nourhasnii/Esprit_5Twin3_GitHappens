@@ -2,12 +2,12 @@
     <x-slot name="header">
         <div class="flex items-center justify-between gap-4">
             <div>
-                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-amber-warm">Production workspace</p>
-                <h2 class="mt-1 font-fraunces text-3xl font-bold text-ink">Détails du produit</h2>
+                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-amber-warm">{{ __('Production workspace') }}</p>
+                <h2 class="mt-1 font-fraunces text-3xl font-bold text-ink">{{ __('Détails du produit') }}</h2>
             </div>
             <div class="flex gap-2">
-                <a href="{{ route('admin.products.edit', $product) }}" class="rounded bg-indigo-500 px-4 py-2 font-bold text-white hover:bg-indigo-700">Modifier</a>
-                <a href="{{ route('admin.products.index') }}" class="rounded bg-gray-500 px-4 py-2 font-bold text-white hover:bg-gray-700">Retour</a>
+                <a href="{{ route('admin.products.edit', $product) }}" class="rounded bg-indigo-500 px-4 py-2 font-bold text-white hover:bg-indigo-700">{{ __('Modifier') }}</a>
+                <a href="{{ route('admin.products.index') }}" class="rounded bg-gray-500 px-4 py-2 font-bold text-white hover:bg-gray-700">{{ __('Retour') }}</a>
             </div>
         </div>
     </x-slot>
@@ -27,30 +27,30 @@
                                         <circle cx="8.5" cy="8.5" r="1.5"/>
                                         <path d="M21 15L16 10L5 21"/>
                                     </svg>
-                                    <p class="text-sm">Aucune image disponible</p>
+                                    <p class="text-sm">{{ __('Aucune image disponible') }}</p>
                                 </div>
                             @endif
                         </div>
                     </div>
                     <div>
-                        <h3 class="mb-4 text-lg font-semibold">Informations générales</h3>
+                        <h3 class="mb-4 text-lg font-semibold">{{ __('Informations générales') }}</h3>
                         <dl class="space-y-3">
-                            <div><dt class="text-sm font-medium text-gray-500">Nom</dt><dd>{{ $product->name }}</dd></div>
-                            <div><dt class="text-sm font-medium text-gray-500">Description</dt><dd>{{ $product->description ?: '-' }}</dd></div>
-                            <div><dt class="text-sm font-medium text-gray-500">Catégorie</dt><dd>{{ $product->categoryModel?->name ?? $product->category }}</dd></div>
-                            <div><dt class="text-sm font-medium text-gray-500">Unité</dt><dd>{{ $product->unit }}</dd></div>
-                            <div><dt class="text-sm font-medium text-gray-500">Code-barres</dt><dd>{{ $product->barcode ?: '-' }}</dd></div>
+                            <div><dt class="text-sm font-medium text-gray-500">{{ __('Nom') }}</dt><dd>{{ $product->name }}</dd></div>
+                            <div><dt class="text-sm font-medium text-gray-500">{{ __('Description') }}</dt><dd>{{ $product->description ?: '-' }}</dd></div>
+                            <div><dt class="text-sm font-medium text-gray-500">{{ __('Catégorie') }}</dt><dd>{{ $product->categoryModel?->name ?? $product->category }}</dd></div>
+                            <div><dt class="text-sm font-medium text-gray-500">{{ __('Unité') }}</dt><dd>{{ $product->unit }}</dd></div>
+                            <div><dt class="text-sm font-medium text-gray-500">{{ __('Code-barres') }}</dt><dd>{{ $product->barcode ?: '-' }}</dd></div>
                         </dl>
                     </div>
                     <div>
-                        <h3 class="mb-4 text-lg font-semibold">Traçabilité</h3>
+                        <h3 class="mb-4 text-lg font-semibold">{{ __('Traçabilité') }}</h3>
                         <dl class="space-y-3">
-                            <div><dt class="text-sm font-medium text-gray-500">Pays d'origine</dt><dd>{{ $product->origin_country }}</dd></div>
-                            <div><dt class="text-sm font-medium text-gray-500">Région d'origine</dt><dd>{{ $product->origin_region ?: '-' }}</dd></div>
-                            <div><dt class="text-sm font-medium text-gray-500">Producteur</dt><dd>{{ $product->producer?->name ?: '-' }}</dd></div>
-                            <div><dt class="text-sm font-medium text-gray-500">Empreinte carbone</dt><dd>{{ $product->carbon_footprint !== null ? $product->carbon_footprint . ' kg CO₂' : '-' }}</dd></div>
-                            <div><dt class="text-sm font-medium text-gray-500">Biologique</dt><dd>{{ $product->is_organic ? 'Oui' : 'Non' }}</dd></div>
-                            <div><dt class="text-sm font-medium text-gray-500">Vérification</dt><dd>{{ ucfirst($product->verification_status) }}</dd></div>
+                            <div><dt class="text-sm font-medium text-gray-500">{{ __('Pays d\'origine') }}</dt><dd>{{ $product->origin_country }}</dd></div>
+                            <div><dt class="text-sm font-medium text-gray-500">{{ __('Région d\'origine') }}</dt><dd>{{ $product->origin_region ?: '-' }}</dd></div>
+                            <div><dt class="text-sm font-medium text-gray-500">{{ __('Producteur') }}</dt><dd>{{ $product->producer?->name ?: '-' }}</dd></div>
+                            <div><dt class="text-sm font-medium text-gray-500">{{ __('Empreinte carbone') }}</dt><dd>{{ $product->carbon_footprint !== null ? $product->carbon_footprint . ' kg CO₂' : '-' }}</dd></div>
+                            <div><dt class="text-sm font-medium text-gray-500">{{ __('Biologique') }}</dt><dd>{{ $product->is_organic ? __('Oui') : __('Non') }}</dd></div>
+                            <div><dt class="text-sm font-medium text-gray-500">{{ __('Vérification') }}</dt><dd>{{ ucfirst($product->verification_status) }}</dd></div>
                         </dl>
                     </div>
                 </div>

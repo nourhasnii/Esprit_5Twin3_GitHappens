@@ -17,7 +17,7 @@ class TwoFactorAuthenticationController extends Controller
         $user = $request->user();
 
         if ($user->hasEnabledTwoFactorAuthentication()) {
-            return back()->with('status', 'two-factor-already-enabled');
+            return back()->with('status', __('two-factor-already-enabled'));
         }
 
         $user->forceFill([
@@ -26,7 +26,7 @@ class TwoFactorAuthenticationController extends Controller
             'two_factor_confirmed_at' => null,
         ])->save();
 
-        return back()->with('status', 'two-factor-enabling');
+        return back()->with('status', __('two-factor-enabling'));
     }
 
     /**
@@ -56,7 +56,7 @@ class TwoFactorAuthenticationController extends Controller
 
         $user->forceFill(['two_factor_confirmed_at' => now()])->save();
 
-        return back()->with('status', 'two-factor-confirmed');
+        return back()->with('status', __('two-factor-confirmed'));
     }
 
     /**
@@ -82,7 +82,7 @@ class TwoFactorAuthenticationController extends Controller
             'two_factor_confirmed_at' => null,
         ])->save();
 
-        return back()->with('status', 'two-factor-disabled');
+        return back()->with('status', __('two-factor-disabled'));
     }
 
     /**
@@ -100,6 +100,6 @@ class TwoFactorAuthenticationController extends Controller
             'two_factor_recovery_codes' => $user->generateTwoFactorRecoveryCodes(),
         ])->save();
 
-        return back()->with('status', 'recovery-codes-regenerated');
+        return back()->with('status', __('recovery-codes-regenerated'));
     }
 }

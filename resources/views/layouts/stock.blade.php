@@ -204,7 +204,7 @@
         {{-- Les messages session('success') / session('error') sont déjà affichés par x-dashboard-layout --}}
         @if ($errors->any())
             <div class="notice notice-error" role="alert">
-                <p class="notice-title">Corrigez les points suivants :</p>
+                <p class="notice-title">{{ __('Corrigez les points suivants :') }}</p>
                 <ul>@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
             </div>
         @endif

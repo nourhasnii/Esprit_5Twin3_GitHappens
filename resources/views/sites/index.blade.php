@@ -1,11 +1,11 @@
 @extends('layouts.stock')
 @use('App\Support\Fmt')
 
-@section('eyebrow', 'Network workspace')
-@section('title', 'Sites')
-@section('description', 'Gérez les entrepôts, plateformes et magasins du réseau; leurs coordonnées alimentent les calculs de distance.')
+@section('eyebrow', __('Network workspace'))
+@section('title', __('Sites'))
+@section('description', __('Gérez les entrepôts, plateformes et magasins du réseau; leurs coordonnées alimentent les calculs de distance.'))
 @section('page-action')
-    <a class="btn btn-primary" href="{{ route('sites.create') }}">Ajouter un site</a>
+    <a class="btn btn-primary" href="{{ route('sites.create') }}">{{ __('Ajouter un site') }}</a>
 @endsection
 
 @section('content')
@@ -32,20 +32,20 @@
     <section class="panel">
         <div class="panel-head">
             <div>
-                <h2>Carte du réseau</h2>
-                <p class="muted small">Position de chaque site. La taille du point indique la capacité, sa couleur le type de site. Cliquez sur un point pour voir son occupation.</p>
+                <h2>{{ __('Carte du réseau') }}</h2>
+                <p class="muted small">{{ __('Position de chaque site. La taille du point indique la capacité, sa couleur le type de site. Cliquez sur un point pour voir son occupation.') }}</p>
             </div>
         </div>
-        <div id="sites-map" class="map" aria-label="Carte des sites"></div>
+        <div id="sites-map" class="map" aria-label="{{ __('Carte des sites') }}"></div>
         <div class="map-legend">
-            <span><i style="background:#245d8a"></i>Site de production</span>
-            <span><i style="background:#0f6b58"></i>Entrepôt</span>
-            <span><i style="background:#6b4f9a"></i>Centre de distribution</span>
-            <span><i style="background:#c48a1a"></i>Magasin</span>
-            <span><i style="background:#a8325e"></i>Association (dons)</span>
-            <span><i style="background:#8a9a95"></i>Inactif</span>
+            <span><i style="background:#245d8a"></i>{{ __('Site de production') }}</span>
+            <span><i style="background:#0f6b58"></i>{{ __('Entrepôt') }}</span>
+            <span><i style="background:#6b4f9a"></i>{{ __('Centre de distribution') }}</span>
+            <span><i style="background:#c48a1a"></i>{{ __('Magasin') }}</span>
+            <span><i style="background:#a8325e"></i>{{ __('Association (dons)') }}</span>
+            <span><i style="background:#8a9a95"></i>{{ __('Inactif') }}</span>
             @if ($missing > 0)
-                <span style="color:var(--amber)">{{ $missing }} site(s) sans coordonnées GPS ne figurent pas sur la carte.</span>
+                <span style="color:var(--amber)">{{ __(':missing site(s) sans coordonnées GPS ne figurent pas sur la carte.', ['missing' => $missing]) }}</span>
             @endif
         </div>
     </section>
@@ -54,20 +54,20 @@
 <section class="panel">
     @if ($sites->isEmpty())
         <div class="empty">
-            <p>Aucun site pour l’instant. Commencez par déclarer vos entrepôts et magasins.</p>
-            <a class="btn btn-primary" href="{{ route('sites.create') }}">Ajouter un site</a>
+            <p>{{ __('Aucun site pour l’instant. Commencez par déclarer vos entrepôts et magasins.') }}</p>
+            <a class="btn btn-primary" href="{{ route('sites.create') }}">{{ __('Ajouter un site') }}</a>
         </div>
     @else
         <div class="table-wrap">
             <table>
                 <thead>
                 <tr>
-                    <th>Code</th>
-                    <th>Site</th>
-                    <th>Type</th>
-                    <th>Position GPS</th>
-                    <th>Occupation</th>
-                    <th>Statut</th>
+                    <th>{{ __('Code') }}</th>
+                    <th>{{ __('Site') }}</th>
+                    <th>{{ __('Type') }}</th>
+                    <th>{{ __('Position GPS') }}</th>
+                    <th>{{ __('Occupation') }}</th>
+                    <th>{{ __('Statut') }}</th>
                     <th></th>
                 </tr>
                 </thead>
@@ -84,18 +84,18 @@
                             @if ($site->hasCoordinates())
                                 {{ Fmt::n($site->latitude, 4) }}, {{ Fmt::n($site->longitude, 4) }}
                             @else
-                                <span class="tag tag-expiring">À renseigner</span>
+                                <span class="tag tag-expiring">{{ __('À renseigner') }}</span>
                             @endif
                         </td>
                         <td>@include('stocks._rack', ['used' => $site->usedCapacity(), 'capacity' => $site->capacity])</td>
-                        <td><span class="tag {{ $site->is_active ? 'tag-ok' : '' }}">{{ $site->is_active ? 'Actif' : 'Inactif' }}</span></td>
+                        <td><span class="tag {{ $site->is_active ? 'tag-ok' : '' }}">{{ $site->is_active ? __('Actif') : __('Inactif') }}</span></td>
                         <td class="row-actions">
-                            <a href="{{ route('stocks.index', ['site_id' => $site->id]) }}">Stocks</a>
-                            <a href="{{ route('sites.edit', $site) }}">Modifier</a>
+                            <a href="{{ route('stocks.index', ['site_id' => $site->id]) }}">{{ __('Stocks') }}</a>
+                            <a href="{{ route('sites.edit', $site) }}">{{ __('Modifier') }}</a>
                             @if ($site->stocks_count === 0)
                                 <form method="POST" action="{{ route('sites.destroy', $site) }}" onsubmit="return confirm('Supprimer ce site ?')">
                                     @csrf @method('DELETE')
-                                    <button class="linklike" type="submit">Supprimer</button>
+                                    <button class="linklike" type="submit">{{ __('Supprimer') }}</button>
                                 </form>
                             @endif
                         </td>

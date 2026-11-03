@@ -35,10 +35,10 @@ class StoreStockMovementRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'product_id' => 'produit', 'batch_id' => 'lot',
-            'source_site_id' => 'site d’origine', 'destination_site_id' => 'site de destination',
-            'site_id' => 'site', 'quantity' => 'quantité', 'counted_quantity' => 'quantité comptée',
-            'moved_at' => 'date du mouvement', 'reason' => 'motif',
+            'product_id' => __('produit'), 'batch_id' => __('lot'),
+            'source_site_id' => __('site d’origine'), 'destination_site_id' => __('site de destination'),
+            'site_id' => __('site'), 'quantity' => __('quantité'), 'counted_quantity' => __('quantité comptée'),
+            'moved_at' => __('date du mouvement'), 'reason' => __('motif'),
         ];
     }
 }

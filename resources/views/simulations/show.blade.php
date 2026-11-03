@@ -60,26 +60,26 @@
 @section('description', 'Simulation de '.$simulation->horizon_days.' jours à partir du '.$simulation->start_date->format('d/m/Y').' sur une copie des stocks réels. Même demande et mêmes incidents pour les deux stratégies.')
 
 @section('page-action')
-    <a class="btn btn-ghost" href="{{ route('simulations.index') }}">← Nouvelle simulation</a>
+    <a class="btn btn-ghost" href="{{ route('simulations.index') }}">{{ __('← Nouvelle simulation') }}</a>
 @endsection
 
 @section('content')
 <div class="figures">
     <div class="figure {{ $wasteCut !== null && $wasteCut > 0 ? '' : 'is-warn' }}">
         <strong>{{ $wasteCut !== null ? ($wasteCut > 0 ? '-' : '').abs($wasteCut).' %' : '—' }}</strong>
-        <span>de gaspillage avec l’IA ({{ Fmt::n($b['wasted']) }} → {{ Fmt::n($a['wasted']) }} u. jetées)</span>
+        <span>{{ __('de gaspillage avec l’IA (:wasted → :wasted2 u. jetées)', ['wasted' => Fmt::n($b['wasted']), 'wasted2' => Fmt::n($a['wasted'])]) }}</span>
     </div>
     <div class="figure">
         <strong>{{ Fmt::n(max(0, $b['unmet'] - $a['unmet'])) }}</strong>
-        <span>ventes perdues évitées (taux de service {{ Fmt::n($b['service_rate'], 1) }} % → {{ Fmt::n($a['service_rate'], 1) }} %)</span>
+        <span>{{ __('ventes perdues évitées (taux de service :service_rate % → :service_rate2 %)', ['service_rate' => Fmt::n($b['service_rate'], 1), 'service_rate2' => Fmt::n($a['service_rate'], 1)]) }}</span>
     </div>
     <div class="figure">
         <strong>{{ Fmt::n($a['meals']) }}</strong>
-        <span>repas offerts aux associations ({{ Fmt::n($a['donated']) }} u. données la veille de la DLC)</span>
+        <span>{{ __('repas offerts aux associations (:donated u. données la veille de la DLC)', ['donated' => Fmt::n($a['donated'])]) }}</span>
     </div>
     <div class="figure {{ $co2Net < 0 ? 'is-alert' : '' }}">
-        <strong>{{ Fmt::n($co2Net, 0) }} kg</strong>
-        <span>de CO₂e évités au total (nourriture non jetée moins transport en plus)</span>
+        <strong>{{ __(':co2net kg', ['co2net' => Fmt::n($co2Net, 0)]) }}</strong>
+        <span>{{ __('de CO₂e évités au total (nourriture non jetée moins transport en plus)') }}</span>
     </div>
 </div>
 
@@ -95,17 +95,17 @@
 <section class="panel">
     <div class="panel-head">
         <div>
-            <h2>Sans IA ou avec IA ?</h2>
+            <h2>{{ __('Sans IA ou avec IA ?') }}</h2>
             <p class="muted small">
-                <b>Sans IA</b> : un magasin recommande quand il passe sous son seuil, l’entrepôt envoie le premier lot trouvé, ce qui dépasse la DLC est jeté.
-                <b>Avec IA</b> : prévision de la demande, vente du lot le plus proche de sa DLC d’abord, transferts anticipés, promotions calculées, dons la veille de la DLC, réassort avant la rupture.
+                <b>{{ __('Sans IA') }}</b> {{ __(': un magasin recommande quand il passe sous son seuil, l’entrepôt envoie le premier lot trouvé, ce qui dépasse la DLC est jeté.') }}
+                <b>{{ __('Avec IA') }}</b> {{ __(': prévision de la demande, vente du lot le plus proche de sa DLC d’abord, transferts anticipés, promotions calculées, dons la veille de la DLC, réassort avant la rupture.') }}
             </p>
         </div>
     </div>
     <div class="table-wrap">
         <table class="compare">
             <thead>
-                <tr><th>Indicateur</th><th class="num">Sans IA</th><th class="num">Avec IA</th><th class="num">Écart</th></tr>
+                <tr><th>{{ __('Indicateur') }}</th><th class="num">{{ __('Sans IA') }}</th><th class="num">{{ __('Avec IA') }}</th><th class="num">{{ __('Écart') }}</th></tr>
             </thead>
             <tbody>
                 @foreach ($rows as [$label, $key, $dec, $lowerIsBetter, $unit])
@@ -164,8 +164,8 @@
                 <circle cx="{{ $x($n - 1) }}" cy="{{ $y(end($sa)) }}" r="4" fill="var(--pine)"><title>Avec IA : {{ Fmt::n(end($sa)) }}</title></circle>
             </svg>
             <p class="legend small">
-                <span><i class="sw dashed" style="border-color: {{ $chart['color'] }}"></i>Sans IA : {{ Fmt::n(end($sb)) }}</span>
-                <span><i class="sw" style="border-color: var(--pine)"></i>Avec IA : {{ Fmt::n(end($sa)) }}</span>
+                <span><i class="sw dashed" style="border-color: {{ $chart['color'] }}"></i>{{ __('Sans IA : :sb', ['sb' => Fmt::n(end($sb))]) }}</span>
+                <span><i class="sw" style="border-color: var(--pine)"></i>{{ __('Avec IA : :sa', ['sa' => Fmt::n(end($sa))]) }}</span>
             </p>
         </section>
     @endforeach
@@ -174,30 +174,30 @@
 <section class="panel">
     <div class="panel-head">
         <div>
-            <h2>Carte animée du réseau</h2>
-            <p class="muted small">État de chaque site en fin de journée et camions partis ce jour-là. Appuyez sur ▶ pour rejouer la simulation.</p>
+            <h2>{{ __('Carte animée du réseau') }}</h2>
+            <p class="muted small">{{ __('État de chaque site en fin de journée et camions partis ce jour-là. Appuyez sur ▶ pour rejouer la simulation.') }}</p>
         </div>
-        <div class="seg" role="group" aria-label="Stratégie affichée">
-            <button type="button" class="seg-btn" data-strategy="baseline">Sans IA</button>
-            <button type="button" class="seg-btn is-on" data-strategy="ai">Avec IA</button>
+        <div class="seg" role="group" aria-label="{{ __('Stratégie affichée') }}">
+            <button type="button" class="seg-btn" data-strategy="baseline">{{ __('Sans IA') }}</button>
+            <button type="button" class="seg-btn is-on" data-strategy="ai">{{ __('Avec IA') }}</button>
         </div>
     </div>
 
     <div class="player">
-        <button type="button" class="btn btn-primary play" id="sim-play" aria-label="Lecture">▶</button>
-        <input type="range" id="sim-day" min="0" max="{{ $n - 1 }}" value="0" aria-label="Jour affiché">
+        <button type="button" class="btn btn-primary play" id="sim-play" aria-label="{{ __('Lecture') }}">▶</button>
+        <input type="range" id="sim-day" min="0" max="{{ $n - 1 }}" value="0" aria-label="{{ __('Jour affiché') }}">
         <output id="sim-day-label" class="day-label"></output>
     </div>
 
     <div id="sim-map" class="map"></div>
     <p class="map-legend">
-        <span><i style="background: var(--pine)"></i>Stock suffisant</span>
-        <span><i style="background: #c48a1a"></i>Sous le seuil</span>
-        <span><i style="background: #a3261d"></i>Rupture</span>
-        <span><i style="background: #8a9a95"></i>Fermé</span>
-        <span><i style="background: #6b4f9a"></i>Association</span>
-        <span><i class="line" style="border-color: #245d8a"></i>Transfert</span>
-        <span><i class="line dashed" style="border-color: #0f6b58"></i>Don</span>
+        <span><i style="background: var(--pine)"></i>{{ __('Stock suffisant') }}</span>
+        <span><i style="background: #c48a1a"></i>{{ __('Sous le seuil') }}</span>
+        <span><i style="background: #a3261d"></i>{{ __('Rupture') }}</span>
+        <span><i style="background: #8a9a95"></i>{{ __('Fermé') }}</span>
+        <span><i style="background: #6b4f9a"></i>{{ __('Association') }}</span>
+        <span><i class="line" style="border-color: #245d8a"></i>{{ __('Transfert') }}</span>
+        <span><i class="line dashed" style="border-color: #0f6b58"></i>{{ __('Don') }}</span>
     </p>
     <ul class="day-actions" id="sim-day-actions" aria-live="polite"></ul>
 </section>
@@ -206,38 +206,38 @@
 <section class="panel">
     <div class="panel-head">
         <div>
-            <h2>Journal des décisions</h2>
-            <p class="muted small">Ce qui s’est passé, jour après jour, dans chaque stratégie.</p>
+            <h2>{{ __('Journal des décisions') }}</h2>
+            <p class="muted small">{{ __('Ce qui s’est passé, jour après jour, dans chaque stratégie.') }}</p>
         </div>
-        <div class="seg" role="tablist" aria-label="Journal">
-            <button type="button" class="seg-btn is-on" data-log="ai" role="tab" aria-selected="true">Avec IA ({{ count($r['ai']['actions']) }})</button>
-            <button type="button" class="seg-btn" data-log="baseline" role="tab" aria-selected="false">Sans IA ({{ count($r['baseline']['actions']) }})</button>
+        <div class="seg" role="tablist" aria-label="{{ __('Journal') }}">
+            <button type="button" class="seg-btn is-on" data-log="ai" role="tab" aria-selected="true">{{ __('Avec IA (:actions)', ['actions' => count($r['ai']['actions'])]) }}</button>
+            <button type="button" class="seg-btn" data-log="baseline" role="tab" aria-selected="false">{{ __('Sans IA (:actions)', ['actions' => count($r['baseline']['actions'])]) }}</button>
         </div>
     </div>
     @foreach (['ai', 'baseline'] as $strategy)
         <div class="log" data-log-panel="{{ $strategy }}" @if ($strategy !== 'ai') hidden @endif>
             @forelse (collect($r[$strategy]['actions'])->groupBy('day') as $day => $actions)
-                <h3 class="log-day">Jour {{ $day + 1 }} · {{ CarbonImmutable::parse($actions->first()['date'])->locale('fr')->isoFormat('dddd D MMMM') }}</h3>
+                <h3 class="log-day">{{ __('Jour :day · :mmmm', ['day' => $day + 1, 'mmmm' => CarbonImmutable::parse($actions->first()['date'])->locale(app()->getLocale())->isoFormat('dddd D MMMM')]) }}</h3>
                 <ul class="log-list">
                     @foreach ($actions as $action)
                         <li><span class="tag {{ $kinds[$action['kind']][1] ?? '' }}">{{ $kinds[$action['kind']][0] ?? $action['kind'] }}</span> {{ $action['text'] }}</li>
                     @endforeach
                 </ul>
             @empty
-                <p class="muted">Aucune action : rien à signaler dans cette stratégie.</p>
+                <p class="muted">{{ __('Aucune action : rien à signaler dans cette stratégie.') }}</p>
             @endforelse
         </div>
     @endforeach
 </section>
 
 <section class="panel">
-    <h2>Comment ça marche ?</h2>
+    <h2>{{ __('Comment ça marche ?') }}</h2>
     <ol class="how">
-        <li><b>Copie de l’état réel.</b> Le jumeau numérique lit les stocks d’aujourd’hui (quantités, lots, DLC) et les sites avec leurs coordonnées GPS. Les lots rappelés ou périmés sont exclus.</li>
-        <li><b>Demande prévue.</b> Pour chaque magasin et chaque produit, la demande jour par jour vient de la prévision du module (historique des ventes + calendrier tunisien), puis le scénario la modifie.</li>
-        <li><b>Deux stratégies, mêmes conditions.</b> Chaque jour : arrivée des camions, incidents, ventes, décisions, puis on jette ce qui atteint sa DLC. Seules les décisions changent entre « sans IA » et « avec IA ».</li>
-        <li><b>Décisions de l’IA.</b> Transfert vers le magasin le plus proche qui vendra avant la DLC, promotion calculée avec l’élasticité-prix ({{ config('stock.anti_waste.price_elasticity') }}), don à l’association la plus proche la veille de la DLC, réassort quand le stock ne tiendra pas jusqu’à la prochaine livraison.</li>
-        <li><b>Bilan vérifiable.</b> Pour chaque stratégie : stock de départ = vendu + jeté + donné + restant. Rien n’est écrit dans les stocks réels.</li>
+        <li><b>{{ __('Copie de l’état réel.') }}</b> {{ __('Le jumeau numérique lit les stocks d’aujourd’hui (quantités, lots, DLC) et les sites avec leurs coordonnées GPS. Les lots rappelés ou périmés sont exclus.') }}</li>
+        <li><b>{{ __('Demande prévue.') }}</b> {{ __('Pour chaque magasin et chaque produit, la demande jour par jour vient de la prévision du module (historique des ventes + calendrier tunisien), puis le scénario la modifie.') }}</li>
+        <li><b>{{ __('Deux stratégies, mêmes conditions.') }}</b> {{ __('Chaque jour : arrivée des camions, incidents, ventes, décisions, puis on jette ce qui atteint sa DLC. Seules les décisions changent entre « sans IA » et « avec IA ».') }}</li>
+        <li><b>{{ __('Décisions de l’IA.') }}</b> {{ __('Transfert vers le magasin le plus proche qui vendra avant la DLC, promotion calculée avec l’élasticité-prix (:price_elasticity), don à l’association la plus proche la veille de la DLC, réassort quand le stock ne tiendra pas jusqu’à la prochaine livraison.', ['price_elasticity' => config('stock.anti_waste.price_elasticity')]) }}</li>
+        <li><b>{{ __('Bilan vérifiable.') }}</b> {{ __('Pour chaque stratégie : stock de départ = vendu + jeté + donné + restant. Rien n’est écrit dans les stocks réels.') }}</li>
     </ol>
 </section>
 @endsection

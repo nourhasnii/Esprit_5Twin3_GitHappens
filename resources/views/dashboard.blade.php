@@ -1,28 +1,29 @@
 <x-dashboard-layout>
     <x-slot name="header">
         <div>
-            <p class="text-xs font-bold uppercase tracking-[0.18em] text-amber-warm">Workspace</p>
-            <h1 class="mt-1 font-fraunces text-3xl font-bold text-ink">Vue d'ensemble</h1>
-            <p class="mt-2 text-sm text-ink/55 dark:text-white/55">Suivez l’activité, les alertes et les opérations de NutriTrace.</p>
+            <p class="text-xs font-bold uppercase tracking-[0.18em] text-amber-warm">{{ __('Workspace') }}</p>
+            <h1 class="mt-1 font-fraunces text-3xl font-bold text-ink">{{ __('Vue d\'ensemble') }}</h1>
+            <p class="mt-2 text-sm text-ink/55 dark:text-white/55">{{ __('Suivez l’activité, les alertes et les opérations de NutriTrace.') }}</p>
         </div>
     </x-slot>
 
     <x-slot name="headerActions">
         <div class="hidden items-center gap-3 lg:flex">
             <label for="dashboard-search" class="relative block w-64">
-                <span class="sr-only">Rechercher</span>
-                <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink/45" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
-                <input id="dashboard-search" type="search" class="w-full rounded-full border border-ink/10 bg-white py-2 pl-9 pr-14 text-sm text-ink placeholder:text-ink/40 focus:border-[#E3A23C] focus:outline-none focus:ring-2 focus:ring-[#E3A23C]/20 dark:border-white/10 dark:bg-[#1E3527] dark:text-white dark:placeholder:text-white/40" placeholder="Rechercher..." />
-                <kbd class="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 rounded-md border border-ink/10 bg-cream px-1.5 py-0.5 text-[10px] font-semibold text-ink/45">⌘K</kbd>
+                <span class="sr-only">{{ __('Rechercher') }}</span>
+                <svg class="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink/45" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+                <input id="dashboard-search" type="search" class="w-full rounded-full border border-ink/10 bg-white py-2 ps-9 pe-14 text-sm text-ink placeholder:text-ink/40 focus:border-[#E3A23C] focus:outline-none focus:ring-2 focus:ring-[#E3A23C]/20 dark:border-white/10 dark:bg-[#1E3527] dark:text-white dark:placeholder:text-white/40" placeholder="{{ __('Rechercher...') }}" />
+                <kbd class="pointer-events-none absolute end-2 top-1/2 -translate-y-1/2 rounded-md border border-ink/10 bg-cream px-1.5 py-0.5 text-[10px] font-semibold text-ink/45">⌘K</kbd>
             </label>
+            <x-locale-switcher />
             <x-notification-bell />
             <div class="flex items-center gap-2">
                 <x-user-avatar :user="$user" size="md" class="bg-forest text-white ring-2 ring-white dark:ring-[#101815]" />
                 <span class="hidden text-sm font-semibold text-ink xl:inline">{{ $user->name }}</span>
             </div>
-            <a href="{{ route('front.products.index') }}" target="_blank" rel="noopener" class="rounded-xl px-3 py-2 text-sm font-semibold text-ink/55 transition hover:bg-cream dark:text-white/60 dark:hover:bg-white/5" title="Catalogue public">Catalogue</a>
+            <a href="{{ route('front.products.index') }}" target="_blank" rel="noopener" class="rounded-xl px-3 py-2 text-sm font-semibold text-ink/55 transition hover:bg-cream dark:text-white/60 dark:hover:bg-white/5" title="{{ __('Catalogue public') }}">{{ __('Catalogue') }}</a>
             <div class="rounded-full border border-ink/10 p-1 shadow-sm dark:border-white/10">
-                <button type="button" role="switch" @click="theme = theme === 'light' ? 'dark' : 'light'; applyTheme()" class="relative h-8 w-16 rounded-full transition-colors" data-theme-switch :aria-checked="theme === 'dark'" :aria-label="theme === 'dark' ? 'Passer en mode clair' : 'Passer en mode sombre'" title="Changer de thème">
+                <button type="button" role="switch" @click="theme = theme === 'light' ? 'dark' : 'light'; applyTheme()" class="relative h-8 w-16 rounded-full transition-colors" data-theme-switch :aria-checked="theme === 'dark'" :aria-label="theme === 'dark' ? 'Passer en mode clair' : 'Passer en mode sombre'" title="{{ __('Changer de thème') }}">
                     <svg x-cloak x-show="theme === 'dark'" class="absolute left-1.5 h-3 w-3 text-white/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l-1.42-1.42m11.3-11.3 1.42 1.42"/></svg>
                     <svg x-cloak x-show="theme === 'light'" class="absolute right-1.5 h-3 w-3 text-forest/45" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20.5 15.5A8.5 8.5 0 0 1 8.5 3.5 8.5 8.5 0 1 0 20.5 15.5Z"/></svg>
                     <span class="absolute inset-y-1 left-1 grid h-6 w-6 place-items-center rounded-full bg-white text-[#1F3D2E] shadow-md transition-transform duration-200" :class="theme === 'dark' ? 'translate-x-8' : 'translate-x-0'">
@@ -48,26 +49,26 @@
 
         <section class="w-full rounded-3xl bg-gradient-to-br from-[#20402E] to-[#16281E] p-8 flex justify-between items-center gap-6 shadow-lg shadow-[#16281E]/20">
             <div class="min-w-0 flex-1 space-y-3">
-                <h2 class="text-2xl font-bold text-white">Bonjour {{ $greetingName }} 👋</h2>
+                <h2 class="text-2xl font-bold text-white">{{ __('Bonjour :greetingname 👋', ['greetingname' => $greetingName]) }}</h2>
                 <p class="text-white/80">
-                    Vous avez
+                    {{ __('Vous avez') }}
                     <span class="font-bold text-white">
                         {{ $alertCount }} {{ \Illuminate\Support\Str::plural('alerte', $alertCount) }}
                     </span>
-                    active{{ $alertCount > 1 ? 's' : '' }} aujourd'hui.
+                    {{ __('active:s aujourd\'hui.', ['s' => $alertCount > 1 ? 's' : '']) }}
                 </p>
                 <div class="pt-1">
                     <a
                         href="{{ app('router')->has('admin.batches.index') ? route('admin.batches.index') : '#' }}"
                         class="inline-flex items-center rounded-full bg-white px-5 py-2 font-semibold text-[#16281E] shadow-sm hover:bg-[#EEF3EC] mt-4"
                     >
-                        Voir les alertes
+                        {{ __('Voir les alertes') }}
                     </a>
                 </div>
             </div>
             <div class="hidden sm:flex flex-none items-center justify-center">
                 <div class="relative h-40 w-40 sm:h-44 sm:w-44 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" class="h-28 w-28" role="img" aria-label="Scanner QR caisse légumes">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" class="h-28 w-28" role="img" aria-label="{{ __('Scanner QR caisse légumes') }}">
                         <g fill="none" stroke-width="0">
                             <circle cx="80" cy="80" r="68" fill="white" fill-opacity="0.15"/>
                             <rect x="42" y="38" width="76" height="58" rx="10" fill="white" fill-opacity="0.95"/>
@@ -104,51 +105,51 @@
 
         <section class="w-full rounded-2xl border border-[#DCE7DE] bg-white p-5 shadow-[0_14px_35px_-28px_rgba(31,61,46,0.7)] dark:border-white/10 dark:bg-[#1E3527] dark:shadow-[0_14px_35px_-25px_rgba(227,162,60,0.25)]">
             <div class="flex items-center justify-between gap-4">
-                <h3 class="text-base font-bold text-ink dark:text-white">Quick Access</h3>
-                <span class="text-xs font-medium uppercase tracking-[0.12em] text-gray-400 dark:text-white/40">Workspace</span>
+                <h3 class="text-base font-bold text-ink dark:text-white">{{ __('Quick Access') }}</h3>
+                <span class="text-xs font-medium uppercase tracking-[0.12em] text-gray-400 dark:text-white/40">{{ __('Workspace') }}</span>
             </div>
             <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-7">
-                <a href="{{ app('router')->has('admin.products.index') ? route('admin.products.index') : '#' }}" class="rounded-xl border border-[#DCE7DE] bg-[#EEF3EC] px-4 py-3 text-sm font-semibold text-ink transition hover:border-[#C7D9C9] dark:border-white/10 dark:bg-[#24452F] dark:text-white">Products</a>
-                <a href="{{ app('router')->has('admin.batches.index') ? route('admin.batches.index') : '#' }}" class="rounded-xl border border-[#DCE7DE] bg-[#FBEFE0] px-4 py-3 text-sm font-semibold text-ink transition hover:border-[#E7D0A6] dark:border-white/10 dark:bg-[#5A421F] dark:text-white">Batches</a>
+                <a href="{{ app('router')->has('admin.products.index') ? route('admin.products.index') : '#' }}" class="rounded-xl border border-[#DCE7DE] bg-[#EEF3EC] px-4 py-3 text-sm font-semibold text-ink transition hover:border-[#C7D9C9] dark:border-white/10 dark:bg-[#24452F] dark:text-white">{{ __('Products') }}</a>
+                <a href="{{ app('router')->has('admin.batches.index') ? route('admin.batches.index') : '#' }}" class="rounded-xl border border-[#DCE7DE] bg-[#FBEFE0] px-4 py-3 text-sm font-semibold text-ink transition hover:border-[#E7D0A6] dark:border-white/10 dark:bg-[#5A421F] dark:text-white">{{ __('Batches') }}</a>
                 @can('manage_stocks')
-                <a href="{{ route('stocks.index') }}" class="rounded-xl border border-[#DCE7DE] bg-[#EAF3F0] px-4 py-3 text-sm font-semibold text-ink transition hover:border-[#C5D9D2] dark:border-white/10 dark:bg-[#1E4A42] dark:text-white">Stocks</a>
-                <a href="{{ route('stock-movements.index') }}" class="rounded-xl border border-[#DCE7DE] bg-[#F3F3E9] px-4 py-3 text-sm font-semibold text-ink transition hover:border-[#D7DAB3] dark:border-white/10 dark:bg-[#524E1F] dark:text-white">Movements</a>
-                <a href="{{ route('optimization.index') }}" class="rounded-xl border border-[#DCE7DE] bg-[#EEF3EC] px-4 py-3 text-sm font-semibold text-ink transition hover:border-[#C7D9C9] dark:border-white/10 dark:bg-[#24452F] dark:text-white">Optimization</a>
-                <a href="{{ route('forecast.index') }}" class="rounded-xl border border-[#DCE7DE] bg-[#F5E7E2] px-4 py-3 text-sm font-semibold text-ink transition hover:border-[#E5C5B7] dark:border-white/10 dark:bg-[#5A2B22] dark:text-white">Forecast</a>
+                <a href="{{ route('stocks.index') }}" class="rounded-xl border border-[#DCE7DE] bg-[#EAF3F0] px-4 py-3 text-sm font-semibold text-ink transition hover:border-[#C5D9D2] dark:border-white/10 dark:bg-[#1E4A42] dark:text-white">{{ __('Stocks') }}</a>
+                <a href="{{ route('stock-movements.index') }}" class="rounded-xl border border-[#DCE7DE] bg-[#F3F3E9] px-4 py-3 text-sm font-semibold text-ink transition hover:border-[#D7DAB3] dark:border-white/10 dark:bg-[#524E1F] dark:text-white">{{ __('Movements') }}</a>
+                <a href="{{ route('optimization.index') }}" class="rounded-xl border border-[#DCE7DE] bg-[#EEF3EC] px-4 py-3 text-sm font-semibold text-ink transition hover:border-[#C7D9C9] dark:border-white/10 dark:bg-[#24452F] dark:text-white">{{ __('Optimization') }}</a>
+                <a href="{{ route('forecast.index') }}" class="rounded-xl border border-[#DCE7DE] bg-[#F5E7E2] px-4 py-3 text-sm font-semibold text-ink transition hover:border-[#E5C5B7] dark:border-white/10 dark:bg-[#5A2B22] dark:text-white">{{ __('Forecast') }}</a>
                 @endcan
-                <a href="{{ app('router')->has('admin.verification.index') ? route('admin.verification.index') : '#' }}" class="rounded-xl border border-[#DCE7DE] bg-[#F5E7E2] px-4 py-3 text-sm font-semibold text-ink transition hover:border-[#E5C5B7] dark:border-white/10 dark:bg-[#5A2B22] dark:text-white">Alerts / risks</a>
+                <a href="{{ app('router')->has('admin.verification.index') ? route('admin.verification.index') : '#' }}" class="rounded-xl border border-[#DCE7DE] bg-[#F5E7E2] px-4 py-3 text-sm font-semibold text-ink transition hover:border-[#E5C5B7] dark:border-white/10 dark:bg-[#5A2B22] dark:text-white">{{ __('Alerts / risks') }}</a>
             </div>
         </section>
 
         @can('manage_stocks')
         <section class="w-full rounded-2xl border border-[#DCE7DE] bg-white p-5 shadow-[0_14px_35px_-28px_rgba(31,61,46,0.7)] dark:border-white/10 dark:bg-[#1E3527] dark:shadow-[0_14px_35px_-25px_rgba(227,162,60,0.25)]">
             <div class="flex items-center justify-between gap-4">
-                <h3 class="text-base font-bold text-ink dark:text-white">Stock &amp; Optimization</h3>
-                <a href="{{ route('stocks.index') }}" class="text-sm font-semibold text-[#E3A23C] hover:text-[#C98B2E] hover:underline">Open module</a>
+                <h3 class="text-base font-bold text-ink dark:text-white">{{ __('Stock & Optimization') }}</h3>
+                <a href="{{ route('stocks.index') }}" class="text-sm font-semibold text-[#E3A23C] hover:text-[#C98B2E] hover:underline">{{ __('Open module') }}</a>
             </div>
             <div class="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
                 <div class="rounded-xl border border-[#DCE7DE] bg-[#EEF3EC] p-4 dark:border-white/10 dark:bg-[#24452F]">
-                    <p class="text-xs uppercase tracking-[0.12em] text-gray-500 dark:text-white/50">Sites</p>
-                    <p class="mt-2 text-2xl font-bold text-ink dark:text-white">{{ number_format($stockOverview['sites'] ?? 0, 0, ',', ' ') }}</p>
+                    <p class="text-xs uppercase tracking-[0.12em] text-gray-500 dark:text-white/50">{{ __('Sites') }}</p>
+                    <p class="mt-2 text-2xl font-bold text-ink dark:text-white">{{ number_format($stockOverview['sites'] ?? 0, 0, ',', "\u{202F}") }}</p>
                 </div>
                 <div class="rounded-xl border border-[#DCE7DE] bg-[#FBEFE0] p-4 dark:border-white/10 dark:bg-[#5A421F]">
-                    <p class="text-xs uppercase tracking-[0.12em] text-gray-500 dark:text-white/50">Units</p>
-                    <p class="mt-2 text-2xl font-bold text-ink dark:text-white">{{ number_format((float) ($stockOverview['total_quantity'] ?? 0), 0, ',', ' ') }}</p>
+                    <p class="text-xs uppercase tracking-[0.12em] text-gray-500 dark:text-white/50">{{ __('Units') }}</p>
+                    <p class="mt-2 text-2xl font-bold text-ink dark:text-white">{{ number_format((float) ($stockOverview['total_quantity'] ?? 0), 0, ',', "\u{202F}") }}</p>
                 </div>
                 <div class="rounded-xl border border-[#DCE7DE] bg-[#F5E7E2] p-4 dark:border-white/10 dark:bg-[#5A2B22]">
-                    <p class="text-xs uppercase tracking-[0.12em] text-gray-500 dark:text-white/50">Low stock</p>
-                    <p class="mt-2 text-2xl font-bold text-ink dark:text-white">{{ number_format($stockOverview['low_stock'] ?? 0, 0, ',', ' ') }}</p>
+                    <p class="text-xs uppercase tracking-[0.12em] text-gray-500 dark:text-white/50">{{ __('Low stock') }}</p>
+                    <p class="mt-2 text-2xl font-bold text-ink dark:text-white">{{ number_format($stockOverview['low_stock'] ?? 0, 0, ',', "\u{202F}") }}</p>
                 </div>
                 <div class="rounded-xl border border-[#DCE7DE] bg-[#EAF3F0] p-4 dark:border-white/10 dark:bg-[#1E4A42]">
-                    <p class="text-xs uppercase tracking-[0.12em] text-gray-500 dark:text-white/50">Pending</p>
-                    <p class="mt-2 text-2xl font-bold text-ink dark:text-white">{{ number_format($stockOverview['pending_optimizations'] ?? 0, 0, ',', ' ') }}</p>
+                    <p class="text-xs uppercase tracking-[0.12em] text-gray-500 dark:text-white/50">{{ __('Pending') }}</p>
+                    <p class="mt-2 text-2xl font-bold text-ink dark:text-white">{{ number_format($stockOverview['pending_optimizations'] ?? 0, 0, ',', "\u{202F}") }}</p>
                 </div>
             </div>
             <div class="mt-4 flex flex-wrap gap-3">
-                <a href="{{ route('stocks.index') }}" class="inline-flex items-center rounded-full bg-[#16281E] px-4 py-2 text-sm font-semibold text-white hover:bg-[#20402E]">Overview</a>
-                <a href="{{ route('stock-movements.index') }}" class="inline-flex items-center rounded-full border border-[#DCE7DE] bg-white px-4 py-2 text-sm font-semibold text-ink hover:border-[#C7D9C9] dark:border-white/10 dark:bg-[#1E3527] dark:text-white">Movements</a>
-                <a href="{{ route('optimization.index') }}" class="inline-flex items-center rounded-full border border-[#DCE7DE] bg-white px-4 py-2 text-sm font-semibold text-ink hover:border-[#C7D9C9] dark:border-white/10 dark:bg-[#1E3527] dark:text-white">Optimization</a>
-                <a href="{{ route('forecast.index') }}" class="inline-flex items-center rounded-full border border-[#DCE7DE] bg-white px-4 py-2 text-sm font-semibold text-ink hover:border-[#C7D9C9] dark:border-white/10 dark:bg-[#1E3527] dark:text-white">Forecast</a>
+                <a href="{{ route('stocks.index') }}" class="inline-flex items-center rounded-full bg-[#16281E] px-4 py-2 text-sm font-semibold text-white hover:bg-[#20402E]">{{ __('Overview') }}</a>
+                <a href="{{ route('stock-movements.index') }}" class="inline-flex items-center rounded-full border border-[#DCE7DE] bg-white px-4 py-2 text-sm font-semibold text-ink hover:border-[#C7D9C9] dark:border-white/10 dark:bg-[#1E3527] dark:text-white">{{ __('Movements') }}</a>
+                <a href="{{ route('optimization.index') }}" class="inline-flex items-center rounded-full border border-[#DCE7DE] bg-white px-4 py-2 text-sm font-semibold text-ink hover:border-[#C7D9C9] dark:border-white/10 dark:bg-[#1E3527] dark:text-white">{{ __('Optimization') }}</a>
+                <a href="{{ route('forecast.index') }}" class="inline-flex items-center rounded-full border border-[#DCE7DE] bg-white px-4 py-2 text-sm font-semibold text-ink hover:border-[#C7D9C9] dark:border-white/10 dark:bg-[#1E3527] dark:text-white">{{ __('Forecast') }}</a>
             </div>
         </section>
         @endcan
@@ -170,7 +171,7 @@
                         @endif
                     </div>
                     <p class="mt-3 text-2xl font-bold text-ink dark:text-white">
-                        {{ is_numeric($kpi['value']) ? number_format($kpi['value'], 0, ',', ' ') : $kpi['value'] }}
+                        {{ is_numeric($kpi['value']) ? number_format($kpi['value'], 0, ',', "\u{202F}") : $kpi['value'] }}
                     </p>
                     <p class="mt-1 text-sm text-gray-500 dark:text-white/60">{{ $kpi['label'] }}</p>
                 </div>
@@ -180,15 +181,15 @@
         <section class="w-full grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="md:col-span-2 w-full space-y-4">
                 <div class="w-full flex items-center justify-between gap-4">
-                    <h3 class="text-lg font-bold text-ink dark:text-white">Recent Activity</h3>
-                    <span class="text-xs font-medium uppercase tracking-[0.12em] text-gray-400 dark:text-white/40">Live</span>
+                    <h3 class="text-lg font-bold text-ink dark:text-white">{{ __('Recent Activity') }}</h3>
+                    <span class="text-xs font-medium uppercase tracking-[0.12em] text-gray-400 dark:text-white/40">{{ __('Live') }}</span>
                 </div>
                 <div class="w-full flex justify-between items-center gap-4">
-                    <h3 class="text-lg font-bold text-ink dark:text-white">Derniers lots</h3>
+                    <h3 class="text-lg font-bold text-ink dark:text-white">{{ __('Derniers lots') }}</h3>
                     @if(app('router')->has('admin.batches.index'))
-                        <a href="{{ route('admin.batches.index') }}" class="text-sm font-semibold text-[#E3A23C] hover:text-[#C98B2E] hover:underline">Voir tout</a>
+                        <a href="{{ route('admin.batches.index') }}" class="text-sm font-semibold text-[#E3A23C] hover:text-[#C98B2E] hover:underline">{{ __('Voir tout') }}</a>
                     @else
-                        <span class="text-sm text-[#E3A23C]/60">Voir tout</span>
+                        <span class="text-sm text-[#E3A23C]/60">{{ __('Voir tout') }}</span>
                     @endif
                 </div>
                 <div class="w-full overflow-hidden rounded-2xl border border-[#DCE7DE] bg-white shadow-[0_14px_35px_-28px_rgba(31,61,46,0.7)] dark:border-white/10 dark:bg-[#1E3527] dark:shadow-[0_14px_35px_-25px_rgba(227,162,60,0.25)]">
@@ -196,10 +197,10 @@
                         <table class="table w-full text-sm">
                             <thead class="border-b border-gray-100 bg-gray-50 dark:border-white/10 dark:bg-[#16281E]">
                                 <tr>
-                                    <th scope="col" class="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-white/55">Lot</th>
-                                    <th scope="col" class="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-white/55">Produit</th>
-                                    <th scope="col" class="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-white/55">Statut</th>
-                                    <th scope="col" class="px-5 py-3.5 text-right text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-white/55">Action</th>
+                                    <th scope="col" class="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-white/55">{{ __('Lot') }}</th>
+                                    <th scope="col" class="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-white/55">{{ __('Produit') }}</th>
+                                    <th scope="col" class="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-white/55">{{ __('Statut') }}</th>
+                                    <th scope="col" class="px-5 py-3.5 text-right text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-white/55">{{ __('Action') }}</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-100">
@@ -214,7 +215,7 @@
                                         </td>
                                         <td class="px-5 py-4 text-right whitespace-nowrap">
                                             <a href="{{ $recentBatch['show_url'] }}" class="inline-flex items-center rounded-full border border-[#E3A23C]/50 bg-white px-3.5 py-1.5 text-xs font-semibold text-[#16281E] hover:border-[#E3A23C] hover:bg-[#E3A23C]/10">
-                                                Détails
+                                                {{ __('Détails') }}
                                             </a>
                                         </td>
                                     </tr>
@@ -223,11 +224,11 @@
                                     <tr>
                                         <td colspan="4" class="px-5 py-12 text-center w-full">
                                             <div class="mx-auto max-w-sm">
-                                                <p class="text-sm font-medium text-gray-700 dark:text-white/80">Aucun lot enregistré pour le moment.</p>
-                                                <p class="mt-1 text-xs text-gray-500 dark:text-white/55">Commencez par créer votre premier lot de production.</p>
+                                                <p class="text-sm font-medium text-gray-700 dark:text-white/80">{{ __('Aucun lot enregistré pour le moment.') }}</p>
+                                                <p class="mt-1 text-xs text-gray-500 dark:text-white/55">{{ __('Commencez par créer votre premier lot de production.') }}</p>
                                                 @if(app('router')->has('admin.batches.create'))
                                                     <a href="{{ route('admin.batches.create') }}" class="mt-4 inline-flex items-center rounded-full bg-[#E3A23C] px-5 py-2 text-sm font-semibold text-[#16281E] shadow-sm hover:bg-[#C98B2E]">
-                                                        Créer un lot
+                                                        {{ __('Créer un lot') }}
                                                     </a>
                                                 @endif
                                             </div>
@@ -243,8 +244,8 @@
             <div class="md:col-span-1 w-full space-y-6">
                 <div class="w-full rounded-2xl border border-[#DCE7DE] bg-white p-5 shadow-[0_14px_35px_-28px_rgba(31,61,46,0.7)] dark:border-white/10 dark:bg-[#1E3527] dark:shadow-[0_14px_35px_-25px_rgba(227,162,60,0.25)]">
                     <div class="flex items-center justify-between gap-3 mb-4">
-                        <h3 class="text-base font-bold text-ink dark:text-white">Dernières décisions</h3>
-                        <span class="text-xs font-medium text-gray-400 dark:text-white/45">4 derniers</span>
+                        <h3 class="text-base font-bold text-ink dark:text-white">{{ __('Dernières décisions') }}</h3>
+                        <span class="text-xs font-medium text-gray-400 dark:text-white/45">{{ __('4 derniers') }}</span>
                     </div>
                     @if(count($lastDecisions))
                         <ul class="w-full space-y-3">
@@ -267,14 +268,14 @@
                         </ul>
                     @else
                         <div class="py-8 text-center">
-                            <p class="text-sm text-gray-500 dark:text-white/55">Aucune décision pour le moment.</p>
+                            <p class="text-sm text-gray-500 dark:text-white/55">{{ __('Aucune décision pour le moment.') }}</p>
                         </div>
                     @endif
                 </div>
 
                 <div class="w-full rounded-2xl border border-[#DCE7DE] bg-white p-5 shadow-[0_14px_35px_-28px_rgba(31,61,46,0.7)] dark:border-white/10 dark:bg-[#1E3527] dark:shadow-[0_14px_35px_-25px_rgba(227,162,60,0.25)]">
                     <div class="flex items-center justify-between gap-3 mb-4">
-                        <h3 class="text-base font-bold text-ink dark:text-white">À vérifier</h3>
+                        <h3 class="text-base font-bold text-ink dark:text-white">{{ __('À vérifier') }}</h3>
                         <span class="inline-flex items-center rounded-full bg-orange-100 px-2.5 py-0.5 text-[11px] font-semibold text-orange-700">{{ count($toReview) }}</span>
                     </div>
                     @if(count($toReview))
@@ -286,15 +287,15 @@
                                         <p class="mt-0.5 truncate text-xs text-gray-500 dark:text-white/55">{{ $review['meta'] }}</p>
                                     </div>
                                     <a href="{{ $review['review_url'] }}" class="shrink-0 inline-flex items-center rounded-full bg-[#E3A23C] px-4 py-1.5 text-sm font-semibold text-[#16281E] hover:bg-[#C98B2E]">
-                                        Examiner
+                                        {{ __('Examiner') }}
                                     </a>
                                 </li>
                             @endforeach
                         </ul>
                     @else
                         <div class="py-8 text-center">
-                            <p class="text-sm font-medium text-gray-700 dark:text-white/80">Rien à vérifier 👌</p>
-                            <p class="mt-1 text-xs text-gray-500 dark:text-white/55">Toutes les certifications sont à jour.</p>
+                            <p class="text-sm font-medium text-gray-700 dark:text-white/80">{{ __('Rien à vérifier 👌') }}</p>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-white/55">{{ __('Toutes les certifications sont à jour.') }}</p>
                         </div>
                     @endif
                 </div>

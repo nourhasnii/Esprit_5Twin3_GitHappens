@@ -87,11 +87,11 @@ class Stock extends Model
     public static function stateLabel(string $state): string
     {
         return match ($state) {
-            'recalled' => 'Lot rappelé',
-            'expired' => 'DLC dépassée',
-            'expiring' => 'DLC proche',
-            'low' => 'Sous le seuil',
-            default => 'Normal',
+            'recalled' => __('Lot rappelé'),
+            'expired' => __('DLC dépassée'),
+            'expiring' => __('DLC proche'),
+            'low' => __('Sous le seuil'),
+            default => __('Normal'),
         };
     }
 }

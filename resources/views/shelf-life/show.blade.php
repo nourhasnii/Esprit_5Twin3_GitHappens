@@ -45,26 +45,26 @@
 @section('description', 'Vraie durée de vie calculée à partir de '.$p['readings'].' relevé(s) de température du transport (profil « '.$p['profile_label'].' »).')
 
 @section('page-action')
-    <a class="btn btn-ghost" href="{{ route('shelf-life.index') }}">← Tous les lots</a>
+    <a class="btn btn-ghost" href="{{ route('shelf-life.index') }}">{{ __('← Tous les lots') }}</a>
 @endsection
 
 @section('content')
 <div class="figures">
     <div class="figure">
         <strong @class(['strike' => $shorter])>{{ $printed->format('d/m/Y') }}</strong>
-        <span>DLC imprimée sur l’emballage ({{ $p['printed_remaining_days'] >= 0 ? 'dans '.$p['printed_remaining_days'].' j' : 'dépassée' }})</span>
+        <span>{{ __('DLC imprimée sur l’emballage (:dpasse)', ['dpasse' => $p['printed_remaining_days'] >= 0 ? 'dans '.$p['printed_remaining_days'].' j' : 'dépassée']) }}</span>
     </div>
     <div @class(['figure', 'is-alert' => $shorter])>
         <strong>{{ $predicted->format('d/m/Y') }}</strong>
-        <span>DLC réelle prédite{{ $shorter ? ' : '.$daysCut.' jour(s) de moins' : '' }}{{ $p['earliest'] !== $p['latest'] ? ' · fourchette '.$earliest->format('d/m').' – '.$latest->format('d/m') : '' }}</span>
+        <span>{{ __('DLC réelle prédite:moins:m', ['moins' => $shorter ? ' : '.$daysCut.' jour(s) de moins' : '', 'm' => $p['earliest'] !== $p['latest'] ? ' · fourchette '.$earliest->format('d/m').' – '.$latest->format('d/m') : '']) }}</span>
     </div>
     <div @class(['figure', 'is-warn' => $p['lost_hours'] > 0])>
         <strong>{{ Fmt::n($p['lost_hours'], 1) }} h</strong>
-        <span>de durée de vie perdues à cause de la chaleur ({{ Fmt::n($p['days_lost'], 1) }} jour(s))</span>
+        <span>{{ __('de durée de vie perdues à cause de la chaleur (:days_lost jour(s))', ['days_lost' => Fmt::n($p['days_lost'], 1)]) }}</span>
     </div>
     <div class="figure">
         <strong>{{ $p['consumed_pct'] !== null ? Fmt::n($p['consumed_pct']).' %' : '—' }}</strong>
-        <span>de la durée de vie déjà consommée</span>
+        <span>{{ __('de la durée de vie déjà consommée') }}</span>
         @if ($p['consumed_pct'] !== null)
             <div class="rack {{ $p['consumed_pct'] >= 80 ? 'is-high' : ($p['consumed_pct'] >= 50 ? 'is-mid' : '') }}" style="margin-top: 10px"><span style="width: {{ $p['consumed_pct'] }}%"></span></div>
         @endif
@@ -74,15 +74,15 @@
 <div @class(['verdict', 'is-'.$p['risk']])>
     <span class="tag {{ $riskTag[$p['risk']] }}">{{ $p['risk_label'] }}</span>
     <p>{{ $p['explanation'] }}</p>
-    <p class="verdict-action"><b>Que faire ?</b> {{ $p['action'] }}</p>
+    <p class="verdict-action"><b>{{ __('Que faire ?') }}</b> {{ $p['action'] }}</p>
 </div>
 
 @if ($hasChart)
 <section class="panel">
     <div class="panel-head">
         <div>
-            <h2>Températures pendant le transport</h2>
-            <p class="muted small">Chaque palier est un relevé. Au-dessus de {{ Fmt::n($m['reference_temp'], 1) }} °C, le produit vieillit plus vite ; au-dessus de {{ Fmt::n($m['critical_temp'], 1) }} °C, un contrôle qualité est conseillé.</p>
+            <h2>{{ __('Températures pendant le transport') }}</h2>
+            <p class="muted small">{{ __('Chaque palier est un relevé. Au-dessus de :reference_temp °C, le produit vieillit plus vite ; au-dessus de :critical_temp °C, un contrôle qualité est conseillé.', ['reference_temp' => Fmt::n($m['reference_temp'], 1), 'critical_temp' => Fmt::n($m['critical_temp'], 1)]) }}</p>
         </div>
     </div>
     <div class="chart-wrap">
@@ -125,23 +125,23 @@
         </svg>
     </div>
     <p class="legend small">
-        <span><i class="sw cold"></i>Au froid prévu</span>
-        <span><i class="sw warm"></i>Plus chaud : vieillit plus vite</span>
-        <span><i class="sw hot"></i>Au-dessus du seuil critique</span>
-        <span class="muted">Survolez un palier pour le détail.</span>
+        <span><i class="sw cold"></i>{{ __('Au froid prévu') }}</span>
+        <span><i class="sw warm"></i>{{ __('Plus chaud : vieillit plus vite') }}</span>
+        <span><i class="sw hot"></i>{{ __('Au-dessus du seuil critique') }}</span>
+        <span class="muted">{{ __('Survolez un palier pour le détail.') }}</span>
     </p>
 </section>
 
 <section class="panel">
     <div class="panel-head">
         <div>
-            <h2>Le calcul, relevé par relevé</h2>
-            <p class="muted small">Modèle de Ratkowsky · profil « {{ $p['profile_label'] }} » : T° de référence {{ Fmt::n($m['reference_temp'], 1) }} °C, Tmin {{ Fmt::n($m['t_min'], 1) }} °C. Vitesse = ((T − Tmin) / (Tréf − Tmin))².</p>
+            <h2>{{ __('Le calcul, relevé par relevé') }}</h2>
+            <p class="muted small">{{ __('Modèle de Ratkowsky · profil « :profile_label » : T° de référence :reference_temp °C, Tmin :t_min °C. Vitesse = ((T − Tmin) / (Tréf − Tmin))².', ['profile_label' => $p['profile_label'], 'reference_temp' => Fmt::n($m['reference_temp'], 1), 't_min' => Fmt::n($m['t_min'], 1)]) }}</p>
         </div>
     </div>
     <div class="table-wrap">
         <table class="calc">
-            <thead><tr><th>Où</th><th>Début</th><th class="num">Durée</th><th class="num">T°</th><th class="num">Vieillit</th><th class="num">Heures perdues</th></tr></thead>
+            <thead><tr><th>{{ __('Où') }}</th><th>{{ __('Début') }}</th><th class="num">{{ __('Durée') }}</th><th class="num">T°</th><th class="num">{{ __('Vieillit') }}</th><th class="num">{{ __('Heures perdues') }}</th></tr></thead>
             <tbody>
                 @foreach ($segments as $s)
                     <tr @class(['is-hot' => $s['critical'], 'is-warm' => ! $s['critical'] && $s['above_reference']])>
@@ -155,20 +155,19 @@
                 @endforeach
             </tbody>
             <tfoot>
-                <tr><td colspan="5"><b>Total</b> → DLC imprimée {{ $printed->format('d/m') }} − {{ Fmt::n($p['lost_hours'], 1) }} h = <b>DLC réelle {{ $predicted->format('d/m/Y') }}</b></td><td class="num"><b>{{ Fmt::n($p['lost_hours'], 1) }} h</b></td></tr>
+                <tr><td colspan="5"><b>{{ __('Total') }}</b> {{ __('→ DLC imprimée :m − :lost_hours h =', ['m' => $printed->format('d/m'), 'lost_hours' => Fmt::n($p['lost_hours'], 1)]) }} <b>{{ __('DLC réelle :y', ['y' => $predicted->format('d/m/Y')]) }}</b></td><td class="num"><b>{{ Fmt::n($p['lost_hours'], 1) }} h</b></td></tr>
             </tfoot>
         </table>
     </div>
     @if ($worst && $worst['lost_hours'] > 0)
         <p class="formula small">
-            Exemple, pire épisode : (({{ Fmt::n($worst['temperature'], 1) }} − ({{ Fmt::n($m['t_min'], 1) }})) / ({{ Fmt::n($m['reference_temp'], 1) }} − ({{ Fmt::n($m['t_min'], 1) }})))² = <b>× {{ Fmt::n($worst['rate'], 2) }}</b>.
-            Pendant {{ Fmt::n($worst['minutes'] / 60, 1) }} h, le produit a vieilli comme en {{ Fmt::n($worst['rate'] * $worst['minutes'] / 60, 1) }} h au froid : {{ Fmt::n($worst['lost_hours'], 1) }} h perdues.
+            {{ __('Exemple, pire épisode : ((:temperature − (:t_min)) / (:reference_temp − (:t_min2)))² =', ['temperature' => Fmt::n($worst['temperature'], 1), 't_min' => Fmt::n($m['t_min'], 1), 'reference_temp' => Fmt::n($m['reference_temp'], 1), 't_min2' => Fmt::n($m['t_min'], 1)]) }} <b>× {{ Fmt::n($worst['rate'], 2) }}</b>{{ __('. Pendant :minutes h, le produit a vieilli comme en :minutes2 h au froid : :lost_hours h perdues.', ['minutes' => Fmt::n($worst['minutes'] / 60, 1), 'minutes2' => Fmt::n($worst['rate'] * $worst['minutes'] / 60, 1), 'lost_hours' => Fmt::n($worst['lost_hours'], 1)]) }}
         </p>
     @endif
 </section>
 @else
 <section class="panel">
-    <p class="muted">Aucun relevé de température pour ce lot dans le module Chaîne du froid : la DLC imprimée est conservée.</p>
+    <p class="muted">{{ __('Aucun relevé de température pour ce lot dans le module Chaîne du froid : la DLC imprimée est conservée.') }}</p>
 </section>
 @endif
 
@@ -176,12 +175,12 @@
     <section class="panel">
         <div class="panel-head">
             <div>
-                <h2>Où est ce lot ?</h2>
-                <p class="muted small">Stock actuel dans les sites du module.</p>
+                <h2>{{ __('Où est ce lot ?') }}</h2>
+                <p class="muted small">{{ __('Stock actuel dans les sites du module.') }}</p>
             </div>
         </div>
         @if ($lines->isEmpty())
-            <p class="muted">Ce lot n’est plus en stock dans le module.</p>
+            <p class="muted">{{ __('Ce lot n’est plus en stock dans le module.') }}</p>
         @else
             <ul class="where">
                 @foreach ($lines as $line)
@@ -192,7 +191,7 @@
                 @endforeach
             </ul>
             @if ($shorter && $p['remaining_days'] >= 0)
-                <a class="btn btn-primary" href="{{ route('optimization.create', ['batch_id' => $batch->id]) }}">Trouver la meilleure destination avant le {{ $predicted->format('d/m') }} →</a>
+                <a class="btn btn-primary" href="{{ route('optimization.create', ['batch_id' => $batch->id]) }}">{{ __('Trouver la meilleure destination avant le :m →', ['m' => $predicted->format('d/m')]) }}</a>
             @endif
         @endif
     </section>
@@ -200,35 +199,35 @@
     <section class="panel">
         <div class="panel-head">
             <div>
-                <h2>Décision du responsable</h2>
+                <h2>{{ __('Décision du responsable') }}</h2>
                 <p class="muted small">
-                    Le module utilise actuellement la DLC du <b>{{ CarbonImmutable::parse($p['effective'])->format('d/m/Y') }}</b>
-                    {{ $p['effective'] === $p['predicted'] && $shorter ? '(DLC réelle)' : '(DLC imprimée)' }}.
+                    {{ __('Le module utilise actuellement la DLC du') }} <b>{{ CarbonImmutable::parse($p['effective'])->format('d/m/Y') }}</b>
+                    {{ $p['effective'] === $p['predicted'] && $shorter ? __('(DLC réelle)') : __('(DLC imprimée)') }}.
                 </p>
             </div>
         </div>
         @if ($shorter)
             <form method="POST" action="{{ route('shelf-life.decide', $batch) }}" class="decide">
                 @csrf
-                <label for="note">Commentaire <span class="muted">(obligatoire pour garder la DLC imprimée)</span></label>
-                <textarea id="note" name="note" rows="2" maxlength="1000" placeholder="Ex. : contrôle qualité conforme le 01/11, pH 4,4">{{ old('note') }}</textarea>
+                <label for="note">{{ __('Commentaire') }} <span class="muted">{{ __('(obligatoire pour garder la DLC imprimée)') }}</span></label>
+                <textarea id="note" name="note" rows="2" maxlength="1000" placeholder="{{ __('Ex. : contrôle qualité conforme le 01/11, pH 4,4') }}">{{ old('note') }}</textarea>
                 @error('note')<p class="error">{{ $message }}</p>@enderror
                 <div class="actions">
-                    <button class="btn btn-primary" type="submit" name="decision" value="{{ ShelfLifeAssessment::ACCEPTED }}">✓ Valider la DLC réelle</button>
-                    <button class="btn btn-ghost" type="submit" name="decision" value="{{ ShelfLifeAssessment::REJECTED }}">Garder la DLC imprimée</button>
+                    <button class="btn btn-primary" type="submit" name="decision" value="{{ ShelfLifeAssessment::ACCEPTED }}">{{ __('✓ Valider la DLC réelle') }}</button>
+                    <button class="btn btn-ghost" type="submit" name="decision" value="{{ ShelfLifeAssessment::REJECTED }}">{{ __('Garder la DLC imprimée') }}</button>
                 </div>
             </form>
         @else
-            <p class="muted">Aucune décision nécessaire : la DLC imprimée reste valable.</p>
+            <p class="muted">{{ __('Aucune décision nécessaire : la DLC imprimée reste valable.') }}</p>
         @endif
 
         @if ($history->isNotEmpty())
-            <h3 class="hist-title">Historique</h3>
+            <h3 class="hist-title">{{ __('Historique') }}</h3>
             <ul class="hist">
                 @foreach ($history as $h)
                     <li>
                         <span @class(['tag', 'tag-accepted' => $h->decision === ShelfLifeAssessment::ACCEPTED, 'tag-rejected' => $h->decision === ShelfLifeAssessment::REJECTED])>{{ $h->decisionLabel() }}</span>
-                        <span class="small">{{ $h->created_at->format('d/m/Y H:i') }} · {{ $h->user?->name ?? '—' }} · DLC réelle {{ $h->predicted_expiry->format('d/m') }} ({{ Fmt::n($h->days_lost, 1) }} j perdus)</span>
+                        <span class="small">{{ __(':i · :name · DLC réelle :m (:days_lost j perdus)', ['i' => $h->created_at->format('d/m/Y H:i'), 'name' => $h->user?->name ?? '—', 'm' => $h->predicted_expiry->format('d/m'), 'days_lost' => Fmt::n($h->days_lost, 1)]) }}</span>
                         @if ($h->note)<div class="muted small">« {{ $h->note }} »</div>@endif
                     </li>
                 @endforeach

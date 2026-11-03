@@ -48,8 +48,8 @@
 {{-- Actual journey --}}
 @if ($events->isEmpty())
     <div class="mt-6 rounded-2xl border border-dashed border-ink/15 bg-cream/60 px-6 py-10 text-center">
-        <p class="font-fraunces text-lg font-bold text-ink">Aucun événement enregistré</p>
-        <p class="mt-1 text-sm text-ink/55">La traçabilité de ce lot n'a pas encore été renseignée.</p>
+        <p class="font-fraunces text-lg font-bold text-ink">{{ __('Aucun événement enregistré') }}</p>
+        <p class="mt-1 text-sm text-ink/55">{{ __('La traçabilité de ce lot n\'a pas encore été renseignée.') }}</p>
     </div>
 @else
     <ol class="relative mt-6">
@@ -77,9 +77,9 @@
                     @endif
                     @if (! $compact)
                         <div class="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-ink/55">
-                            @if ($event->temperature !== null)<span>Température {{ $event->temperature }} °C</span>@endif
-                            @if ($event->distance_km !== null)<span>{{ number_format((float) $event->distance_km, 1, ',', ' ') }} km</span>@endif
-                            @if ($event->carbon_emission !== null)<span>CO₂ {{ number_format((float) $event->carbon_emission, 2, ',', ' ') }} kg</span>@endif
+                            @if ($event->temperature !== null)<span>{{ __('Température :temperature °C', ['temperature' => $event->temperature]) }}</span>@endif
+                            @if ($event->distance_km !== null)<span>{{ __(':distance_km km', ['distance_km' => number_format((float) $event->distance_km, 1, ',', "\u{202F}")]) }}</span>@endif
+                            @if ($event->carbon_emission !== null)<span>{{ __('CO₂ :carbon_emission kg', ['carbon_emission' => number_format((float) $event->carbon_emission, 2, ',', "\u{202F}")]) }}</span>@endif
                         </div>
                     @endif
                 </div>

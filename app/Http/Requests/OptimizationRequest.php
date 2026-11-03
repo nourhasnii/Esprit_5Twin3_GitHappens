@@ -23,6 +23,6 @@ class OptimizationRequest extends FormRequest
 
     public function attributes(): array
     {
-        return ['batch_id' => 'lot', 'source_site_id' => 'site d’origine', 'quantity' => 'quantité'];
+        return ['batch_id' => __('lot'), 'source_site_id' => __('site d’origine'), 'quantity' => __('quantité')];
     }
 }

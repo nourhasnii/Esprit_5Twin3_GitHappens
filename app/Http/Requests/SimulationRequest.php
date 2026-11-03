@@ -46,11 +46,11 @@ class SimulationRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'horizon' => 'durée simulée', 'demand_change' => 'variation de la demande', 'demand_product_id' => 'produit',
-            'demand_from' => 'premier jour du pic', 'demand_to' => 'dernier jour du pic',
-            'closed_site_id' => 'site fermé', 'closed_from' => 'jour de fermeture', 'closed_days' => 'durée de fermeture',
-            'transport_delay' => 'retard des camions', 'transport_from' => 'début du retard',
-            'cold_site_id' => 'site touché', 'cold_day' => 'jour de la panne de froid', 'cold_lost_days' => 'jours de DLC perdus',
+            'horizon' => __('durée simulée'), 'demand_change' => __('variation de la demande'), 'demand_product_id' => __('produit'),
+            'demand_from' => __('premier jour du pic'), 'demand_to' => __('dernier jour du pic'),
+            'closed_site_id' => __('site fermé'), 'closed_from' => __('jour de fermeture'), 'closed_days' => __('durée de fermeture'),
+            'transport_delay' => __('retard des camions'), 'transport_from' => __('début du retard'),
+            'cold_site_id' => __('site touché'), 'cold_day' => __('jour de la panne de froid'), 'cold_lost_days' => __('jours de DLC perdus'),
         ];
     }
 

@@ -26,8 +26,8 @@ class StoreStockRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'site_id' => 'site', 'product_id' => 'produit', 'batch_id' => 'lot',
-            'quantity' => 'quantité initiale', 'min_threshold' => 'seuil minimum',
+            'site_id' => __('site'), 'product_id' => __('produit'), 'batch_id' => __('lot'),
+            'quantity' => __('quantité initiale'), 'min_threshold' => __('seuil minimum'),
         ];
     }
 }

@@ -35,18 +35,18 @@
     <x-slot name="header">
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
             <div>
-                <p class="text-xs font-bold uppercase tracking-[0.18em] text-amber-warm">Certification workspace</p>
+                <p class="text-xs font-bold uppercase tracking-[0.18em] text-amber-warm">{{ __('Certification workspace') }}</p>
                 <h1 class="mt-1 font-fraunces font-bold text-3xl text-ink leading-tight dark:text-white">
                     {{ __('Certification Intelligence') }}
                 </h1>
-                <p class="text-sm text-ink/55 dark:text-white/55 mt-2">Analyse déterministe et IA locale de la conformité des certifications.</p>
+                <p class="text-sm text-ink/55 dark:text-white/55 mt-2">{{ __('Analyse déterministe et IA locale de la conformité des certifications.') }}</p>
             </div>
             <div class="flex items-center gap-2">
                 <a href="{{ route('admin.certifications.index') }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white hover:bg-cream text-ink border border-ink/10 rounded-lg text-sm font-semibold transition-colors">
                     <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M19 12H5M12 19L5 12L12 5"/>
                     </svg>
-                    Retour liste
+                    {{ __('Retour liste') }}
                 </a>
                 <form method="POST" action="{{ route('admin.certifications.intelligence.analyze.store') }}" class="inline">
                     @csrf
@@ -95,22 +95,22 @@
 
             @if(($analysis_status ?? null) === 'pending')
                 <div role="status" class="px-5 py-4 rounded-xl bg-amber-warm/8 border border-amber-warm/25 text-amber-warm text-sm font-medium">
-                    Analyse IA en cours. Les métriques déterministes ci-dessous restent la source de vérité; les résultats apparaîtront automatiquement.
+                    {{ __('Analyse IA en cours. Les métriques déterministes ci-dessous restent la source de vérité; les résultats apparaîtront automatiquement.') }}
                 </div>
                 <script>window.setTimeout(() => window.location.reload(), 5000);</script>
             @elseif(($analysis_status ?? null) === 'failed')
                 <div role="alert" class="px-5 py-4 rounded-xl bg-amber-warm/8 border border-amber-warm/25 text-amber-warm text-sm font-medium">
-                    L’analyse IA a échoué. Les métriques déterministes restent disponibles; vous pouvez relancer l’analyse.
+                    {{ __('L’analyse IA a échoué. Les métriques déterministes restent disponibles; vous pouvez relancer l’analyse.') }}
                 </div>
             @endif
 
             {{-- ===== DÉTERMINISTE — KPI Cards ===== --}}
-            <section aria-label="Métriques déterministes">
+            <section aria-label="{{ __('Métriques déterministes') }}">
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                     <div class="bg-white rounded-2xl border border-ink/5 shadow-lg shadow-ink/[0.03] p-5">
                         <div class="flex items-start justify-between">
                             <div>
-                                <p class="text-[11px] font-bold tracking-wider uppercase text-ink/45">Conformité</p>
+                                <p class="text-[11px] font-bold tracking-wider uppercase text-ink/45">{{ __('Conformité') }}</p>
                                 <p class="font-fraunces font-bold text-3xl text-ink mt-2">{{ $intelligence['compliance']['score'] }}<span class="text-lg font-semibold text-ink/40">/100</span></p>
                                 <span class="inline-flex items-center gap-1 mt-3 px-2.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide {{ $complianceBadgeClass }}">
                                     {{ $intelligence['compliance']['level'] }}
@@ -128,7 +128,7 @@
                     <div class="bg-white rounded-2xl border border-ink/5 shadow-lg shadow-ink/[0.03] p-5">
                         <div class="flex items-start justify-between">
                             <div>
-                                <p class="text-[11px] font-bold tracking-wider uppercase text-ink/45">Risque</p>
+                                <p class="text-[11px] font-bold tracking-wider uppercase text-ink/45">{{ __('Risque') }}</p>
                                 <p class="font-fraunces font-bold text-3xl text-ink mt-2">{{ $intelligence['risk']['score'] }}<span class="text-lg font-semibold text-ink/40">/100</span></p>
                                 <span class="inline-flex items-center gap-1 mt-3 px-2.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide {{ $riskBadgeClass }}">
                                     {{ $intelligence['risk']['level'] }}
@@ -144,11 +144,11 @@
 
                     <div class="bg-white rounded-2xl border border-ink/5 shadow-lg shadow-ink/[0.03] p-5">
                         <div>
-                            <p class="text-[11px] font-bold tracking-wider uppercase text-ink/45">Certifications</p>
+                            <p class="text-[11px] font-bold tracking-wider uppercase text-ink/45">{{ __('Certifications') }}</p>
                             <div class="grid grid-cols-3 gap-2 mt-3 text-center">
                                 <div>
                                     <p class="font-fraunces font-bold text-2xl text-emerald-600">{{ $intelligence['counts']['valid_certifications'] }}</p>
-                                    <p class="text-[10px] uppercase font-bold tracking-wider text-ink/40">Valides</p>
+                                    <p class="text-[10px] uppercase font-bold tracking-wider text-ink/40">{{ __('Valides') }}</p>
                                 </div>
                                 <div>
                                     <p class="font-fraunces font-bold text-2xl text-amber-warm">{{ $intelligence['counts']['expiring_soon'] }}</p>
@@ -156,7 +156,7 @@
                                 </div>
                                 <div>
                                     <p class="font-fraunces font-bold text-2xl text-red-600">{{ $intelligence['counts']['expired_certifications'] }}</p>
-                                    <p class="text-[10px] uppercase font-bold tracking-wider text-ink/40">Expirées</p>
+                                    <p class="text-[10px] uppercase font-bold tracking-wider text-ink/40">{{ __('Expirées') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -164,10 +164,10 @@
 
                     <div class="bg-white rounded-2xl border border-ink/5 shadow-lg shadow-ink/[0.03] p-5">
                         <div>
-                            <p class="text-[11px] font-bold tracking-wider uppercase text-ink/45">Produits</p>
+                            <p class="text-[11px] font-bold tracking-wider uppercase text-ink/45">{{ __('Produits') }}</p>
                             <div class="mt-3">
                                 <div class="flex items-baseline justify-between">
-                                    <span class="text-sm text-ink/60">Couverture</span>
+                                    <span class="text-sm text-ink/60">{{ __('Couverture') }}</span>
                                     <span class="font-bold text-ink">
                                         @php $coverage = $intelligence['impact_analysis']['coverage_percent'] ?? 0.0; @endphp
                                         {{ $coverage }}%
@@ -177,9 +177,9 @@
                                     <div class="h-full bg-forest transition-all" style="width: {{ max(0, min(100, (float) $coverage)) }}%"></div>
                                 </div>
                                 <div class="flex justify-between mt-2 text-[11px] text-ink/50 font-medium">
-                                    <span>{{ $intelligence['counts']['certified_products'] }} certifiés</span>
-                                    <span>{{ $intelligence['counts']['uncertified_products'] }} sans certif</span>
-                                    <span>{{ $intelligence['counts']['affected_products'] }} impactés</span>
+                                    <span>{{ __(':certified_products certifiés', ['certified_products' => $intelligence['counts']['certified_products']]) }}</span>
+                                    <span>{{ __(':uncertified_products sans certif', ['uncertified_products' => $intelligence['counts']['uncertified_products']]) }}</span>
+                                    <span>{{ __(':affected_products impactés', ['affected_products' => $intelligence['counts']['affected_products']]) }}</span>
                                 </div>
                             </div>
                         </div>
@@ -191,8 +191,8 @@
             <section class="grid grid-cols-1 lg:grid-cols-3 gap-4">
                 <div class="bg-white rounded-2xl border border-ink/5 shadow-lg shadow-ink/[0.03] p-5 lg:col-span-2">
                     <div class="flex items-center justify-between mb-4">
-                        <h3 class="font-fraunces font-bold text-lg text-ink">Facteurs de risque</h3>
-                        <span class="text-[11px] uppercase tracking-wider font-bold text-ink/40">moteur déterministe</span>
+                        <h3 class="font-fraunces font-bold text-lg text-ink">{{ __('Facteurs de risque') }}</h3>
+                        <span class="text-[11px] uppercase tracking-wider font-bold text-ink/40">{{ __('moteur déterministe') }}</span>
                     </div>
                     <ul class="space-y-2.5">
                         @forelse($intelligence['risk']['factors'] as $factor)
@@ -205,38 +205,38 @@
                                 <p class="text-sm text-ink/80 leading-relaxed">{{ $factor }}</p>
                             </li>
                         @empty
-                            <li class="p-4 text-center text-sm text-ink/40 italic">Aucun facteur détecté</li>
+                            <li class="p-4 text-center text-sm text-ink/40 italic">{{ __('Aucun facteur détecté') }}</li>
                         @endforelse
                     </ul>
                 </div>
 
                 <div class="bg-white rounded-2xl border border-ink/5 shadow-lg shadow-ink/[0.03] p-5">
-                    <h3 class="font-fraunces font-bold text-lg text-ink mb-4">Expiration — 30 prochains jours</h3>
+                    <h3 class="font-fraunces font-bold text-lg text-ink mb-4">{{ __('Expiration — 30 prochains jours') }}</h3>
                     <div class="space-y-2 text-sm">
                         <div class="flex items-center justify-between py-2 border-b border-ink/5">
-                            <span class="text-ink/60">Déjà expirées</span>
+                            <span class="text-ink/60">{{ __('Déjà expirées') }}</span>
                             <span class="font-bold text-red-600">{{ $intelligence['expiration_analysis']['groups']['already_expired'] ?? 0 }}</span>
                         </div>
                         <div class="flex items-center justify-between py-2 border-b border-ink/5">
-                            <span class="text-ink/60">Exp. 0–7 jours</span>
+                            <span class="text-ink/60">{{ __('Exp. 0–7 jours') }}</span>
                             <span class="font-bold text-red-500">{{ $intelligence['expiration_analysis']['groups']['0_to_7_days'] ?? 0 }}</span>
                         </div>
                         <div class="flex items-center justify-between py-2 border-b border-ink/5">
-                            <span class="text-ink/60">Exp. 8–30 jours</span>
+                            <span class="text-ink/60">{{ __('Exp. 8–30 jours') }}</span>
                             <span class="font-bold text-amber-warm">{{ $intelligence['expiration_analysis']['groups']['8_to_30_days'] ?? 0 }}</span>
                         </div>
                         <div class="flex items-center justify-between py-2 border-b border-ink/5">
-                            <span class="text-ink/60">Exp. 31–90 jours</span>
+                            <span class="text-ink/60">{{ __('Exp. 31–90 jours') }}</span>
                             <span class="font-bold text-ink/80">{{ $intelligence['expiration_analysis']['groups']['31_to_90_days'] ?? 0 }}</span>
                         </div>
                         <div class="flex items-center justify-between py-2">
-                            <span class="text-ink/60">≥ 90 jours</span>
+                            <span class="text-ink/60">{{ __('≥ 90 jours') }}</span>
                             <span class="font-bold text-emerald-600">{{ $intelligence['expiration_analysis']['groups']['over_90_days'] ?? 0 }}</span>
                         </div>
                     </div>
                     @if(!empty($intelligence['expiration_analysis']['nearest']))
                         <div class="mt-4 pt-4 border-t border-ink/5">
-                            <p class="text-[11px] uppercase font-bold tracking-wider text-ink/40 mb-2">Prochaines à surveiller</p>
+                            <p class="text-[11px] uppercase font-bold tracking-wider text-ink/40 mb-2">{{ __('Prochaines à surveiller') }}</p>
                             <ul class="space-y-1.5 max-h-40 overflow-auto pr-1">
                                 @foreach($intelligence['expiration_analysis']['nearest'] as $item)
                                     <li class="flex items-center justify-between text-xs">
@@ -253,14 +253,14 @@
             {{-- ===== ACTIONS PRIORITAIRES DÉTERMINISTES ===== --}}
             <section class="bg-white rounded-2xl border border-ink/5 shadow-lg shadow-ink/[0.03] p-5">
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="font-fraunces font-bold text-lg text-ink">Actions prioritaires — moteur déterministe</h3>
+                    <h3 class="font-fraunces font-bold text-lg text-ink">{{ __('Actions prioritaires — moteur déterministe') }}</h3>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                     @foreach($intelligence['priority_actions'] as $action)
                         <div class="rounded-xl border border-ink/5 bg-cream/40 p-4">
                             <div class="flex items-start justify-between gap-3">
                                 <span class="inline-flex shrink-0 items-center px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-widest {{ $priorityBadgeClass($action['priority'] ?? 'MEDIUM') }}">
-                                    {{ $action['priority'] ?? 'MEDIUM' }}
+                                    {{ $action['priority'] ?? __('MEDIUM') }}
                                 </span>
                             </div>
                             <p class="mt-2 font-semibold text-ink">{{ $action['action'] ?? '' }}</p>
@@ -271,7 +271,7 @@
             </section>
 
             {{-- ===== AI SECTION ===== --}}
-            <section aria-label="Analyse IA" class="bg-gradient-to-br from-forest/[0.04] via-white to-amber-warm/[0.04] rounded-2xl border border-forest/10 shadow-lg shadow-forest/[0.04] p-6">
+            <section aria-label="{{ __('Analyse IA') }}" class="bg-gradient-to-br from-forest/[0.04] via-white to-amber-warm/[0.04] rounded-2xl border border-forest/10 shadow-lg shadow-forest/[0.04] p-6">
                 <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 mb-6">
                     <div class="flex items-center gap-3">
                         <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-forest to-forest-dark flex items-center justify-center shrink-0 shadow-md shadow-forest/30">
@@ -281,12 +281,12 @@
                         </div>
                         <div>
                             <h3 class="font-fraunces font-bold text-xl text-ink flex items-center gap-2">
-                                🤖 Certification AI Insight
+                                {{ __('🤖 Certification AI Insight') }}
                                 @if($used_ai_cache ?? false)
-                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-ink/5 text-[10px] uppercase font-bold tracking-wider text-ink/50 border border-ink/10">Cache</span>
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-ink/5 text-[10px] uppercase font-bold tracking-wider text-ink/50 border border-ink/10">{{ __('Cache') }}</span>
                                 @endif
                             </h3>
-                            <p class="text-sm text-ink/50 mt-0.5">Analyse par IA locale Ollama — les métriques déterministes restent source de vérité.</p>
+                            <p class="text-sm text-ink/50 mt-0.5">{{ __('Analyse par IA locale Ollama — les métriques déterministes restent source de vérité.') }}</p>
                         </div>
                     </div>
 
@@ -294,7 +294,7 @@
                         <div class="flex flex-wrap items-center gap-2 text-xs">
                             @if($ai_analysis->compliance_score !== null && $ai_analysis->risk_level !== null)
                                 <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white border border-ink/10 shadow-sm">
-                                    <span class="text-ink/45 uppercase tracking-wider text-[10px] font-bold">Snapshot</span>
+                                    <span class="text-ink/45 uppercase tracking-wider text-[10px] font-bold">{{ __('Snapshot') }}</span>
                                     <span class="font-bold text-forest">C: {{ $ai_analysis->compliance_score }}</span>
                                     <span class="text-ink/20">·</span>
                                     <span class="font-bold {{ $aiRiskBadgeClass }}">R: {{ $ai_analysis->risk_level }}</span>
@@ -317,7 +317,7 @@
                                         <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"/>
                                         <path d="M9 12L11 14L15 10"/>
                                     </svg>
-                                    <span class="uppercase tracking-wider text-[10px] font-bold text-ink/45">Confiance IA</span>
+                                    <span class="uppercase tracking-wider text-[10px] font-bold text-ink/45">{{ __('Confiance IA') }}</span>
                                     <span class="font-bold text-ink">{{ $ai_analysis->confidence }}%</span>
                                 </div>
                             @endif
@@ -329,24 +329,24 @@
                     <div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
                         <div class="lg:col-span-3 space-y-4">
                             <div class="bg-white rounded-xl border border-ink/5 shadow-sm p-4">
-                                <p class="text-[11px] uppercase tracking-wider font-bold text-forest/80 mb-2">Synthèse IA</p>
+                                <p class="text-[11px] uppercase tracking-wider font-bold text-forest/80 mb-2">{{ __('Synthèse IA') }}</p>
                                 <p class="text-ink/85 leading-relaxed">{{ $ai_analysis->summary }}</p>
                             </div>
 
                             <div class="bg-white rounded-xl border border-ink/5 shadow-sm p-4">
-                                <p class="text-[11px] uppercase tracking-wider font-bold text-red-600/80 mb-2">Explication du risque</p>
+                                <p class="text-[11px] uppercase tracking-wider font-bold text-red-600/80 mb-2">{{ __('Explication du risque') }}</p>
                                 <p class="text-ink/85 leading-relaxed">{{ $ai_analysis->risk_explanation }}</p>
                             </div>
 
                             <div class="bg-white rounded-xl border border-ink/5 shadow-sm p-4">
-                                <p class="text-[11px] uppercase tracking-wider font-bold text-amber-warm mb-2">Impact métier</p>
+                                <p class="text-[11px] uppercase tracking-wider font-bold text-amber-warm mb-2">{{ __('Impact métier') }}</p>
                                 <p class="text-ink/85 leading-relaxed">{{ $ai_analysis->business_impact }}</p>
                             </div>
                         </div>
 
                         <div class="lg:col-span-2 space-y-4">
                             <div class="bg-white rounded-xl border border-ink/5 shadow-sm p-4">
-                                <p class="text-[11px] uppercase tracking-wider font-bold text-ink/50 mb-3">Points clés</p>
+                                <p class="text-[11px] uppercase tracking-wider font-bold text-ink/50 mb-3">{{ __('Points clés') }}</p>
                                 <ul class="space-y-2">
                                     @forelse($ai_analysis->key_insights as $insight)
                                         <li class="flex items-start gap-2.5">
@@ -354,19 +354,19 @@
                                             <p class="text-sm text-ink/80 leading-relaxed">{{ $insight }}</p>
                                         </li>
                                     @empty
-                                        <li class="text-sm text-ink/40 italic">Aucun insight IA disponible</li>
+                                        <li class="text-sm text-ink/40 italic">{{ __('Aucun insight IA disponible') }}</li>
                                     @endforelse
                                 </ul>
                             </div>
 
                             <div class="bg-white rounded-xl border border-ink/5 shadow-sm p-4">
-                                <p class="text-[11px] uppercase tracking-wider font-bold text-ink/50 mb-3">Actions priorisées (IA)</p>
+                                <p class="text-[11px] uppercase tracking-wider font-bold text-ink/50 mb-3">{{ __('Actions priorisées (IA)') }}</p>
                                 <div class="space-y-2.5">
                                     @forelse($ai_analysis->priority_actions as $action)
                                         <div class="rounded-lg border border-ink/5 bg-cream/40 p-3">
                                             <div class="flex items-center justify-between gap-2 mb-1.5">
                                                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-widest {{ $priorityBadgeClass($action['priority'] ?? 'MEDIUM') }}">
-                                                    {{ $action['priority'] ?? 'MEDIUM' }}
+                                                    {{ $action['priority'] ?? __('MEDIUM') }}
                                                 </span>
                                             </div>
                                             <p class="text-sm font-semibold text-ink">{{ $action['action'] ?? '' }}</p>
@@ -375,7 +375,7 @@
                                             @endif
                                         </div>
                                     @empty
-                                        <p class="text-sm text-ink/40 italic">Aucune action IA disponible</p>
+                                        <p class="text-sm text-ink/40 italic">{{ __('Aucune action IA disponible') }}</p>
                                     @endforelse
                                 </div>
                             </div>
@@ -389,18 +389,18 @@
                             </svg>
                         </div>
                         @if(($analysis_status ?? null) === 'pending')
-                            <p class="font-semibold text-ink mb-1">Analyse IA en attente</p>
-                            <p class="text-sm text-ink/50 max-w-md mx-auto">Le résultat apparaîtra ici dès que le traitement en arrière-plan sera terminé.</p>
+                            <p class="font-semibold text-ink mb-1">{{ __('Analyse IA en attente') }}</p>
+                            <p class="text-sm text-ink/50 max-w-md mx-auto">{{ __('Le résultat apparaîtra ici dès que le traitement en arrière-plan sera terminé.') }}</p>
                         @else
-                            <p class="font-semibold text-ink mb-1">Aucune analyse IA sauvegardée</p>
-                            <p class="text-sm text-ink/50 mb-5 max-w-md mx-auto">Cliquez sur « Générer l’analyse IA » pour synthétiser les métriques déterministes via le modèle Qwen local Ollama.</p>
+                            <p class="font-semibold text-ink mb-1">{{ __('Aucune analyse IA sauvegardée') }}</p>
+                            <p class="text-sm text-ink/50 mb-5 max-w-md mx-auto">{{ __('Cliquez sur « Générer l’analyse IA » pour synthétiser les métriques déterministes via le modèle Qwen local Ollama.') }}</p>
                             <form method="POST" action="{{ route('admin.certifications.intelligence.analyze.store') }}" class="inline">
                                 @csrf
                                 <button type="submit" class="inline-flex items-center gap-2 px-5 py-2.5 bg-forest hover:bg-forest-dark text-white text-sm font-semibold rounded-lg transition-colors shadow-md shadow-forest/20">
                                     <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                                         <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
                                     </svg>
-                                    Générer la première analyse IA
+                                    {{ __('Générer la première analyse IA') }}
                                 </button>
                             </form>
                         @endif
@@ -413,21 +413,21 @@
                 <section class="bg-white rounded-2xl border border-ink/5 shadow-lg shadow-ink/[0.03] p-5">
                     <div class="flex items-center justify-between mb-4">
                         <div>
-                            <h3 class="font-fraunces font-bold text-lg text-ink">Historique analyses IA</h3>
-                            <p class="text-xs text-ink/50 mt-0.5">Comparatif des analyses précédentes — {{ $history->count() }} dernière(s) entrée(s).</p>
+                            <h3 class="font-fraunces font-bold text-lg text-ink">{{ __('Historique analyses IA') }}</h3>
+                            <p class="text-xs text-ink/50 mt-0.5">{{ __('Comparatif des analyses précédentes — :history dernière(s) entrée(s).', ['history' => $history->count()]) }}</p>
                         </div>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-ink/5">
                             <thead class="bg-cream/50">
                                 <tr>
-                                    <th class="px-4 py-3 text-left text-[11px] font-bold tracking-wider text-ink/50 uppercase">Date</th>
-                                    <th class="px-4 py-3 text-left text-[11px] font-bold tracking-wider text-ink/50 uppercase">Statut</th>
-                                    <th class="px-4 py-3 text-left text-[11px] font-bold tracking-wider text-ink/50 uppercase">Conformité</th>
-                                    <th class="px-4 py-3 text-left text-[11px] font-bold tracking-wider text-ink/50 uppercase">Risque</th>
-                                    <th class="px-4 py-3 text-left text-[11px] font-bold tracking-wider text-ink/50 uppercase">Modèle</th>
-                                    <th class="px-4 py-3 text-left text-[11px] font-bold tracking-wider text-ink/50 uppercase">Durée</th>
-                                    <th class="px-4 py-3 text-left text-[11px] font-bold tracking-wider text-ink/50 uppercase">Confiance IA</th>
+                                    <th class="px-4 py-3 text-left text-[11px] font-bold tracking-wider text-ink/50 uppercase">{{ __('Date') }}</th>
+                                    <th class="px-4 py-3 text-left text-[11px] font-bold tracking-wider text-ink/50 uppercase">{{ __('Statut') }}</th>
+                                    <th class="px-4 py-3 text-left text-[11px] font-bold tracking-wider text-ink/50 uppercase">{{ __('Conformité') }}</th>
+                                    <th class="px-4 py-3 text-left text-[11px] font-bold tracking-wider text-ink/50 uppercase">{{ __('Risque') }}</th>
+                                    <th class="px-4 py-3 text-left text-[11px] font-bold tracking-wider text-ink/50 uppercase">{{ __('Modèle') }}</th>
+                                    <th class="px-4 py-3 text-left text-[11px] font-bold tracking-wider text-ink/50 uppercase">{{ __('Durée') }}</th>
+                                    <th class="px-4 py-3 text-left text-[11px] font-bold tracking-wider text-ink/50 uppercase">{{ __('Confiance IA') }}</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-ink/5 bg-white text-sm">
@@ -466,7 +466,7 @@
                                         <td class="px-4 py-3 whitespace-nowrap font-mono text-xs text-ink/60">{{ $entry->model ?? '—' }}</td>
                                         <td class="px-4 py-3 whitespace-nowrap">
                                             @if($entry->duration_ms !== null)
-                                                <span class="font-mono text-xs text-ink/60">{{ number_format($entry->duration_ms, 0, ',', ' ') }} ms</span>
+                                                <span class="font-mono text-xs text-ink/60">{{ __(':duration_ms ms', ['duration_ms' => number_format($entry->duration_ms, 0, ',', "\u{202F}")]) }}</span>
                                             @else
                                                 <span class="text-ink/30">—</span>
                                             @endif
@@ -487,7 +487,7 @@
             @endif
 
             <p class="text-center text-[11px] text-ink/35 py-2">
-                Source de vérité : Laravel · Données structurées générées {{ $intelligence['snapshot']['generated_at'] ?? '' }}
+                {{ __('Source de vérité : Laravel · Données structurées générées :generated_at', ['generated_at' => $intelligence['snapshot']['generated_at'] ?? '']) }}
             </p>
         </div>
     </div>

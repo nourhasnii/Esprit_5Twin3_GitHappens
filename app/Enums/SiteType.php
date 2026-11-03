@@ -13,11 +13,11 @@ enum SiteType: string
     public function label(): string
     {
         return match ($this) {
-            self::Production => 'Site de production',
-            self::Warehouse => 'Entrepôt',
-            self::DistributionCenter => 'Centre de distribution',
-            self::Store => 'Magasin',
-            self::Association => 'Association (dons)',
+            self::Production => __('Site de production'),
+            self::Warehouse => __('Entrepôt'),
+            self::DistributionCenter => __('Centre de distribution'),
+            self::Store => __('Magasin'),
+            self::Association => __('Association (dons)'),
         };
     }
 

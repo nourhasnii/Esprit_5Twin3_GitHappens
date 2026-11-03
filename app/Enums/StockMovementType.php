@@ -12,20 +12,20 @@ enum StockMovementType: string
     public function label(): string
     {
         return match ($this) {
-            self::In => 'Entrée',
-            self::Out => 'Sortie',
-            self::Transfer => 'Transfert',
-            self::Adjustment => 'Ajustement',
+            self::In => __('Entrée'),
+            self::Out => __('Sortie'),
+            self::Transfer => __('Transfert'),
+            self::Adjustment => __('Ajustement'),
         };
     }
 
     public function description(): string
     {
         return match ($this) {
-            self::In => 'Réception de marchandise sur un site',
-            self::Out => 'Vente, consommation ou destruction',
-            self::Transfer => 'Déplacement d’un site vers un autre',
-            self::Adjustment => 'Correction après un inventaire physique',
+            self::In => __('Réception de marchandise sur un site'),
+            self::Out => __('Vente, consommation ou destruction'),
+            self::Transfer => __('Déplacement d’un site vers un autre'),
+            self::Adjustment => __('Correction après un inventaire physique'),
         };
     }
 }

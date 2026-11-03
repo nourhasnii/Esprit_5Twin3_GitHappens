@@ -2,12 +2,12 @@
     <x-slot name="header">
         <div class="flex flex-wrap items-center justify-between gap-4">
             <div>
-                <h2 class="font-fraunces text-2xl font-bold text-ink">Centre de notifications</h2>
-                <p class="mt-1 text-sm text-ink/55">Alertes de risque NutriTrace : certifications, OCR, rappels, qualité et couverture.</p>
+                <h2 class="font-fraunces text-2xl font-bold text-ink">{{ __('Centre de notifications') }}</h2>
+                <p class="mt-1 text-sm text-ink/55">{{ __('Alertes de risque NutriTrace : certifications, OCR, rappels, qualité et couverture.') }}</p>
             </div>
             <div class="flex items-center gap-3">
                 <span class="inline-flex items-center gap-2 rounded-full bg-[#FBEFE0] px-4 py-2 text-sm font-semibold text-[#8a5a12]">
-                    {{ $unreadCount }} non lue(s)
+                    {{ __(':unreadcount non lue(s)', ['unreadcount' => $unreadCount]) }}
                 </span>
                 <form method="POST" action="{{ route('notifications.read-all') }}">
                     @csrf
@@ -16,7 +16,7 @@
                         class="rounded-full bg-[#1F3D2E] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#16281E] disabled:cursor-not-allowed disabled:opacity-50"
                         @disabled($unreadCount === 0)
                     >
-                        Tout marquer comme lu
+                        {{ __('Tout marquer comme lu') }}
                     </button>
                 </form>
             </div>
@@ -33,9 +33,9 @@
 
             <form method="GET" class="grid grid-cols-1 gap-3 rounded-2xl border border-ink/10 bg-white p-4 sm:grid-cols-2 lg:grid-cols-4">
                 <label class="block">
-                    <span class="mb-1 block text-xs font-semibold uppercase tracking-wide text-ink/50">Source</span>
+                    <span class="mb-1 block text-xs font-semibold uppercase tracking-wide text-ink/50">{{ __('Source') }}</span>
                     <select name="source" onchange="this.form.submit()" class="w-full rounded-xl border-ink/15 bg-cream/50 text-sm text-ink focus:border-[#C17817] focus:ring-[#C17817]/30">
-                        <option value="">Toutes les sources</option>
+                        <option value="">{{ __('Toutes les sources') }}</option>
                         @foreach($sources as $value => $label)
                             <option value="{{ $value }}" @selected($filters['source'] === $value)>{{ $label }}</option>
                         @endforeach
@@ -43,9 +43,9 @@
                 </label>
 
                 <label class="block">
-                    <span class="mb-1 block text-xs font-semibold uppercase tracking-wide text-ink/50">Sévérité</span>
+                    <span class="mb-1 block text-xs font-semibold uppercase tracking-wide text-ink/50">{{ __('Sévérité') }}</span>
                     <select name="severity" onchange="this.form.submit()" class="w-full rounded-xl border-ink/15 bg-cream/50 text-sm text-ink focus:border-[#C17817] focus:ring-[#C17817]/30">
-                        <option value="">Toutes les sévérités</option>
+                        <option value="">{{ __('Toutes les sévérités') }}</option>
                         @foreach($severities as $value => $label)
                             <option value="{{ $value }}" @selected($filters['severity'] === $value)>{{ $label }}</option>
                         @endforeach
@@ -53,19 +53,19 @@
                 </label>
 
                 <label class="block">
-                    <span class="mb-1 block text-xs font-semibold uppercase tracking-wide text-ink/50">État</span>
+                    <span class="mb-1 block text-xs font-semibold uppercase tracking-wide text-ink/50">{{ __('État') }}</span>
                     <select name="state" onchange="this.form.submit()" class="w-full rounded-xl border-ink/15 bg-cream/50 text-sm text-ink focus:border-[#C17817] focus:ring-[#C17817]/30">
-                        <option value="">Toutes</option>
-                        <option value="unread" @selected($filters['state'] === 'unread')>Non lues</option>
-                        <option value="read" @selected($filters['state'] === 'read')>Lues</option>
+                        <option value="">{{ __('Toutes') }}</option>
+                        <option value="unread" @selected($filters['state'] === 'unread')>{{ __('Non lues') }}</option>
+                        <option value="read" @selected($filters['state'] === 'read')>{{ __('Lues') }}</option>
                     </select>
                 </label>
 
                 <label class="block">
-                    <span class="mb-1 block text-xs font-semibold uppercase tracking-wide text-ink/50">Tri</span>
+                    <span class="mb-1 block text-xs font-semibold uppercase tracking-wide text-ink/50">{{ __('Tri') }}</span>
                     <select name="sort" onchange="this.form.submit()" class="w-full rounded-xl border-ink/15 bg-cream/50 text-sm text-ink focus:border-[#C17817] focus:ring-[#C17817]/30">
-                        <option value="priority" @selected($filters['sort'] === 'priority')>Priorité (décroissante)</option>
-                        <option value="recent" @selected($filters['sort'] === 'recent')>Plus récentes</option>
+                        <option value="priority" @selected($filters['sort'] === 'priority')>{{ __('Priorité (décroissante)') }}</option>
+                        <option value="recent" @selected($filters['sort'] === 'recent')>{{ __('Plus récentes') }}</option>
                     </select>
                 </label>
             </form>
@@ -92,9 +92,9 @@
                                 } }}">
                                     {{ $notification['severity_label'] }}
                                 </span>
-                                <span class="text-[11px] font-semibold text-ink/40">Priorité {{ number_format($notification['priority'], 0, ',', ' ') }}/100</span>
+                                <span class="text-[11px] font-semibold text-ink/40">{{ __('Priorité :priority/100', ['priority' => number_format($notification['priority'], 0, ',', "\u{202F}")]) }}</span>
                                 @unless($notification['read'])
-                                    <span class="inline-flex items-center rounded-full bg-[#E3A23C] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#16281E]">Nouveau</span>
+                                    <span class="inline-flex items-center rounded-full bg-[#E3A23C] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#16281E]">{{ __('Nouveau') }}</span>
                                 @endunless
                             </div>
 
@@ -105,7 +105,7 @@
 
                                 @if($notification['action_url'])
                                     <a href="{{ $notification['action_url'] }}" class="text-xs font-semibold text-[#C17817] hover:underline">
-                                        {{ $notification['action_label'] ?? 'Ouvrir' }}
+                                        {{ $notification['action_label'] ?? __('Ouvrir') }}
                                     </a>
                                 @endif
 
@@ -113,7 +113,7 @@
                                     <form method="POST" action="{{ route('notifications.read', $notification['id']) }}">
                                         @csrf
                                         @method('PATCH')
-                                        <button type="submit" class="text-xs font-semibold text-ink/50 transition hover:text-ink">Marquer comme lu</button>
+                                        <button type="submit" class="text-xs font-semibold text-ink/50 transition hover:text-ink">{{ __('Marquer comme lu') }}</button>
                                     </form>
                                 @endunless
                             </div>
@@ -121,8 +121,8 @@
                     </article>
                 @empty
                     <div class="rounded-2xl border border-dashed border-ink/15 bg-white px-6 py-16 text-center">
-                        <p class="text-sm font-semibold text-ink/70">Aucune notification pour ces critères.</p>
-                        <p class="mt-1 text-xs text-ink/45">Les alertes apparaissent dès qu'un risque est détecté par le NutriAlert Hub.</p>
+                        <p class="text-sm font-semibold text-ink/70">{{ __('Aucune notification pour ces critères.') }}</p>
+                        <p class="mt-1 text-xs text-ink/45">{{ __('Les alertes apparaissent dès qu\'un risque est détecté par le NutriAlert Hub.') }}</p>
                     </div>
                 @endforelse
             </div>

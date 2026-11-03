@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ in_array(app()->getLocale(), config('app.rtl_locales', []), true) ? 'rtl' : 'ltr' }}">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,6 +12,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;0,9..144,900;1,9..144,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @include('partials.locale-head')
     </head>
     <body class="font-inter text-ink antialiased bg-cream">
         <div class="min-h-screen grid grid-cols-1 md:grid-cols-2">
@@ -36,7 +37,7 @@
                                 <path d="M12 2L14.09 8.26L21 9.27L16 14.14L17.18 21.02L12 17.77L6.82 21.02L8 14.14L3 9.27L9.91 8.26L12 2Z" fill="currentColor"/>
                             </svg>
                         </span>
-                        <span class="font-fraunces font-extrabold text-2xl text-white tracking-tight">NutriTrace</span>
+                        <span class="font-fraunces font-extrabold text-2xl text-white tracking-tight">{{ __('NutriTrace') }}</span>
                     </a>
 
                     <div>
@@ -52,14 +53,15 @@
                                 <rect x="19" y="19" width="2" height="2" rx="0.5"/>
                             </svg>
                         </div>
-                        <h2 class="font-fraunces font-bold text-3xl xl:text-4xl text-white leading-tight mb-5">Chaque produit a une histoire vérifiable.</h2>
-                        <p class="text-white/70 text-base leading-relaxed">Connectez-vous ou créez un compte pour suivre la traçabilité de vos produits, de la ferme jusqu'à votre assiette, avec des preuves documentées à chaque étape.</p>
+                        <h2 class="font-fraunces font-bold text-3xl xl:text-4xl text-white leading-tight mb-5">{{ __('Chaque produit a une histoire vérifiable.') }}</h2>
+                        <p class="text-white/70 text-base leading-relaxed">{{ __('Connectez-vous ou créez un compte pour suivre la traçabilité de vos produits, de la ferme jusqu\'à votre assiette, avec des preuves documentées à chaque étape.') }}</p>
                     </div>
                 </div>
             </aside>
 
             <main class="flex min-h-screen items-center justify-center bg-[#FAFAF8] px-8 py-12 lg:px-16">
                 <div class="w-full max-w-lg">
+                    <div class="mb-6 flex justify-end"><x-locale-switcher /></div>
                     <div class="mb-8 flex justify-center md:hidden">
                         <a href="{{ url('/') }}" class="flex items-center gap-2.5">
                             <span class="w-9 h-9 rounded-full bg-amber-warm flex items-center justify-center shadow-md shadow-amber-warm/40 shrink-0">
@@ -67,7 +69,7 @@
                                     <path d="M12 2L14.09 8.26L21 9.27L16 14.14L17.18 21.02L12 17.77L6.82 21.02L8 14.14L3 9.27L9.91 8.26L12 2Z" fill="currentColor"/>
                                 </svg>
                             </span>
-                            <span class="font-fraunces font-extrabold text-xl text-ink tracking-tight">NutriTrace</span>
+                            <span class="font-fraunces font-extrabold text-xl text-ink tracking-tight">{{ __('NutriTrace') }}</span>
                         </a>
                     </div>
                     {{ $slot }}

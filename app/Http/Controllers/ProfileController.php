@@ -35,7 +35,7 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        return Redirect::route('profile.edit')->with('status', __('profile-updated'));
     }
 
     /**
@@ -66,7 +66,7 @@ class ProfileController extends Controller
             Storage::disk('public')->delete($oldPath);
         }
 
-        return Redirect::route('profile.edit')->with('status', 'photo-updated');
+        return Redirect::route('profile.edit')->with('status', __('photo-updated'));
     }
 
     /**
@@ -82,7 +82,7 @@ class ProfileController extends Controller
             $user->forceFill(['profile_photo_path' => null])->save();
         }
 
-        return Redirect::route('profile.edit')->with('status', 'photo-removed');
+        return Redirect::route('profile.edit')->with('status', __('photo-removed'));
     }
 
     /**

@@ -32,7 +32,7 @@ class CategoryController extends Controller
 
         Category::create($request->validated());
 
-        return redirect()->route('admin.categories.index')->with('success', 'Catégorie créée avec succès.');
+        return redirect()->route('admin.categories.index')->with('success', __('Catégorie créée avec succès.'));
     }
 
     public function edit(Category $category)
@@ -48,7 +48,7 @@ class CategoryController extends Controller
 
         $category->update($request->validated());
 
-        return redirect()->route('admin.categories.index')->with('success', 'Catégorie mise à jour avec succès.');
+        return redirect()->route('admin.categories.index')->with('success', __('Catégorie mise à jour avec succès.'));
     }
 
     public function destroy(Category $category)
@@ -57,6 +57,6 @@ class CategoryController extends Controller
 
         $category->delete();
 
-        return redirect()->route('admin.categories.index')->with('success', 'Catégorie supprimée. Les produits associés conservent leur catégorie historique.');
+        return redirect()->route('admin.categories.index')->with('success', __('Catégorie supprimée. Les produits associés conservent leur catégorie historique.'));
     }
 }

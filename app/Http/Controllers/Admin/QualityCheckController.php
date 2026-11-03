@@ -48,7 +48,7 @@ class QualityCheckController extends Controller
 
         return redirect()
             ->route('admin.quality-checks.show', $check)
-            ->with('success', 'Analyse lancée. Le résultat arrivera dans quelques instants.');
+            ->with('success', __('Analyse lancée. Le résultat arrivera dans quelques instants.'));
     }
 
     public function show(QualityCheck $qualityCheck)
@@ -67,6 +67,6 @@ class QualityCheckController extends Controller
 
         return redirect()
             ->route('admin.quality-checks.index')
-            ->with('success', 'Analyse supprimée.');
+            ->with('success', __('Analyse supprimée.'));
     }
 }

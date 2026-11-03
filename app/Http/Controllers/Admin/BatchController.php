@@ -60,7 +60,7 @@ class BatchController extends Controller
 
         Batch::create($data);
 
-        return redirect()->route('admin.batches.index')->with('success', 'Lot créé avec succès.');
+        return redirect()->route('admin.batches.index')->with('success', __('Lot créé avec succès.'));
     }
 
     /**
@@ -83,7 +83,7 @@ class BatchController extends Controller
         $disk = Storage::disk('public');
 
         if (! $batch->qr_code_path || ! $disk->exists($batch->qr_code_path)) {
-            return redirect()->route('admin.batches.show', $batch)->with('error', 'QR code is not available.');
+            return redirect()->route('admin.batches.show', $batch)->with('error', __('QR code is not available.'));
         }
 
         $extension = pathinfo($batch->qr_code_path, PATHINFO_EXTENSION);
@@ -97,7 +97,7 @@ class BatchController extends Controller
 
         $qrCodeService->generate($batch);
 
-        return redirect()->route('admin.batches.show', $batch)->with('success', 'QR code regenerated.');
+        return redirect()->route('admin.batches.show', $batch)->with('success', __('QR code regenerated.'));
     }
 
     /**
@@ -126,7 +126,7 @@ class BatchController extends Controller
 
         $batch->update($data);
 
-        return redirect()->route('admin.batches.index')->with('success', 'Lot mis à jour avec succès.');
+        return redirect()->route('admin.batches.index')->with('success', __('Lot mis à jour avec succès.'));
     }
 
     /**
@@ -138,7 +138,7 @@ class BatchController extends Controller
 
         $batch->delete();
 
-        return redirect()->route('admin.batches.index')->with('success', 'Lot supprimé avec succès.');
+        return redirect()->route('admin.batches.index')->with('success', __('Lot supprimé avec succès.'));
     }
 
     /**

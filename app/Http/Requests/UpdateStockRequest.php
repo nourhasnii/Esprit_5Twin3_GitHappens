@@ -18,6 +18,6 @@ class UpdateStockRequest extends FormRequest
 
     public function attributes(): array
     {
-        return ['min_threshold' => 'seuil minimum'];
+        return ['min_threshold' => __('seuil minimum')];
     }
 }

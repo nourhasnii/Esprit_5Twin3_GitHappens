@@ -25,7 +25,7 @@ class ShelfLifeDecisionRequest extends FormRequest
 
     public function attributes(): array
     {
-        return ['decision' => 'décision', 'note' => 'justification'];
+        return ['decision' => __('décision'), 'note' => __('justification')];
     }
 
     public function messages(): array

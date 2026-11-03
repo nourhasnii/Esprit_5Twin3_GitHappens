@@ -1,8 +1,8 @@
 <x-guest-layout>
     <div class="bg-white rounded-2xl shadow-xl shadow-ink/5 border border-ink/5 p-6 sm:p-8 md:p-10 lg:p-12">
         <div class="mb-8">
-            <h1 class="font-fraunces font-bold text-3xl sm:text-4xl text-ink tracking-tight mb-2">Connexion</h1>
-            <p class="text-ink/60 text-sm sm:text-base">Bienvenue de retour. Accédez à votre tableau de traçabilité.</p>
+            <h1 class="font-fraunces font-bold text-3xl sm:text-4xl text-ink tracking-tight mb-2">{{ __('Connexion') }}</h1>
+            <p class="text-ink/60 text-sm sm:text-base">{{ __('Bienvenue de retour. Accédez à votre tableau de traçabilité.') }}</p>
         </div>
 
         <x-auth-session-status class="mb-6" :status="session('status')" />
@@ -25,7 +25,7 @@
                                     name="password"
                                     required autocomplete="current-password"
                                     placeholder="••••••••" />
-                    <button type="button" aria-label="Afficher le mot de passe"
+                    <button type="button" aria-label="{{ __('Afficher le mot de passe') }}"
                             x-bind:aria-label="visible ? 'Masquer le mot de passe' : 'Afficher le mot de passe'"
                             x-bind:aria-pressed="visible"
                             x-on:click="visible = ! visible"
@@ -65,7 +65,7 @@
 
                 @if (Route::has('register'))
                     <p class="text-sm text-ink/60">
-                        Pas encore de compte ?
+                        {{ __('Pas encore de compte ?') }}
                         <a class="font-semibold text-forest hover:text-forest/80 underline decoration-1 underline-offset-4 hover:underline-offset-2 transition-all" href="{{ route('register') }}">
                             {{ __("S'inscrire") }}
                         </a>

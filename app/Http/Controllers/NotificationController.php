@@ -75,7 +75,7 @@ class NotificationController extends Controller
             return response()->json(['ok' => true, 'unread' => 0]);
         }
 
-        return back()->with('success', 'Toutes les notifications ont été marquées comme lues.');
+        return back()->with('success', __('Toutes les notifications ont été marquées comme lues.'));
     }
 
     /** Compteur de non-lues (rafraîchissement de la cloche sans rechargement de page). */

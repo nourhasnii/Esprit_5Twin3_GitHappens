@@ -53,11 +53,11 @@ class SiteController extends Controller
             || $site->outgoingMovements()->exists();
 
         if ($hasHistory) {
-            return back()->with('error', 'Ce site a un historique de stock : désactivez-le au lieu de le supprimer.');
+            return back()->with('error', __('Ce site a un historique de stock : désactivez-le au lieu de le supprimer.'));
         }
 
         $site->delete();
 
-        return redirect()->route('sites.index')->with('success', 'Site supprimé.');
+        return redirect()->route('sites.index')->with('success', __('Site supprimé.'));
     }
 }

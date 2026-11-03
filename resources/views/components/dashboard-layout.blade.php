@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-data="themeManager()" x-init="initTheme()" :class="{ 'dark': isDark }">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ in_array(app()->getLocale(), config('app.rtl_locales', []), true) ? 'rtl' : 'ltr' }}" x-data="themeManager()" x-init="initTheme()" :class="{ 'dark': isDark }">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ config('app.name', 'NutriTrace') }} · Workspace</title>
+    <title>{{ __(':nutritrace · Workspace', ['nutritrace' => config('app.name', 'NutriTrace')]) }}</title>
     <script>
         (() => {
             const theme = localStorage.getItem('nutritrace-theme') || 'light';
@@ -208,7 +208,8 @@
             [data-dashboard-header] h2 { font-size: 1.65rem; }
         }
     </style>
-</head>
+    @include('partials.locale-head')
+    </head>
 <body class="bg-cream font-inter text-ink antialiased transition-colors dark:bg-[#101815] dark:text-white">
 <div x-data="dashboardShell()" x-init="init()" class="min-h-screen relative">
     <div x-show="sidebarOpen" x-cloak @click="sidebarOpen = false" class="fixed inset-0 z-40 bg-ink/40 lg:hidden"></div>
@@ -216,12 +217,12 @@
     <div class="relative min-h-screen bg-cream dark:bg-[#101815]">
         <aside
             data-sidebar
-            :class="{ 'translate-x-0': sidebarOpen, '-translate-x-full lg:translate-x-0': !sidebarOpen }"
-            class="fixed top-4 left-4 bottom-4 z-50 flex w-60 -translate-x-full flex-col overflow-hidden rounded-[20px] bg-gradient-to-b from-[#16281E] to-[#20402E] text-white shadow-[0_20px_60px_-20px_rgba(22,40,30,0.55)] transition-all duration-300 lg:translate-x-0 dark:shadow-black/50"
-            aria-label="Sidebar principal"
+            :class="{ 'translate-x-0': sidebarOpen, '-translate-x-full rtl:translate-x-full lg:translate-x-0 rtl:lg:translate-x-0': !sidebarOpen }"
+            class="fixed top-4 start-4 bottom-4 z-50 flex w-60 -translate-x-full rtl:translate-x-full flex-col overflow-hidden rounded-[20px] bg-gradient-to-b from-[#16281E] to-[#20402E] text-white shadow-[0_20px_60px_-20px_rgba(22,40,30,0.55)] transition-all duration-300 lg:translate-x-0 rtl:lg:translate-x-0 dark:shadow-black/50"
+            aria-label="{{ __('Sidebar principal') }}"
         >
             <div x-ref="sidebarScroll" @scroll="saveSidebarScroll($event)" class="sidebar-scrollbar-hidden relative h-full flex flex-col overflow-y-auto p-6">
-                <button @click="sidebarOpen = false" class="absolute top-4 right-4 z-10 rounded-xl p-1.5 text-white/50 hover:bg-white/5 lg:hidden dark:text-white/50" aria-label="Fermer le menu">
+                <button @click="sidebarOpen = false" class="absolute top-4 end-4 z-10 rounded-xl p-1.5 text-white/50 hover:bg-white/5 lg:hidden dark:text-white/50" aria-label="{{ __('Fermer le menu') }}">
                     <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
                 </button>
 
@@ -243,19 +244,19 @@
                     </div>
                 </div>
 
-                <nav class="flex-1 space-y-2 pr-1">
+                <nav class="flex-1 space-y-2 pe-1">
                     <div>
                         <ul class="space-y-1">
                             <li>
                                     <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'bg-[#E3A23C] text-[#16281E] font-semibold' : 'text-white/70 hover:bg-white/5' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors" @click="sidebarOpen = false">
                                     <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-                                    <span>Dashboard</span>
+                                    <span>{{ __('Dashboard') }}</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ route('notifications.index') }}" class="{{ request()->routeIs('notifications.*') ? 'bg-[#E3A23C] text-[#16281E] font-semibold' : 'text-white/70 hover:bg-white/5' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors" @click="sidebarOpen = false">
                                     <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg>
-                                    <span>Notifications</span>
+                                    <span>{{ __('Notifications') }}</span>
                                 </a>
                             </li>
                         </ul>
@@ -267,19 +268,19 @@
                                 <li>
                                     <a href="{{ route('admin.products.index') }}" class="{{ request()->routeIs('admin.products.*') ? 'bg-[#E3A23C] text-[#16281E] font-semibold' : 'text-white/70 hover:bg-white/5' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors" @click="sidebarOpen = false">
                                         <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 3c2 3-1 5-3 6 2 2 6 3 3 9-3-2-5-5-6-5-1 2-2 5-5 6 1-3 0-7 3-9-3-2-5-4-3-6 3 1 5 4 5 4 0-3 1-6 6-5Z"/></svg>
-                                        <span>Products</span>
+                                        <span>{{ __('Products') }}</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{{ route('admin.categories.index') }}" class="{{ request()->routeIs('admin.categories.*') ? 'bg-[#E3A23C] text-[#16281E] font-semibold' : 'text-white/70 hover:bg-white/5' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors" @click="sidebarOpen = false">
                                         <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h5M8 17h3"/><circle cx="18" cy="16" r="2"/></svg>
-                                        <span>Categories</span>
+                                        <span>{{ __('Categories') }}</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{{ route('admin.batches.index') }}" class="{{ request()->routeIs('admin.batches.*') && ! request()->routeIs('admin.batches.traceability') ? 'bg-[#E3A23C] text-[#16281E] font-semibold' : 'text-white/70 hover:bg-white/5' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors" @click="sidebarOpen = false">
                                         <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 8h16v11H4zM4 8l3-4h10l3 4M9 12h6"/></svg>
-                                        <span>Batches / Lots</span>
+                                        <span>{{ __('Batches / Lots') }}</span>
                                     </a>
                                 </li>
                             </ul>
@@ -290,31 +291,31 @@
                                 <li>
                                     <a href="{{ route('admin.certifications.index') }}" class="{{ request()->routeIs('admin.certifications.*') ? 'bg-[#E3A23C] text-[#16281E] font-semibold' : 'text-white/70 hover:bg-white/5' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors" @click="sidebarOpen = false">
                                         <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 2l3 3 4-1 1 4 3 3-3 3-1 4-4-1-3 3-3-3-4 1-1-4-3-3 3-3 4 1 1-4z"/><path d="m9 12 2 2 4-4"/></svg>
-                                        <span>Certifications</span>
+                                        <span>{{ __('Certifications') }}</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{{ route('admin.certifications.intelligence') }}" class="{{ request()->routeIs('admin.certifications.intelligence') ? 'bg-[#E3A23C] text-[#16281E] font-semibold' : 'text-white/70 hover:bg-white/5' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors" @click="sidebarOpen = false">
                                         <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 2l1.8 5.2L19 9l-5.2 1.8L12 16l-1.8-5.2L5 9l5.2-1.8L12 2Z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15Z"/></svg>
-                                        <span>Certification Intelligence</span>
+                                        <span>{{ __('Certification Intelligence') }}</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{{ route('account.verification.edit') }}" class="{{ request()->routeIs('account.verification.*') ? 'bg-[#E3A23C] text-[#16281E] font-semibold' : 'text-white/70 hover:bg-white/5' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors" @click="sidebarOpen = false">
                                         <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg>
-                                        <span>Verification</span>
+                                        <span>{{ __('Verification') }}</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{{ route('admin.quality-checks.index') }}" class="{{ request()->routeIs('admin.quality-checks.*') ? 'bg-[#E3A23C] text-[#16281E] font-semibold' : 'text-white/70 hover:bg-white/5' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors" @click="sidebarOpen = false">
                                         <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h5"/><path d="m16 17 2 2 3-4"/></svg>
-                                        <span>Analyses Qualité</span>
+                                        <span>{{ __('Analyses Qualité') }}</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{{ route('admin.ocr-checks.index') }}" class="{{ request()->routeIs('admin.ocr-checks.*') ? 'bg-[#E3A23C] text-[#16281E] font-semibold' : 'text-white/70 hover:bg-white/5' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors" @click="sidebarOpen = false">
                                         <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h5M8 17h3"/><path d="m17 15 2 2 3-4"/></svg>
-                                        <span>OCR / Étiquettes</span>
+                                        <span>{{ __('OCR / Étiquettes') }}</span>
                                     </a>
                                 </li>
                             </ul>
@@ -325,25 +326,25 @@
                                 <li>
                                     <a href="{{ route('admin.events.index') }}" class="{{ request()->routeIs('admin.events.*') || request()->routeIs('admin.batches.traceability') ? 'bg-[#E3A23C] text-[#16281E] font-semibold' : 'text-white/70 hover:bg-white/5' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors" @click="sidebarOpen = false">
                                         <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="12" r="1.5"/><circle cx="20" cy="12" r="1.5"/><circle cx="12" cy="4" r="1.5"/><circle cx="12" cy="20" r="1.5"/><path d="M5.5 12H9m6 0h3.5M12 5.5V9m0 6v3.5"/></svg>
-                                        <span>Traceability</span>
+                                        <span>{{ __('Traceability') }}</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{{ route('admin.transport-conditions.index') }}" class="{{ request()->routeIs('admin.transport-conditions.*') ? 'bg-[#E3A23C] text-[#16281E] font-semibold' : 'text-white/70 hover:bg-white/5' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors" @click="sidebarOpen = false">
                                         <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 3v18M5 8h14M5 16h14"/><path d="M7 3h10M7 21h10"/></svg>
-                                        <span>Transport Conditions</span>
+                                        <span>{{ __('Transport Conditions') }}</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{{ route('admin.alerts.index') }}" class="{{ request()->routeIs('admin.alerts.*') ? 'bg-[#E3A23C] text-[#16281E] font-semibold' : 'text-white/70 hover:bg-white/5' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors" @click="sidebarOpen = false">
                                         <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="m12 3 9 16H3L12 3Z"/><path d="M12 9v4M12 16h.01"/></svg>
-                                        <span>Alerts</span>
+                                        <span>{{ __('Alerts') }}</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{{ route('admin.nutrimind.index') }}" class="{{ request()->routeIs('admin.nutrimind.*') ? 'bg-[#E3A23C] text-[#16281E] font-semibold' : 'text-white/70 hover:bg-white/5' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors" @click="sidebarOpen = false">
                                         <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="6" cy="6" r="2.4"/><circle cx="18" cy="6" r="2.4"/><circle cx="12" cy="18" r="2.4"/><path d="M7.7 7.7 10.6 15.9M16.3 7.7 13.4 15.9M8.4 6h7.2"/></svg>
-                                        <span>NutriMind</span>
+                                        <span>{{ __('NutriMind') }}</span>
                                     </a>
                                 </li>
                             </ul>
@@ -355,43 +356,43 @@
                                 <li>
                                     <a href="{{ route('stocks.index') }}" class="{{ request()->routeIs('stocks.*') ? 'bg-[#E3A23C] text-[#16281E] font-semibold' : 'text-white/70 hover:bg-white/5' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors" @click="sidebarOpen = false">
                                         <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M3 8h18v11H3zM7 8V5h10v3M8 12h8M8 16h6"/></svg>
-                                        <span>Stocks</span>
+                                        <span>{{ __('Stocks') }}</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{{ route('stock-movements.index') }}" class="{{ request()->routeIs('stock-movements.*') ? 'bg-[#E3A23C] text-[#16281E] font-semibold' : 'text-white/70 hover:bg-white/5' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors" @click="sidebarOpen = false">
                                         <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M3 12h18"/><path d="M12 3v18"/><path d="M7 7l-4 5 4 5M17 7l4 5-4 5"/></svg>
-                                        <span>Stock movements</span>
+                                        <span>{{ __('Stock movements') }}</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{{ route('sites.index') }}" class="{{ request()->routeIs('sites.*') ? 'bg-[#E3A23C] text-[#16281E] font-semibold' : 'text-white/70 hover:bg-white/5' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors" @click="sidebarOpen = false">
                                         <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 19V7l8-4 8 4v12"/><path d="M9 10h6M9 14h6M12 6v12"/></svg>
-                                        <span>Sites</span>
+                                        <span>{{ __('Sites') }}</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{{ route('forecast.index') }}" class="{{ request()->routeIs('forecast.index') ? 'bg-[#E3A23C] text-[#16281E] font-semibold' : 'text-white/70 hover:bg-white/5' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors" @click="sidebarOpen = false">
                                         <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 18h16"/><path d="M7 15l3-3 3 2 5-6"/><path d="M19 8v4h-4"/></svg>
-                                        <span>Forecast</span>
+                                        <span>{{ __('Forecast') }}</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{{ route('optimization.index') }}" class="{{ request()->routeIs('optimization.*') ? 'bg-[#E3A23C] text-[#16281E] font-semibold' : 'text-white/70 hover:bg-white/5' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors" @click="sidebarOpen = false">
                                         <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 3v18"/><path d="m5 8 7-5 7 5-7 5-7-5Z"/><path d="m5 16 7 5 7-5"/></svg>
-                                        <span>Optimization</span>
+                                        <span>{{ __('Optimization') }}</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{{ route('simulations.index') }}" class="{{ request()->routeIs('simulations.*') ? 'bg-[#E3A23C] text-[#16281E] font-semibold' : 'text-white/70 hover:bg-white/5' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors" @click="sidebarOpen = false">
                                         <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="8"/><path d="M12 4v16M4 12h16"/><path d="M12 4c2.5 2.2 3.5 5 3.5 8s-1 5.8-3.5 8M12 4c-2.5 2.2-3.5 5-3.5 8s1 5.8 3.5 8"/></svg>
-                                        <span>Digital twin</span>
+                                        <span>{{ __('Digital twin') }}</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{{ route('shelf-life.index') }}" class="{{ request()->routeIs('shelf-life.*') ? 'bg-[#E3A23C] text-[#16281E] font-semibold' : 'text-white/70 hover:bg-white/5' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors" @click="sidebarOpen = false">
                                         <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M10 13.5V4.5a2 2 0 1 1 4 0v9a4 4 0 1 1-4 0Z"/><path d="M12 9v6"/><path d="M18 5h3M18 9h3"/></svg>
-                                        <span>Dynamic shelf life</span>
+                                        <span>{{ __('Dynamic shelf life') }}</span>
                                     </a>
                                 </li>
                             </ul>
@@ -404,20 +405,20 @@
                                     <li>
                                         <a href="{{ route('admin.users.index') }}" class="{{ request()->routeIs('admin.users.*') ? 'bg-[#E3A23C] text-[#16281E] font-semibold' : 'text-white/70 hover:bg-white/5' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors" @click="sidebarOpen = false">
                                             <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                                            <span>Users</span>
+                                            <span>{{ __('Users') }}</span>
                                         </a>
                                     </li>
                                     <li>
                                         <a href="{{ route('admin.verification.index') }}" class="{{ request()->routeIs('admin.verification.*') ? 'bg-[#E3A23C] text-[#16281E] font-semibold' : 'text-white/70 hover:bg-white/5' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors" @click="sidebarOpen = false">
                                             <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M9 11V6h6v5"/><path d="M4 8h16v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8z"/><path d="m9 15 2 2 4-4"/></svg>
-                                            <span>Verification Requests</span>
+                                            <span>{{ __('Verification Requests') }}</span>
                                         </a>
                                     </li>
                                     @if(app('router')->has('admin.audit.index'))
                                         <li>
                                             <a href="{{ route('admin.audit.index') }}" class="{{ request()->routeIs('admin.audit.*') ? 'bg-[#E3A23C] text-[#16281E] font-semibold' : 'text-white/70 hover:bg-white/5' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors" @click="sidebarOpen = false">
                                                 <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 4h16v16H4zM8 8h8M8 12h8M8 16h5"/></svg>
-                                                <span>Audit Logs</span>
+                                                <span>{{ __('Audit Logs') }}</span>
                                             </a>
                                         </li>
                                     @endif
@@ -431,7 +432,7 @@
                             <li>
                                 <a href="{{ route('profile.edit') }}" class="{{ request()->routeIs('profile.*') ? 'bg-[#E3A23C] text-[#16281E] font-semibold' : 'text-white/70 hover:bg-white/5' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors" @click="sidebarOpen = false">
                                     <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
-                                    <span>Mon profil</span>
+                                    <span>{{ __('Mon profil') }}</span>
                                 </a>
                             </li>
                         </ul>
@@ -443,18 +444,18 @@
                         @csrf
                         <button type="submit" class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-white/70 hover:bg-white/5 transition-colors" @click="sidebarOpen = false">
                             <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
-                            <span>Logout</span>
+                            <span>{{ __('Logout') }}</span>
                         </button>
                     </form>
                 </div>
             </div>
         </aside>
 
-        <div class="min-h-screen pl-0 transition-all duration-300 lg:pl-[17rem]">
+        <div class="min-h-screen ps-0 transition-all duration-300 lg:ps-[17rem]">
             <header class="sticky top-0 z-30 bg-cream/90 backdrop-blur dark:bg-[#101815]/90 border-b border-ink/5">
                 <div data-dashboard-header class="flex min-h-20 items-center gap-4 px-8 py-6 lg:px-10">
                     <div class="flex min-w-0 flex-1 items-center gap-3">
-                        <button @click="sidebarOpen = true" class="rounded-xl p-2 text-ink/60 hover:bg-white lg:hidden dark:text-white/60" aria-label="Ouvrir le menu">
+                        <button @click="sidebarOpen = true" class="rounded-xl p-2 text-ink/60 hover:bg-white lg:hidden dark:text-white/60" aria-label="{{ __('Ouvrir le menu') }}">
                             <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
                         </button>
                         <div class="min-w-0 flex-1">
@@ -465,12 +466,13 @@
                         @if(isset($headerActions))
                             {{ $headerActions }}
                         @else
-                            <a href="{{ route('front.products.index') }}" target="_blank" rel="noopener" class="hidden rounded-xl px-3 py-2 text-sm font-semibold text-ink/55 transition hover:bg-white sm:inline-flex dark:text-white/60 dark:hover:bg-white/5" title="Catalogue public">
-                                Catalogue
+                            <a href="{{ route('front.products.index') }}" target="_blank" rel="noopener" class="hidden rounded-xl px-3 py-2 text-sm font-semibold text-ink/55 transition hover:bg-white sm:inline-flex dark:text-white/60 dark:hover:bg-white/5" title="{{ __('Catalogue public') }}">
+                                {{ __('Catalogue') }}
                             </a>
+                            <x-locale-switcher />
                             <x-notification-bell />
                             <div class="rounded-full border border-ink/10 p-1 shadow-sm dark:border-white/10">
-                                <button type="button" role="switch" @click="theme = theme === 'light' ? 'dark' : 'light'; applyTheme()" class="relative h-8 w-16 rounded-full transition-colors" data-theme-switch :aria-checked="theme === 'dark'" :aria-label="theme === 'dark' ? 'Passer en mode clair' : 'Passer en mode sombre'" title="Changer de thème">
+                                <button type="button" dir="ltr" role="switch" @click="theme = theme === 'light' ? 'dark' : 'light'; applyTheme()" class="relative h-8 w-16 rounded-full transition-colors" data-theme-switch :aria-checked="theme === 'dark'" :aria-label="theme === 'dark' ? 'Passer en mode clair' : 'Passer en mode sombre'" title="{{ __('Changer de thème') }}">
                                     <svg x-cloak x-show="theme === 'dark'" class="absolute left-1.5 h-3 w-3 text-white/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>
                                     <svg x-cloak x-show="theme === 'light'" class="absolute right-1.5 h-3 w-3 text-forest/45" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20.5 15.5A8.5 8.5 0 0 1 8.5 3.5 8.5 8.5 0 1 0 20.5 15.5Z"/></svg>
                                     <span class="absolute inset-y-1 left-1 grid h-6 w-6 place-items-center rounded-full bg-white text-[#1F3D2E] shadow-md transition-transform duration-200" :class="theme === 'dark' ? 'translate-x-8' : 'translate-x-0'">
