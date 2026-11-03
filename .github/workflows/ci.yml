@@ -1,10 +1,17 @@
-name: NutriTrace CI
+name: NutriTrace CI/CD
 
+# CI : à chaque pull request et à chaque push sur main → tests + construction de l'image Docker.
+# CD : seulement après un push (merge) sur main, si tout est vert → déploiement sur Render.
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch:
+
+concurrency:
+  group: nutritrace-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build-and-test:
@@ -56,3 +63,77 @@ jobs:
           ADMIN_PASSWORD: testing-password-123
           APP_ENV: testing
         run: php artisan test
+
+  docker-image:
+    name: docker-image (build + smoke test)
+    needs: build-and-test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build the production image
+        run: docker build -t nutritrace:${{ github.sha }} .
+
+      - name: Start the container
+        run: |
+          docker run -d --name nutritrace -p 10000:10000 \
+            -e APP_KEY="base64:$(openssl rand -base64 32)" \
+            -e ADMIN_PASSWORD=ci-smoke-test-123 \
+            -e APP_URL=http://localhost:10000 \
+            -e MAIL_MAILER=log -e SESSION_DRIVER=database -e CACHE_STORE=database \
+            nutritrace:${{ github.sha }}
+
+      - name: Smoke test (health, home, login, language switch)
+        run: |
+          for i in $(seq 1 60); do
+            if curl -fsS http://localhost:10000/up > /dev/null; then break; fi
+            sleep 3
+          done
+          curl -fsS http://localhost:10000/up > /dev/null
+          curl -fsS http://localhost:10000/ | grep -q "NutriTrace"
+          curl -fsS http://localhost:10000/login | grep -q 'name="email"'
+          curl -fsS -c cookies.txt -b cookies.txt -o /dev/null http://localhost:10000/locale/ar
+          curl -fsS -b cookies.txt http://localhost:10000/login | grep -q 'dir="rtl"'
+          echo "Image OK"
+
+      - name: Container logs (on failure)
+        if: failure()
+        run: docker logs nutritrace
+
+  deploy:
+    name: deploy (Render)
+    needs: docker-image
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: ${{ vars.RENDER_APP_URL }}
+
+    steps:
+      - name: Trigger the Render deployment
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$RENDER_DEPLOY_HOOK_URL" ]; then
+            echo "::error::Secret RENDER_DEPLOY_HOOK_URL manquant (Settings > Secrets and variables > Actions)."
+            exit 1
+          fi
+          curl -fsS -X POST "$RENDER_DEPLOY_HOOK_URL"
+          echo "Déploiement demandé à Render pour le commit ${GITHUB_SHA::7}."
+
+      - name: Wait until the site is online
+        if: vars.RENDER_APP_URL != ''
+        env:
+          APP_URL: ${{ vars.RENDER_APP_URL }}
+        run: |
+          sleep 60
+          for i in $(seq 1 40); do
+            code=$(curl -s -o /dev/null -w "%{http_code}" "$APP_URL/up" || true)
+            echo "Tentative $i : HTTP $code"
+            if [ "$code" = "200" ]; then echo "Site en ligne : $APP_URL"; exit 0; fi
+            sleep 15
+          done
+          echo "::error::Le site ne répond pas après 11 minutes."
+          exit 1

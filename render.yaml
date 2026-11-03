@@ -1,0 +1,45 @@
+# Render Blueprint — NutriTrace (offre gratuite)
+# Le déploiement est déclenché par GitHub Actions (job "deploy" de .github/workflows/ci.yml)
+# uniquement quand les tests et la construction de l'image Docker réussissent sur main.
+services:
+  - type: web
+    name: nutritrace
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /up
+    autoDeploy: false
+    envVars:
+      - key: APP_NAME
+        value: NutriTrace
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_KEY            # à coller : résultat de "php artisan key:generate --show"
+        sync: false
+      - key: APP_URL            # à coller : https://<nom>.onrender.com
+        sync: false
+      - key: ADMIN_PASSWORD     # mot de passe du compte administrateur de démonstration
+        sync: false
+      - key: APP_LOCALE
+        value: fr
+      - key: APP_FALLBACK_LOCALE
+        value: en
+      - key: DB_CONNECTION
+        value: sqlite
+      - key: SESSION_DRIVER
+        value: database
+      - key: CACHE_STORE
+        value: database
+      - key: QUEUE_CONNECTION
+        value: database
+      - key: MAIL_MAILER
+        value: log
+      - key: NUTRIALERT_MAIL
+        value: "false"
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: SEED_DEMO
+        value: "true"
