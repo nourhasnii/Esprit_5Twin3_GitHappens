@@ -29,6 +29,7 @@ if [ "$FIRST_START" = "1" ] && [ "${SEED_DEMO:-true}" = "true" ]; then
     php artisan db:seed --class=StockModuleDemoSeeder --force
 fi
 chown -R www-data:www-data "$(dirname "$DB_FILE")"
+mkdir -p storage/app/public/products storage/app/public/profile-photos storage/app/public/quality-checks storage/app/public/certifications
 
 php artisan storage:link --force >/dev/null 2>&1 || true
 php artisan config:cache
